@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "django_markdown_converter"
+version = "0.1.0"
+description = "converter for django md"
+authors = ["Lawen Thayalakrishnan"]
+readme = "README.md"
+packages = [{include = "django_markdown_converter"}]
+
+[tool.poetry.dependencies]
+python = "3.11.0"
+pygments = "^2.16.1"
+pytest = "^7.4.4"
+
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
