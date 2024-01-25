@@ -1,6 +1,8 @@
 import pytest
 
-from ..base_blockifier import BaseBlockifier
+#from django.base_blockifier import BaseBlockifier
+#from django_markdown_converter.blockifiers.base_blockifier import BaseBlockifier
+from blockifiers.base_blockifier import BaseBlockifier
 
 TEST_DATA = {
     "pattern": r'^(?P<content>.*?)$)',
@@ -17,7 +19,7 @@ TEST_DATA = {
 @pytest.fixture
 def my_class_instance():
     return BaseBlockifier(
-        pattern=r'^(?P<content>.*?)$)',
+        pattern=r'^(?P<content>.*?)$',
         name="everything",
         left="",
         right="",
@@ -28,38 +30,38 @@ def my_class_instance():
     )
 
 
-def test_base_blockifier(obj):
-    assert False
+def test_base_blockifier(my_class_instance):
+    assert 1 > 2
 
-def test_base_priority(obj):
-    assert False
+def test_base_priority(my_class_instance):
+    assert 1 > 2
 
-def test_base_createBlock(obj):
-    assert False
+def test_base_createBlock(my_class_instance):
+    assert 1 > 2
 
-def test_base_createChunk(obj):
-    assert False
+def test_base_createChunk(my_class_instance):
+    assert 1 > 2
 
-def test_base_getType(obj):
-    assert False
+def test_base_getType(my_class_instance):
+    assert 1 > 2
 
-def test_base_getProperties(obj):
-    assert False
+def test_base_getProperties(my_class_instance):
+    assert 1 > 2
 
-def test_base_getData(obj):
-    assert False
+def test_base_getData(my_class_instance):
+    assert 1 > 2
 
-def test_base_get_matched_group(obj):
-    assert False
+def test_base_get_matched_group(my_class_instance):
+    assert 1 > 2
 
-def test_base_getAttrs(obj):
-    assert False
+def test_base_getAttrs(my_class_instance):
+    assert 1 > 2
 
-def test_base_resetBank(obj):
-    assert False
+def test_base_resetBank(my_class_instance):
+    assert 1 > 2
 
-def test_base_getBank(obj):
-    assert False
+def test_base_getBank(my_class_instance):
+    assert 1 > 2
 
-def test_base_blockify(obj):
-    assert False
+def test_base_blockify(my_class_instance):
+    assert 1 > 2
