@@ -6,7 +6,8 @@ authors = ["Lawen Thayalakrishnan <lawen.thaya94@gmail.com>"]
 maintainers = ["Lawen Thayalakrishnan <lawen.thaya94@gmail.com>"]
 readme = "README.md"
 license = "MIT"
-packages = [{include = "src/django_markdown_converter"}]
+packages = [{include = "django_markdown_converter", from = "src}]
+exclude = ["notes/"]
 homepage = "https://github.com/Thayalakrishnan/django_markdown_converter"
 repository = "https://github.com/Thayalakrishnan/django_markdown_converter"
 keywords = ["django", "converter", "markdown", "json"]
