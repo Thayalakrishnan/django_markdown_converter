@@ -1,8 +1,6 @@
 [tool.poetry]
-package-mode = true
 name = "django_markdown_converter"
 version = "0.1.0"
-requires-python = ">=3.8"
 description = "converter for django md"
 authors = ["Lawen Thayalakrishnan <lawen.thaya94@gmail.com>"]
 maintainers = ["Lawen Thayalakrishnan <lawen.thaya94@gmail.com>"]
