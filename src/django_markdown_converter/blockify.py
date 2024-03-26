@@ -1,4 +1,4 @@
-from blockifiers.blockifier import BIG_BLOCKIFIER
+from django_markdown_converter.blockifiers.blockifier import BIG_BLOCKIFIER
 
 '''
 edge cases

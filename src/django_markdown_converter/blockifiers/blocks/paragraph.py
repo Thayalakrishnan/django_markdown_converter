@@ -1,6 +1,6 @@
 # paragraph_processor
-from blockifiers.base_blockifier import BaseBlockifier
-from inlineifiers.inline_parser import InlineParser
+from .base import BaseBlockifier
+from ...inlineifiers.inline_parser import InlineParser
 
 '''
 need to be mindful that a paragraph block may also, unwittingly

@@ -1,17 +1,17 @@
-from blockifiers.blockifier_admonition import AdmonitionBlockifier
-from blockifiers.blockifier_code import CodeBlockifier
-from blockifiers.blockifier_heading import HeadingBlockifier
-from blockifiers.blockifier_hr import HRBlockifier
-from blockifiers.blockifier_image import ImageBlockifier
-from blockifiers.blockifier_meta import MetaBlockifier
-from blockifiers.blockifier_footnote import FootnoteBlockifier
-from blockifiers.blockifier_blockquote import BlockquoteBlockifier
-from blockifiers.blockifier_table import TableBlockifier
-from blockifiers.blockifier_paragraph import ParagraphBlockifier
-from blockifiers.blockifier_list import ListBlockifier
-from blockifiers.blockifier_definitionlist import DefinitionListBlockifier
-from blockifiers.blockifier_svg import SVGBlockifier
-from blockifiers.blockifier_empty import EmptyBlockifier
+from .blocks.admonition import AdmonitionBlockifier
+from .blocks.blockquote import BlockquoteBlockifier
+from .blocks.code import CodeBlockifier
+from .blocks.heading import HeadingBlockifier
+from .blocks.hr import HRBlockifier
+from .blocks.image import ImageBlockifier
+from .blocks.meta import MetaBlockifier
+from .blocks.footnote import FootnoteBlockifier
+from .blocks.table import TableBlockifier
+from .blocks.paragraph import ParagraphBlockifier
+from .blocks.list import ListBlockifier
+from .blocks.definitionlist import DefinitionListBlockifier
+from .blocks.svg import SVGBlockifier
+from .blocks.empty import EmptyBlockifier
 
 
 TAB_LENGTH = 4

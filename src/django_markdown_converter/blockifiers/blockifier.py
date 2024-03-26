@@ -1,5 +1,5 @@
 # blockifiers.py
-from blockifiers.blockifier_data import BLOCKIFIER_DATA
+from .blockifier_data import BLOCKIFIER_DATA
 
 
 class Blockifier:

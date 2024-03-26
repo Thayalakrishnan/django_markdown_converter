@@ -1,5 +1,5 @@
 import re
-from blockifiers.base_blockifier import BaseBlockifier
+from .base import BaseBlockifier
 from textwrap import dedent
 '''
 admonition_processor

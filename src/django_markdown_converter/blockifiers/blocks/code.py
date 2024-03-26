@@ -2,7 +2,7 @@ import re
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name
 from pygments.formatters import HtmlFormatter
-from blockifiers.base_blockifier import BaseBlockifier
+from .base import BaseBlockifier
 
 class CustomFormatter(HtmlFormatter):
     

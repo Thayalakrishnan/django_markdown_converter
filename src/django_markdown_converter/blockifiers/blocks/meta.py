@@ -1,5 +1,5 @@
 import re
-from blockifiers.base_blockifier import BaseBlockifier
+from .base import BaseBlockifier
 
 '''
 this needs to be expanded more to facilitate

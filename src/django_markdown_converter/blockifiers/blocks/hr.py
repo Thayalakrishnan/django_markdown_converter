@@ -1,4 +1,4 @@
-from blockifiers.base_blockifier import BaseBlockifier
+from .base import BaseBlockifier
 
 
 class HRBlockifier(BaseBlockifier):

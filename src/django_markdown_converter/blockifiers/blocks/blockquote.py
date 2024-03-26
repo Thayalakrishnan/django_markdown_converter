@@ -1,6 +1,6 @@
 import re
 # paragraph_processor
-from blockifiers.base_blockifier import BaseBlockifier
+from .base import BaseBlockifier
 
 '''
 blockifier_blockquote

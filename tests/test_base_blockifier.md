@@ -2,7 +2,8 @@ import pytest
 
 #from django.base_blockifier import BaseBlockifier
 #from django_markdown_converter.blockifiers.base_blockifier import BaseBlockifier
-from blockifiers.base_blockifier import BaseBlockifier
+from django_markdown_converter.blockifiers.blocks.base import BaseBlockifier
+
 
 TEST_DATA = {
     "pattern": r'^(?P<content>.*?)$)',
