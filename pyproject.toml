@@ -1,17 +1,34 @@
 [tool.poetry]
+package-mode = true
 name = "django_markdown_converter"
 version = "0.1.0"
+requires-python = ">=3.8"
 description = "converter for django md"
-authors = ["Lawen Thayalakrishnan"]
+authors = ["Lawen Thayalakrishnan <lawen.thaya94@gmail.com>"]
+maintainers = ["Lawen Thayalakrishnan <lawen.thaya94@gmail.com>"]
 readme = "README.md"
+license = "MIT"
 packages = [{include = "django_markdown_converter"}]
+homepage = "https://github.com/Thayalakrishnan/django_markdown_converter"
+repository = "https://github.com/Thayalakrishnan/django_markdown_converter"
+keywords = ["django", "converter", "markdown", "json"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+]
+
 
 [tool.poetry.dependencies]
 python = "3.11.0"
 pygments = "^2.16.1"
 pytest = "^7.4.4"
-
-
 
 [build-system]
 requires = ["poetry-core"]
