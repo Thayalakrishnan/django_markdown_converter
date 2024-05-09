@@ -27,7 +27,7 @@ class FootnoteBlockifier(BaseBlockifier):
     
     def getFootnotes(self):
         return {
-            "blocktype": self.name,
-            "properties": {},
+            "type": self.name,
+            "props": {},
             "data": self.bank
         }

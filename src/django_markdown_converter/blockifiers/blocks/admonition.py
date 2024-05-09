@@ -7,6 +7,7 @@ admonition_processor
 
 class AdmonitionBlockifier(BaseBlockifier):
     """ Process admonition blocks """
+    
 
     def getData(self, match, *args, **kwargs):
         if match.group('content'):
@@ -14,7 +15,7 @@ class AdmonitionBlockifier(BaseBlockifier):
             return dedent(content)
         return ""
         
-    def getProperties(self, match, *args, **kwargs):
+    def getProps(self, match, *args, **kwargs):
         return {
             "type": self.get_matched_group(match, "type", ""),
             "title": self.get_matched_group(match, "title", "")

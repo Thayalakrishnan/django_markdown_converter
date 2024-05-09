@@ -50,7 +50,7 @@ class MetaBlockifier(BaseBlockifier):
             content = match.group("content")
             return self.process_meta(content.split("\n"))
         return {
-            "blocktype": self.name,
+            "type": self.name,
             "tag": self.tag,
             "data": {}
         }
@@ -58,7 +58,7 @@ class MetaBlockifier(BaseBlockifier):
     def process_meta(self, lines):
         return dict(map(self.lam_dict, filter(self.lam_filter, map(self.lam_split, lines))))
 
-    def getProperties(self, *args, **kwargs):
+    def getProps(self, *args, **kwargs):
         return {}
 
     def getData(self, lines, *args, **kwargs):

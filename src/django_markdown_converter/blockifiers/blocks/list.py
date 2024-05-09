@@ -130,7 +130,7 @@ class ListBlockifier(BaseBlockifier):
         #print("---------------------")
         #print(content)
         li =  {
-            'blocktype': "item",
+            'type': "item",
             'tag': "li",
             'data': content
         }
@@ -140,9 +140,9 @@ class ListBlockifier(BaseBlockifier):
     def create_list_object(self, items, emptyList):
         firstItem = items[0]
         return {
-            'blocktype': "list",
+            'type': "list",
             'level': firstItem["level"],
-            'tag': firstItem["blocktype"],
+            'tag': firstItem["type"],
             'children': emptyList
         }
 
@@ -164,7 +164,7 @@ class ListBlockifier(BaseBlockifier):
 
     def create_list_item(self, lineType:str, level:int, marker:str, content:str) -> dict:
         return {
-            "blocktype": lineType,
+            "type": lineType,
             "level": level,
             "delimeter": marker,
             "content": content

@@ -54,13 +54,13 @@ class BaseBlockifier:
         split again by the colon sperator
         this gives us the key value pairs
         '''
-        props = self.getProperties(*args, **kwargs)
+        props = self.getProps(*args, **kwargs)
         kwargs.update({"props": props})
         data = self.getData(*args, **kwargs)
 
         block = {
-            "blocktype": self.getType(*args, **kwargs),
-            "properties": props,
+            "type": self.getType(*args, **kwargs),
+            "props": props,
             "data": data
         }
         self.bank.append(block)
@@ -75,7 +75,7 @@ class BaseBlockifier:
         return self.name
 
 
-    def getProperties(self, match, *args, **kwargs):
+    def getProps(self, match, *args, **kwargs):
         """return the attributes as properties of the block"""
         if match.group('attrs'):
             return self.getAttrs(match.group('attrs'))

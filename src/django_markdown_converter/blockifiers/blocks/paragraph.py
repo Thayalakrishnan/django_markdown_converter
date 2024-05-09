@@ -1,6 +1,11 @@
 # paragraph_processor
 from .base import BaseBlockifier
 from ...inlineifiers.inline_parser import InlineParser
+from ..blockifier_data import PARAGRAPH_BLOCK_DATA
+
+#from django_markdown_converter.blockifiers.blocks.base import BaseBlockifier
+#from django_markdown_converter.blockifiers.blockifier_data import PARAGRAPH_BLOCK_DATA
+#from django_markdown_converter.inlineifiers.inline_parser import InlineParser
 
 '''
 need to be mindful that a paragraph block may also, unwittingly
@@ -10,6 +15,9 @@ so we need to check for that when we parse the paragraphs line by line
 
 class ParagraphBlockifier(BaseBlockifier):
     """ Process paragraphs """
+    
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(**PARAGRAPH_BLOCK_DATA)
     
     def blockify(self, lines:list=[]):
         p_blocks = []
@@ -26,7 +34,7 @@ class ParagraphBlockifier(BaseBlockifier):
     def getData(self, chunk, *args, **kwargs):
         return "".join(InlineParser([chunk]))
     
-    def getProperties(self, *args, **kwargs):
+    def getProps(self, *args, **kwargs):
         return {}
         
  

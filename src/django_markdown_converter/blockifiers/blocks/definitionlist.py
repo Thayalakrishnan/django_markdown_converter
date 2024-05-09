@@ -12,5 +12,5 @@ class DefinitionListBlockifier(BaseBlockifier):
     def getData(self, match, *args, **kwargs):
         return match.groupdict()
     
-    def getProperties(self, match, *args, **kwargs):
+    def getProps(self, match, *args, **kwargs):
         return {}

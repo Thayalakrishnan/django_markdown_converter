@@ -46,7 +46,7 @@ def test_base_createChunk(my_class_instance):
 def test_base_getType(my_class_instance):
     assert 1 > 2
 
-def test_base_getProperties(my_class_instance):
+def test_base_getProps(my_class_instance):
     assert 1 > 2
 
 def test_base_getData(my_class_instance):
