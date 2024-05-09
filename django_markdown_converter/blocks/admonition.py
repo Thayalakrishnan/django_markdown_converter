@@ -1,5 +1,6 @@
-import re
-from .base import BaseBlockifier
+from django_markdown_converter.blocks.base import BaseBlockifier
+from django_markdown_converter.blockifiers.blockifier_data import ADMONITION_BLOCK_DATA
+
 from textwrap import dedent
 '''
 admonition_processor
@@ -7,7 +8,8 @@ admonition_processor
 
 class AdmonitionBlockifier(BaseBlockifier):
     """ Process admonition blocks """
-    
+    def __init__(self, *args, **kwargs) -> None:
+            super().__init__(**ADMONITION_BLOCK_DATA)
 
     def getData(self, match, *args, **kwargs):
         if match.group('content'):

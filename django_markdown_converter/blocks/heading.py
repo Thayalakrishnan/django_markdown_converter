@@ -1,9 +1,11 @@
-import re
-from .base import BaseBlockifier
+from django_markdown_converter.blocks.base import BaseBlockifier
+from django_markdown_converter.blockifiers.blockifier_data import HEADING_BLOCK_DATA
 
 class HeadingBlockifier(BaseBlockifier):
     """ Process Hash Headers. """
     __slots__ = ("header", "level",)
+    def __init__(self, *args, **kwargs) -> None:
+            super().__init__(**HEADING_BLOCK_DATA)
     
     def getProps(self, match, *args, **kwargs):
         self.header = self.get_matched_group(match, "content", "").strip()

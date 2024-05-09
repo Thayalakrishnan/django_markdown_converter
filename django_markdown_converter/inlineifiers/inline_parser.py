@@ -1,7 +1,8 @@
 import re
 from typing import Callable, Pattern
 
-from .inline_data import CASES_LIST
+#from .inline_data import CASES_LIST
+from django_markdown_converter.inlineifiers.inline_data import CASES_LIST
 
 class InlinePatternClass:
     """

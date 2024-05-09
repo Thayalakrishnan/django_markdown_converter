@@ -1,6 +1,5 @@
-import re
-from .base import BaseBlockifier
-
+from django_markdown_converter.blocks.base import BaseBlockifier
+from django_markdown_converter.blockifiers.blockifier_data import META_BLOCK_DATA
 '''
 this needs to be expanded more to facilitate
 different data types in the meta
@@ -12,6 +11,9 @@ class MetaBlockifier(BaseBlockifier):
     """ Process meta """
     __slots__ = ("lam_split", "lam_filter", "lam_dict",)
 
+    def __init__(self, *args, **kwargs) -> None:
+            super().__init__(**META_BLOCK_DATA)
+            
     def setUp(self, *args, **kwargs) -> None:
         self.lam_split = lambda x: x.strip().split(":")
         self.lam_filter = lambda x: len(x)==2

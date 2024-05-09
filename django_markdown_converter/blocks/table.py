@@ -1,6 +1,6 @@
-import re
-# paragraph_processor
-from .base import BaseBlockifier
+# table blockifier
+from django_markdown_converter.blocks.base import BaseBlockifier
+from django_markdown_converter.blockifiers.blockifier_data import TABLE_BLOCK_DATA
 
 
 '''
@@ -23,6 +23,8 @@ blockifier_table
 
 class TableBlockifier(BaseBlockifier):
     """ Process tables """
+    def __init__(self, *args, **kwargs) -> None:
+            super().__init__(**TABLE_BLOCK_DATA)
         
     def getHeader(self, line:str="") -> list:
         """strip leading and trailing pipes,"""

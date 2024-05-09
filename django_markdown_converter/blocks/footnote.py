@@ -1,5 +1,4 @@
-import re
-from .base import BaseBlockifier
+from django_markdown_converter.blocks.base import BaseBlockifier
 
 '''
 blockifier_footnote

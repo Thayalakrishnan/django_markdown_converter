@@ -1,11 +1,11 @@
 # paragraph_processor
-from .base import BaseBlockifier
-from ...inlineifiers.inline_parser import InlineParser
-from ..blockifier_data import PARAGRAPH_BLOCK_DATA
+#from django_markdown_converter.blocks.base import BaseBlockifier
+#from ...inlineifiers.inline_parser import InlineParser
+#from ..blockifier_data import PARAGRAPH_BLOCK_DATA
 
-#from django_markdown_converter.blockifiers.blocks.base import BaseBlockifier
-#from django_markdown_converter.blockifiers.blockifier_data import PARAGRAPH_BLOCK_DATA
-#from django_markdown_converter.inlineifiers.inline_parser import InlineParser
+from django_markdown_converter.blocks.base import BaseBlockifier
+from django_markdown_converter.blockifiers.blockifier_data import PARAGRAPH_BLOCK_DATA
+from django_markdown_converter.inlineifiers.inline_parser import InlineParser
 
 '''
 need to be mindful that a paragraph block may also, unwittingly

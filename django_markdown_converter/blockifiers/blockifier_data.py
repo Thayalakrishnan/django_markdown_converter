@@ -1,17 +1,17 @@
-from .blocks.admonition import AdmonitionBlockifier
-from .blocks.blockquote import BlockquoteBlockifier
-from .blocks.code import CodeBlockifier
-from .blocks.heading import HeadingBlockifier
-from .blocks.hr import HRBlockifier
-from .blocks.image import ImageBlockifier
-from .blocks.meta import MetaBlockifier
-from .blocks.footnote import FootnoteBlockifier
-from .blocks.table import TableBlockifier
-from .blocks.paragraph import ParagraphBlockifier
-from .blocks.list import ListBlockifier
-from .blocks.definitionlist import DefinitionListBlockifier
-from .blocks.svg import SVGBlockifier
-from .blocks.empty import EmptyBlockifier
+#from django_markdown_converter.blocks.admonition import AdmonitionBlockifier
+#from django_markdown_converter.blocks.blockquote import BlockquoteBlockifier
+#from django_markdown_converter.blocks.code import CodeBlockifier
+#from django_markdown_converter.blocks.heading import HeadingBlockifier
+#from django_markdown_converter.blocks.hr import HRBlockifier
+#from django_markdown_converter.blocks.image import ImageBlockifier
+#from django_markdown_converter.blocks.meta import MetaBlockifier
+#from django_markdown_converter.blocks.footnote import FootnoteBlockifier
+#from django_markdown_converter.blocks.table import TableBlockifier
+#from django_markdown_converter.blocks.paragraph import ParagraphBlockifier
+#from django_markdown_converter.blocks.list import ListBlockifier
+#from django_markdown_converter.blocks.definitionlist import DefinitionListBlockifier
+#from django_markdown_converter.blocks.svg import SVGBlockifier
+#from django_markdown_converter.blocks.empty import EmptyBlockifier
 
 TAB_LENGTH = 4
 
@@ -24,7 +24,7 @@ META_BLOCK_DATA = {
     "singleline": False,
     "nested": False,
     "nestedpriority": 0,
-    "class": MetaBlockifier,
+    #"class": MetaBlockifier,
 }
 LIST_BLOCK_DATA = {
     "pattern": r'^(?P<indentation>\s*)(?P<marker>.+?)\s+(?P<content>(?P<item>.+?)(?=\n{1}|$)(?P<rest>(?:\s{0,}.*(?:\n|$))+)?)',
@@ -35,7 +35,7 @@ LIST_BLOCK_DATA = {
     "singleline": False,
     "nested": True,
     "nestedpriority": 5,
-    "class": ListBlockifier,
+    #"class": ListBlockifier,
 }
 LIST_BLOCK_DATA = {
     "pattern": r'^(?P<indentation>\s*)(?P<marker>.+?)\s+(?P<content>(?P<item>.+?)(?=\n{1}|$)(?P<rest>(?:\s{0,}.*(?:\n|$))+)?)',
@@ -46,7 +46,7 @@ LIST_BLOCK_DATA = {
     "singleline": False,
     "nested": True,
     "nestedpriority": 4,
-    "class": ListBlockifier,
+    #"class": ListBlockifier,
 }
 DEFINITIONLIST_BLOCK_DATA = {
     "pattern": r'^\:\s+(?P<term>.+?)(?=\n{2}|$)\n\:\s+(?P<definition>.+?)(?=\n{2}|$)',
@@ -57,7 +57,7 @@ DEFINITIONLIST_BLOCK_DATA = {
     "singleline": False,
     "nested": False,
     "nestedpriority": 0,
-    "class": DefinitionListBlockifier,
+    #"class": DefinitionListBlockifier,
 }
 FOOTNOTE_BLOCK_DATA = {
     "pattern": r'\[\^(?P<index>.+?)\]:\s*\n(?P<content>(?: {4,}.*(?:\n|$))+)',
@@ -68,7 +68,7 @@ FOOTNOTE_BLOCK_DATA = {
     "singleline": False,
     "nested": True,
     "nestedpriority": 3,
-    "class": FootnoteBlockifier,
+    #"class": FootnoteBlockifier,
 }
 ADMONITION_BLOCK_DATA = {
     "pattern": r'!!!\s+(?P<type>[a-zA-Z]+)?\s*(?:\s+["\'](?P<title>[^"\']+?)["\'])?\s*\n(?P<content>(?: {4,}.*(?:\n|$))+)',
@@ -79,7 +79,7 @@ ADMONITION_BLOCK_DATA = {
     "singleline": False,
     "nested": True,
     "nestedpriority": 2,
-    "class": AdmonitionBlockifier,
+    #"class": AdmonitionBlockifier,
 }
 CODE_BLOCK_DATA = {
     "pattern": r'(?P<start>^(?:```))\s*(\{(?P<attrs>.*?)\})\n(?P<content>.*?)(?<=\n)(?P<stop>(?:```))\s*',
@@ -90,7 +90,7 @@ CODE_BLOCK_DATA = {
     "singleline": False,
     "nested": False,
     "nestedpriority": 0,
-    "class": CodeBlockifier,
+    #"class": CodeBlockifier,
 }
 TABLE_BLOCK_DATA = {
     "pattern": r'(?:^\|\s*\{(?P<attrs>.*?)\}\s*\|\s*\n)(?:\|(?P<header>.*?)\|\s*\n)(?:\|(?P<settings>.*?)\|\s*\n)(?P<content>(?:.*(?:\|\n|\|$))+)',
@@ -101,7 +101,7 @@ TABLE_BLOCK_DATA = {
     "singleline": False,
     "nested": False,
     "nestedpriority": 0,
-    "class": TableBlockifier,
+    #"class": TableBlockifier,
 }
 BLOCKQUOTE_BLOCK_DATA = {
     "pattern": r'(?:(?:^\>\s+)(\{(?P<attrs>.*?)\})?\s*(?:\n))?(?P<content>(?:\>\s+.*(?:\n|$))+)',
@@ -112,7 +112,7 @@ BLOCKQUOTE_BLOCK_DATA = {
     "singleline": False,
     "nested": True,
     "nestedpriority": 1,
-    "class": BlockquoteBlockifier,
+    #"class": BlockquoteBlockifier,
 }
 HR_BLOCK_DATA = {
     "pattern": r'\n\*\*\*\n',
@@ -123,7 +123,7 @@ HR_BLOCK_DATA = {
     "singleline": True,
     "nested": False,
     "nestedpriority": 0,
-    "class": HRBlockifier,
+    #"class": HRBlockifier,
 }
 HEADING_BLOCK_DATA = {
     "pattern": r'^(?P<level>#{1,6})\s*(?P<content>.*?)(?:\{(?P<attrs>.*?)\})?\s*(?:\n|$)',
@@ -134,7 +134,7 @@ HEADING_BLOCK_DATA = {
     "singleline": True,
     "nested": False,
     "nestedpriority": 0,
-    "class": HeadingBlockifier,
+    #"class": HeadingBlockifier,
 }
 IMAGE_BLOCK_DATA = {
     "pattern": r'!\[(?P<attrs>.*?)\]\((?P<content>.*?)\)',
@@ -145,7 +145,7 @@ IMAGE_BLOCK_DATA = {
     "singleline": False,
     "nested": False,
     "nestedpriority": 0,
-    "class": ImageBlockifier,
+    #"class": ImageBlockifier,
 }
 SVG_BLOCK_DATA = {
     "pattern": r'\<svg(?P<attrs>.*?)\>(?P<content>.*?)\<\/svg\>',
@@ -156,7 +156,7 @@ SVG_BLOCK_DATA = {
     "singleline": False,
     "nested": False,
     "nestedpriority": 0,
-    "class": SVGBlockifier,
+    #"class": SVGBlockifier,
 }
 PARAGRAPH_BLOCK_DATA = {
     "pattern": r'(?P<content>(?:.*(?:\n|$))+)',
@@ -167,23 +167,23 @@ PARAGRAPH_BLOCK_DATA = {
     "singleline": False,
     "nested": False,
     "nestedpriority": 0,
-    "class": ParagraphBlockifier,
+    #"class": ParagraphBlockifier,
 }
 
 
-BLOCKIFIER_DATA = [
-    META_BLOCK_DATA,
-    LIST_BLOCK_DATA,
-    LIST_BLOCK_DATA,
-    DEFINITIONLIST_BLOCK_DATA,
-    FOOTNOTE_BLOCK_DATA,
-    ADMONITION_BLOCK_DATA,
-    CODE_BLOCK_DATA,
-    TABLE_BLOCK_DATA,
-    BLOCKQUOTE_BLOCK_DATA,
-    HR_BLOCK_DATA,
-    HEADING_BLOCK_DATA,
-    IMAGE_BLOCK_DATA,
-    SVG_BLOCK_DATA,
-    PARAGRAPH_BLOCK_DATA,
-]
+#BLOCKIFIER_DATA = [
+#    META_BLOCK_DATA,
+#    LIST_BLOCK_DATA,
+#    LIST_BLOCK_DATA,
+#    DEFINITIONLIST_BLOCK_DATA,
+#    FOOTNOTE_BLOCK_DATA,
+#    ADMONITION_BLOCK_DATA,
+#    CODE_BLOCK_DATA,
+#    TABLE_BLOCK_DATA,
+#    BLOCKQUOTE_BLOCK_DATA,
+#    HR_BLOCK_DATA,
+#    HEADING_BLOCK_DATA,
+#    IMAGE_BLOCK_DATA,
+#    SVG_BLOCK_DATA,
+#    PARAGRAPH_BLOCK_DATA,
+#]

@@ -1,9 +1,8 @@
-import re
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name
 from pygments.formatters import HtmlFormatter
-from .base import BaseBlockifier
-
+from django_markdown_converter.blocks.base import BaseBlockifier
+from django_markdown_converter.blockifiers.blockifier_data import CODE_BLOCK_DATA
 class CustomFormatter(HtmlFormatter):
     
     def wrap(self, source, *args):
@@ -40,6 +39,9 @@ PYG_CONFIG = {
 class CodeBlockifier(BaseBlockifier):
     """ Process code blocks. """
     __slots__ = ("custom_formatter",)
+    
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(**CODE_BLOCK_DATA)
     
     def setUp(self, *args, **kwargs) -> None:
         self.custom_formatter = CustomFormatter(**PYG_CONFIG)

@@ -1,6 +1,35 @@
 # blockifiers.py
-from .blockifier_data import BLOCKIFIER_DATA
+#from django_markdown_converter.blockifiers.blockifier_data import BLOCKIFIER_DATA
+from django_markdown_converter.blocks.admonition import AdmonitionBlockifier
+from django_markdown_converter.blocks.blockquote import BlockquoteBlockifier
+from django_markdown_converter.blocks.code import CodeBlockifier
+from django_markdown_converter.blocks.heading import HeadingBlockifier
+from django_markdown_converter.blocks.hr import HRBlockifier
+from django_markdown_converter.blocks.image import ImageBlockifier
+from django_markdown_converter.blocks.meta import MetaBlockifier
+from django_markdown_converter.blocks.footnote import FootnoteBlockifier
+from django_markdown_converter.blocks.table import TableBlockifier
+from django_markdown_converter.blocks.paragraph import ParagraphBlockifier
+from django_markdown_converter.blocks.list import ListBlockifier
+from django_markdown_converter.blocks.definitionlist import DefinitionListBlockifier
+from django_markdown_converter.blocks.svg import SVGBlockifier
 
+
+BLOCKIFIER_DATA = [
+    AdmonitionBlockifier,
+    BlockquoteBlockifier,
+    CodeBlockifier,
+    HeadingBlockifier,
+    HRBlockifier,
+    ImageBlockifier,
+    MetaBlockifier,
+    FootnoteBlockifier,
+    TableBlockifier,
+    ParagraphBlockifier,
+    ListBlockifier,
+    DefinitionListBlockifier,
+    SVGBlockifier,
+]
 
 class Blockifier:
 
@@ -13,11 +42,24 @@ class Blockifier:
         
         self.default_blockifier = self.get_blockifier_with_key("paragraph")
 
-    def build_blockifiers(self, setup_data:list=[]) -> None:
+#    def build_blockifiers(self, setup_data:list=[]) -> None:
+#        for block_data in setup_data:
+#            key = block_data["name"]
+#            blockifier = block_data["class"](**block_data)
+#            setattr(self, key, blockifier)
+#            self.blockifiers.append(blockifier)
+#            self.lookup_blockifier[key] = blockifier
+#            if blockifier.nested:
+#                self.nested_blockifiers.append(blockifier)
+#        self.blockifiers.sort(key=lambda x: x.priority)
+#        self.nested_blockifiers.sort(key=lambda x: x.nestedpriority)
+        
+    def build_blockifiers(self, blocks:list=[]) -> None:
 
-        for block_data in setup_data:
-            key = block_data["name"]
-            blockifier = block_data["class"](**block_data)
+        for block in blocks:
+            #key = block["name"]
+            blockifier = block()
+            key = blockifier.name
 
             setattr(self, key, blockifier)
 

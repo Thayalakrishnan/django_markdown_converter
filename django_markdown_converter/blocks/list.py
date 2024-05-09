@@ -1,7 +1,7 @@
 import re
-from .base import BaseBlockifier
+from django_markdown_converter.blocks.base import BaseBlockifier
 from typing import Generator
-
+from django_markdown_converter.blockifiers.blockifier_data import LIST_BLOCK_DATA
 
 '''
 list_ul_processor
@@ -11,7 +11,9 @@ class ListBlockifier(BaseBlockifier):
     """ Process list blocks. """
     __slots__ = ("pattern_li", "pattern_ul", "pattern_ol", "pattern_ul_or_ol",)
     
-
+    def __init__(self, *args, **kwargs) -> None:
+            super().__init__(**LIST_BLOCK_DATA)
+            
     def setUp(self, *args, **kwargs) -> None:
         self.pattern_li = re.compile(r'^(?P<indentation>\s*)(?P<marker>.+?)\s+(?P<content>(?P<item>.+?)(?=\n{1}|$)(?P<rest>(?:\s{0,}.*(?:\n|$))+)?)')
         self.pattern_ul = re.compile(r'^(\s*)(-)\s+(.+?)(?=\n{2}|$)')
