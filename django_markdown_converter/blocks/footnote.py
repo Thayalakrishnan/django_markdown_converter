@@ -1,4 +1,5 @@
 from django_markdown_converter.blocks.base import BaseBlockifier
+from django_markdown_converter.blockifiers.blockifier_data import FOOTNOTE_BLOCK_DATA
 
 '''
 blockifier_footnote
@@ -7,6 +8,9 @@ blockifier_footnote
 class FootnoteBlockifier(BaseBlockifier):
     """ Process admonition blocks """
     
+    def __init__(self, *args, **kwargs) -> None:
+            super().__init__(**FOOTNOTE_BLOCK_DATA)
+            
     def createBlock(self, match, *args, **kwargs):
         '''
         '''

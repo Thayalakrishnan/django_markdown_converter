@@ -42,6 +42,7 @@ class Blockifier:
         
         self.default_blockifier = self.get_blockifier_with_key("paragraph")
 
+#   this is the old build function i had
 #    def build_blockifiers(self, setup_data:list=[]) -> None:
 #        for block_data in setup_data:
 #            key = block_data["name"]
@@ -77,6 +78,11 @@ class Blockifier:
             _.resetBank()
 
     def extract_block(self, blockifier, lines, start, stop) -> tuple:
+        """
+        using the correct blockifier, we pass the lines to the blockfier 
+        return a tuple containng the extracted markdown converted to a block
+        and return the index after so that we know where to start from 
+        """
         return (blockifier.blockify(lines[start:stop]), stop)
 
     def get_blockifier_with_key(self, key:str=""):

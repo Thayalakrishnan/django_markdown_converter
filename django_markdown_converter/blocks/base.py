@@ -13,6 +13,7 @@ class BaseBlockifier:
         name:str="",
         left:str="",
         right:str="",
+        flagged:bool=False,
         singleline:bool=False,
         nested:bool=False,
         priority:int=0,
@@ -25,7 +26,7 @@ class BaseBlockifier:
         self.name = name
         self.left = left
         self.right = right
-        self.flagged = False
+        self.flagged = flagged
         self.singleline = singleline
         self.nested = nested
         self.priority = priority
