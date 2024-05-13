@@ -6,9 +6,9 @@ class HRBlockifier(BaseBlockifier):
     def __init__(self, *args, **kwargs) -> None:
             super().__init__(**HR_BLOCK_DATA)
     """ Process Horizontal Rules. """
-    def getProps(self, *args, **kwargs):
+    def get_props(self, *args, **kwargs):
         return {}
     
-    def getData(self, *args, **kwargs):
+    def get_data(self, *args, **kwargs):
         return " "
 

@@ -12,7 +12,7 @@ class BlockquoteBlockifier(BaseBlockifier):
     def __init__(self, *args, **kwargs) -> None:
             super().__init__(**BLOCKQUOTE_BLOCK_DATA)
 
-    def getData(self, match, *args, **kwargs):
+    def get_data(self, match, *args, **kwargs):
         if match.group('content'):
             content_lines = match.group('content').split("\n")
             content = [_[2:] for _ in content_lines]

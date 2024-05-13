@@ -111,7 +111,8 @@ HR_BLOCK_DATA = {
     "nestedpriority": 0,
 }
 HEADING_BLOCK_DATA = {
-    "pattern": r'^(?P<level>#{1,6})\s*(?P<content>.*?)(?:\{(?P<attrs>.*?)\})?\s*(?:\n|$)',
+    #"pattern": r'^(?P<level>#{1,6})\s*(?P<content>.*?)(?:\{(?P<attrs>.*?)\})?\s*(?:\n|$)',
+    "pattern": r'^(?P<level>#{1,6})\s+(?P<content>.*?)(?:\{(?P<attrs>.*?)\})?\s*(?:\n|$)',
     "name": "heading",
     "left": "#",
     "right": "",
@@ -147,7 +148,7 @@ PARAGRAPH_BLOCK_DATA = {
     "pattern": r'(?P<content>(?:.*(?:\n|$))+)',
     "name": "paragraph",
     "left": "",
-    "right": "",
+    "right": "\n",
     "flagged": False,
     "singleline": False,
     "nested": False,

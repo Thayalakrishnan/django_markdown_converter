@@ -3,6 +3,12 @@ from django_markdown_converter.blocks.paragraph import ParagraphBlockifier
 
 
 def test_basic_usage():
-    md = ["This is a paragraph after a heading. ", ""]
+    md = [
+        "This is the first paragraph. ", 
+        "",
+        "This is the second paragraph. ", 
+        ]
     output = ParagraphBlockifier().blockify(md)
-    assert isinstance(output, list)
+    print(output)
+    #assert isinstance(output, list)
+    assert isinstance(output, bool)

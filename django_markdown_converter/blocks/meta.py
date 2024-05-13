@@ -60,8 +60,8 @@ class MetaBlockifier(BaseBlockifier):
     def process_meta(self, lines):
         return dict(map(self.lam_dict, filter(self.lam_filter, map(self.lam_split, lines))))
 
-    def getProps(self, *args, **kwargs):
+    def get_props(self, *args, **kwargs):
         return {}
 
-    def getData(self, lines, *args, **kwargs):
+    def get_data(self, lines, *args, **kwargs):
         return self.process_meta(lines)

@@ -46,7 +46,7 @@ class CodeBlockifier(BaseBlockifier):
     def setUp(self, *args, **kwargs) -> None:
         self.custom_formatter = CustomFormatter(**PYG_CONFIG)
     
-    def getData(self, match, props, *args, **kwargs):
+    def get_data(self, match, props, *args, **kwargs):
         if match.group('content'):
             content = match.group('content')
             lexer = get_lexer_by_name(props['language'], **PYG_CONFIG)

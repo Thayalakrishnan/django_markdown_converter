@@ -11,13 +11,13 @@ class AdmonitionBlockifier(BaseBlockifier):
     def __init__(self, *args, **kwargs) -> None:
             super().__init__(**ADMONITION_BLOCK_DATA)
 
-    def getData(self, match, *args, **kwargs):
+    def get_data(self, match, *args, **kwargs):
         if match.group('content'):
             content = match.group('content')
             return dedent(content)
         return ""
         
-    def getProps(self, match, *args, **kwargs):
+    def get_props(self, match, *args, **kwargs):
         return {
             "type": self.get_matched_group(match, "type", ""),
             "title": self.get_matched_group(match, "title", "")

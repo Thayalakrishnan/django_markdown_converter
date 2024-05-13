@@ -11,7 +11,7 @@ class FootnoteBlockifier(BaseBlockifier):
     def __init__(self, *args, **kwargs) -> None:
             super().__init__(**FOOTNOTE_BLOCK_DATA)
             
-    def createBlock(self, match, *args, **kwargs):
+    def create_block(self, match, *args, **kwargs):
         '''
         '''
         if match.group('index'):

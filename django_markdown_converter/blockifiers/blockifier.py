@@ -75,7 +75,7 @@ class Blockifier:
 
     def reset_nested_banks(self) -> None:
         for _ in self.nested_blockifiers:
-            _.resetBank()
+            _.reset_bank()
 
     def extract_block(self, blockifier, lines, start, stop) -> tuple:
         """
@@ -97,7 +97,7 @@ class Blockifier:
     def process_nested_blockifiers(self) -> None:
         """ return all nested blocks that require a second parsing """
         for blockifier in self.nested_blockifiers:
-            blocks = blockifier.getBank()
+            blocks = blockifier.get_bank()
             for block in blocks:
                 if isinstance(block["data"], str):
                     block["data"] = self.blockify(block["data"])
@@ -127,9 +127,10 @@ class Blockifier:
             for blockifier in self.blockifiers:
 
                 if lines[index_start].startswith(blockifier.left):
-
+                    # once we find the boundary, we look for the closing boundary 
+                    # so increase the current index
                     for index_stop in range(index_start+1, index_max):
-
+                        
                         if lines[index_stop] == blockifier.right:
 
                             # if the line here is empty, we slice here

@@ -33,7 +33,7 @@ class TableBlockifier(BaseBlockifier):
     def getBody(self, lines:list=[])-> list:
         return [[_.strip() for _ in line[1:-1].strip().split("|")] for line in lines]
     
-    def getData(self, lines, *args, **kwargs):
+    def get_data(self, lines, *args, **kwargs):
         return {
             "header": self.getHeader(lines[1]),
             "body": self.getBody(lines[3:])

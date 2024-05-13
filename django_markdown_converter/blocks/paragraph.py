@@ -24,17 +24,17 @@ class ParagraphBlockifier(BaseBlockifier):
         for p in lines:
             p = p.strip()
             if len(p):
-                block = self.createBlock(chunk=p, lines=lines)
+                block = self.create_block(chunk=p, lines=lines)
                 p_blocks.append(block)
 
         if len(p_blocks):
             return p_blocks
         return {}
     
-    def getData(self, chunk, *args, **kwargs):
+    def get_data(self, chunk, *args, **kwargs):
         return "".join(InlineParser([chunk]))
     
-    def getProps(self, *args, **kwargs):
+    def get_props(self, *args, **kwargs):
         return {}
         
  

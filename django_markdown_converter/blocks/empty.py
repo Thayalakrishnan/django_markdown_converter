@@ -7,5 +7,5 @@ blockifier_empty
 class EmptyBlockifier(BaseBlockifier):
     """ Process empty blocks. """
     
-    def createBlock(self, *args, **kwargs):
+    def create_block(self, *args, **kwargs):
         return {}

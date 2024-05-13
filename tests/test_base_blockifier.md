@@ -37,31 +37,31 @@ def test_base_blockifier(my_class_instance):
 def test_base_priority(my_class_instance):
     assert 1 > 2
 
-def test_base_createBlock(my_class_instance):
+def test_base_create_block(my_class_instance):
     assert 1 > 2
 
-def test_base_createChunk(my_class_instance):
+def test_base_create_chunk(my_class_instance):
     assert 1 > 2
 
-def test_base_getType(my_class_instance):
+def test_base_get_type(my_class_instance):
     assert 1 > 2
 
-def test_base_getProps(my_class_instance):
+def test_base_get_props(my_class_instance):
     assert 1 > 2
 
-def test_base_getData(my_class_instance):
+def test_base_get_data(my_class_instance):
     assert 1 > 2
 
 def test_base_get_matched_group(my_class_instance):
     assert 1 > 2
 
-def test_base_getAttrs(my_class_instance):
+def test_base_get_attrs(my_class_instance):
     assert 1 > 2
 
-def test_base_resetBank(my_class_instance):
+def test_base_reset_bank(my_class_instance):
     assert 1 > 2
 
-def test_base_getBank(my_class_instance):
+def test_base_get_bank(my_class_instance):
     assert 1 > 2
 
 def test_base_blockify(my_class_instance):
