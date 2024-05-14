@@ -3,14 +3,6 @@ from django_markdown_converter.blocks.table import TableBlockifier
 
 
 def test_basic_conversion():
-    md = """
-    | { id="small-table" caption="small table of values" } |
-    | Column 1 Title | Column 2 Title |
-    | ----------- | ----------- |
-    | Row 1 Column 1| Row 1 Column 2 |
-    | Row 2 Column 1| Row 2 Column 2 |
-    """
-    
     md = [
         f'| column 1 | column 2 |',
         f'| --- | --- |',
@@ -21,9 +13,12 @@ def test_basic_conversion():
     ]
     output = TableBlockifier().blockify(md)
     assert isinstance(output, dict)
-    print(md)
-    print(output)
     assert "table" == output["type"]
-    assert isinstance(output, bool)
+    assert "props" in output
+    assert "id" in output["props"]
+    assert "caption" in output["props"]
+    assert "header" in output["data"]
+    assert "body" in output["data"]
+    #assert isinstance(output, bool)
     #assert block_data == output["data"]
 

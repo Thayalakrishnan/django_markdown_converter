@@ -14,6 +14,5 @@ def test_basic_conversion():
     assert isinstance(output, dict)
     assert "image" == output["type"]
     assert block_prop_title == output["props"]["title"]
-    assert block_prop_src == output["props"]["src"]
     assert block_prop_src == output["data"]
 

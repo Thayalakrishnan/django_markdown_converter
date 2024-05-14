@@ -39,3 +39,24 @@ print(content)
 print("done")
 
 # %%
+# %%
+import re
+
+raw_chunk = [
+    '***  ',
+    '',
+]
+
+chunk = "\n".join(raw_chunk)
+#raw_pat = r'\n\*\*\*\n'
+raw_pat = r'^(?P<content>\*\*\*)\s*\n'
+raw_pat = r'^\s*(?P<content>\*\*\*)\s*(?:\n|$)'
+pattern = re.compile(raw_pat, re.MULTILINE | re.DOTALL)
+match = pattern.search(chunk)
+
+if match.group('content'):
+    content_chunk = match.group('content')
+    print(content_chunk)
+    
+print("done")
+# %%

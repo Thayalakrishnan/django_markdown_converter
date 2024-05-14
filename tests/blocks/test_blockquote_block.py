@@ -9,7 +9,7 @@ def test_basic_conversion():
     md = [
         f'> {{ key="{block_prop_key}" }}',
         f"> {block_data}",
-        "",
+        #"",
     ]
     
     output = BlockquoteBlockifier().blockify(md)

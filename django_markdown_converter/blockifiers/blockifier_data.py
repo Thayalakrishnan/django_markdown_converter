@@ -78,10 +78,6 @@ CODE_BLOCK_DATA = {
     "nestedpriority": 0,
 }
 TABLE_BLOCK_DATA = {
-    #"pattern": r'^(?:\|\s*\{(?P<attrs>.*?)\}\s*\|\s*\n)?(?:\s*\|(?P<header>.*?)\|\s*\n)(?:\|(?P<settings>.*?)\|\s*\n)(?P<content>(?:.*(?:\|\n|\|$))+)',
-    #"pattern": r'^(?:\|(?P<header>.*?)\|\s*\n)(?:\|(?P<settings>.*?)\|\s*\n)(?P<content>(?:.*(?:\|\n))+)(?:\|\s*\{(?P<attrs>.*?)\}\s*\|\s*\n)?(?:\n|$)',
-    #"pattern": r'^(?:\|(?P<header>.*?)\|\s*\n)(?:\|(?P<settings>.*?)\|\s*\n)(?P<content>.*?)(?:\s*\{\s*(?P<attrs>.*?)\s*\})?(?:\n\s*|$)',
-    #"pattern": r'^(?:\|(?P<header>.*?)\|\s*\n)(?:\|(?P<settings>.*?)\|\s*\n)(?P<content>.*?)(?P<end>(?:\s*\{\s*(?P<attrs>.*?)\s*\}(?:\n\s*|$))?|(?:\n\s*|$))',
     "pattern": r'^(?:\|(?P<header>.*?)\|\s*\n)(?:\|(?P<settings>.*?)\|\s*\n)(?P<content>(?:.*(?:\|\n|\|$))+)(?:(?:\{\s*(?P<attrs>.*?)\s*\})?)',
     "name": "table",
     "left": "|",
@@ -104,7 +100,8 @@ BLOCKQUOTE_BLOCK_DATA = {
     "nestedpriority": 1,
 }
 HR_BLOCK_DATA = {
-    "pattern": r'\n\*\*\*\n',
+    #"pattern": r'\n\*\*\*\n',
+    "pattern": r'^\s*(?P<content>\*\*\*)\s*(?:\n|$)',
     "name": "hr",
     "left": "***",
     "right": "",

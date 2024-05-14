@@ -83,7 +83,6 @@ def test_all_inline_init():
     output = blockifier.blockify(md)
     print(output)
     assert isinstance(output, dict)
-    assert isinstance(output, bool)
     assert output != {}
     assert block_type == output["type"]
     assert block_data == output["data"]
