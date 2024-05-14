@@ -9,7 +9,7 @@ class FootnoteBlockifier(BaseBlockifier):
     """ Process admonition blocks """
     
     def __init__(self, *args, **kwargs) -> None:
-            super().__init__(**FOOTNOTE_BLOCK_DATA)
+        super().__init__(**FOOTNOTE_BLOCK_DATA)
             
     def create_block(self, match, *args, **kwargs):
         '''

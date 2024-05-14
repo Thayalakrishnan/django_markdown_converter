@@ -24,7 +24,7 @@ blockifier_table
 class TableBlockifier(BaseBlockifier):
     """ Process tables """
     def __init__(self, *args, **kwargs) -> None:
-            super().__init__(**TABLE_BLOCK_DATA)
+        super().__init__(**TABLE_BLOCK_DATA)
         
     def getHeader(self, line:str="") -> list:
         """strip leading and trailing pipes,"""

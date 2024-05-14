@@ -2,13 +2,14 @@ import pytest
 from django_markdown_converter.blocks.paragraph import ParagraphBlockifier
 
 
-def test_basic_usage():
+def test_basic_conversion():
     md = [
         "This is the first paragraph. ", 
         "",
-        "This is the second paragraph. ", 
+        #"This is the second paragraph. ", 
         ]
     output = ParagraphBlockifier().blockify(md)
     print(output)
     #assert isinstance(output, list)
-    assert isinstance(output, bool)
+    #assert isinstance(output, bool)
+    assert "paragraph" == output["type"]

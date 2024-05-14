@@ -12,7 +12,7 @@ class MetaBlockifier(BaseBlockifier):
     __slots__ = ("lam_split", "lam_filter", "lam_dict",)
 
     def __init__(self, *args, **kwargs) -> None:
-            super().__init__(**META_BLOCK_DATA)
+        super().__init__(**META_BLOCK_DATA)
             
     def setUp(self, *args, **kwargs) -> None:
         self.lam_split = lambda x: x.strip().split(":")
@@ -46,6 +46,8 @@ class MetaBlockifier(BaseBlockifier):
         i need to check this , as it might have bad logic
         we need to test that te before string is empty
         and if its empty , it means its a meta block
+        
+        i should change this so that the key value pairs are returned as the data
         '''
         match = self.pattern.search(content)
         if match and match.group("content"):

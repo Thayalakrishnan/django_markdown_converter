@@ -8,7 +8,7 @@ list_ul_processor
 class DefinitionListBlockifier(BaseBlockifier):
     """ Process definition list blocks """
     def __init__(self, *args, **kwargs) -> None:
-            super().__init__(**DEFINITIONLIST_BLOCK_DATA)
+        super().__init__(**DEFINITIONLIST_BLOCK_DATA)
     
     def get_data(self, match, *args, **kwargs):
         return match.groupdict()

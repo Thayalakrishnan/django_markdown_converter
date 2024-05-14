@@ -10,7 +10,7 @@ cite
 class BlockquoteBlockifier(BaseBlockifier):
     """ Process blockquotes """
     def __init__(self, *args, **kwargs) -> None:
-            super().__init__(**BLOCKQUOTE_BLOCK_DATA)
+        super().__init__(**BLOCKQUOTE_BLOCK_DATA)
 
     def get_data(self, match, *args, **kwargs):
         if match.group('content'):

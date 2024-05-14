@@ -2,33 +2,40 @@
 import pytest
 from django_markdown_converter.blocks.base import BaseBlockifier
 
+
+
 """
 @@@ { property=value }
 Block content.
 @@@
 """
-def create_pattern():
+def create_pattern(pattern):
     start = r"^"
-    left = r"(?P<left>@@@)"
-    right = r"(?P<right>@@@)"
+    left = f"^(?P<left>{pattern})"
+    right = f"(?P<right>{pattern})" + r"(?:\s*\n\s*|\n\s*|$)"
+    #right = f"(?P<right>{pattern})(?:\n\s*|$)"
     attrs = r"(?:\{(?P<attrs>.*?)\})?"
     wspace = r"\s*"
     nl = r"\n"
     content = r"(?P<content>.*?)"
     end = r"(?:\n\s*|$)"
-    #pattern=r'^@@@\s*(?:\{(?P<attrs>.*?)\})?\s*\n(?P<content>.*?)\n\s*@@@\s*(?:\n\s*|$)'
-    pattern=f"{start}{left}{wspace}{attrs}{wspace}{nl}{content}{nl}{wspace}{right}{wspace}{end}"
-    return pattern
+    gap = r"(?:\n|\n\s*|\s*)"
+    #gen_pattern=r'^@@@\s*(?:\{(?P<attrs>.*?)\})?\s*\n(?P<content>.*?)\n\s*@@@\s*(?:\n\s*|$)'
+    #gen_pattern=f"{start}{left}{attrs}{gap}{content}{gap}{wspace}{right}{end}"
+    #gen_pattern=f"{start}{left}{gap}{attrs}{gap}{content}{gap}{right}{end}"
+    gen_pattern=f"{left}{gap}{attrs}{gap}{content}{gap}{right}"
+    return gen_pattern
 
 
 def create_base_blockifier():
+    pattern = "@@@"
     return BaseBlockifier(
         #pattern=r'^@@@\s*(?:\{(?P<attrs>.*?)\})?\s*\n(?P<content>.*?)\n\s*@@@\s*(?:\n\s*|$)',
         #pattern=r'^@@@\s*\n(?P<content>.*?)\n\s*@@@\s*(?:\n\s*|$)',
-        pattern=create_pattern(),
+        pattern=create_pattern(pattern),
         name="base",
-        left="@@@",
-        right="@@@",
+        left=pattern,
+        right=pattern,
         flagged=False,
         singleline=False,
         nested=False,
@@ -54,6 +61,29 @@ def test_base_init():
     print(md)
     output = blockifier.blockify(md)
     assert isinstance(output, dict)
+    assert output != {}
+    assert block_type == output["type"]
+    assert block_data == output["data"]
+
+
+def test_all_inline_init():
+    blockifier = create_base_blockifier()
+    block_type = "base"
+    block_data = "Block content."
+    block_prop_key = "property"
+    block_prop_value = "value"
+    md = [
+        f'@@@ {{ yeet="yeet" }} {block_data} @@@',
+        #f'@@@ {{ {block_prop_key}="{block_prop_value}" }} ',
+        #f"{block_data}",
+        #"@@@",
+        "",
+    ]
+    #print(md)
+    output = blockifier.blockify(md)
+    print(output)
+    assert isinstance(output, dict)
+    assert isinstance(output, bool)
     assert output != {}
     assert block_type == output["type"]
     assert block_data == output["data"]

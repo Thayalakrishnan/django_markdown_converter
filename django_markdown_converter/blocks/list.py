@@ -12,7 +12,7 @@ class ListBlockifier(BaseBlockifier):
     __slots__ = ("pattern_li", "pattern_ul", "pattern_ol", "pattern_ul_or_ol",)
     
     def __init__(self, *args, **kwargs) -> None:
-            super().__init__(**LIST_BLOCK_DATA)
+        super().__init__(**LIST_BLOCK_DATA)
             
     def setUp(self, *args, **kwargs) -> None:
         self.pattern_li = re.compile(r'^(?P<indentation>\s*)(?P<marker>.+?)\s+(?P<content>(?P<item>.+?)(?=\n{1}|$)(?P<rest>(?:\s{0,}.*(?:\n|$))+)?)')

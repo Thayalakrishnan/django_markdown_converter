@@ -9,7 +9,7 @@ admonition_processor
 class AdmonitionBlockifier(BaseBlockifier):
     """ Process admonition blocks """
     def __init__(self, *args, **kwargs) -> None:
-            super().__init__(**ADMONITION_BLOCK_DATA)
+        super().__init__(**ADMONITION_BLOCK_DATA)
 
     def get_data(self, match, *args, **kwargs):
         if match.group('content'):
