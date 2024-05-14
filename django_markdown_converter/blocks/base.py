@@ -44,6 +44,7 @@ class BaseBlockifier:
         self.priority = priority
         self.nestedpriority = nestedpriority
         self.bank = []
+        self.has_attrs = False
 
         self.setUp(*args, **kwargs)
 
@@ -56,6 +57,7 @@ class BaseBlockifier:
         chunk = self.create_chunk(lines)
         match = self.pattern.search(chunk)
         if match:
+            self.has_attrs = False
             self.flagged = True
             return self.create_block(match=match, lines=lines, chunk=chunk)
         return {}
@@ -115,6 +117,7 @@ class BaseBlockifier:
 
         if match_attrs:
             props.update(dict(match_attrs))
+            self.has_attrs = True
 
         return props
 
