@@ -147,7 +147,8 @@ SVG_BLOCK_DATA = {
     "nestedpriority": 0,
 }
 PARAGRAPH_BLOCK_DATA = {
-    "pattern": r'(?P<content>(?:.*(?:\n|$))+)',
+    #"pattern": r'(?P<content>(?:.*(?:\n|$))+)',
+    "pattern": r'(?P<content>.*?)(?:\n|$)',
     "name": "paragraph",
     "left": "",
     "right": "",

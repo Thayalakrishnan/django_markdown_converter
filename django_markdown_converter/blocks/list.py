@@ -24,10 +24,6 @@ class ListBlockifier(BaseBlockifier):
         return self.pattern_ul.match(line) or self.pattern_ol.match(line)
         #return self.pattern_ul_or_ol.match(line)
 
-    def testline(self, line, *args, **kwargs):
-        #print("testing list item")
-        return self.test_pattern.match(line)
-    
     def get_line_type(self, line):
         return "ul" if self.pattern_ul.match(line) else "ol"
     

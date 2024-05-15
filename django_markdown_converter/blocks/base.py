@@ -2,7 +2,7 @@ import re
 from typing import Literal
 
 """
-pattern: r'^---\s*\n(?P<content>.*?)\n\s*---\s*(?:\n\s*|$)'
+pattern: 
 name: "base"
 left: "---"
 right: "---"

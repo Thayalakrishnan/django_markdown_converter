@@ -1,4 +1,5 @@
 from django_markdown_converter.blockifiers.blockifier import BIG_BLOCKIFIER
+from django_markdown_converter.blockifiers.new_blockifier import NEW_BIG_BLOCKIFIER
 
 '''
 edge cases
@@ -23,3 +24,6 @@ the length of their boundary is 0.
 
 def Blockify(source:str=""):
     return BIG_BLOCKIFIER.run_blockify(source)
+
+def NewBlockify(source:str=""):
+    return NEW_BIG_BLOCKIFIER.run_blockify(source)

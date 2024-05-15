@@ -26,35 +26,20 @@ BLOCKIFIER_DATA = [
     FootnoteBlockifier,
     TableBlockifier,
     ParagraphBlockifier,
-    OrderedListBlockifier,
-    UnOrderedListBlockifier,
+    #OrderedListBlockifier,
+    #UnOrderedListBlockifier,
     DefinitionListBlockifier,
     SVGBlockifier,
 ]
 
-class Blockifier:
+class NewBlockifier:
 
     def __init__(self):
         self.blockifiers = []
         self.nested_blockifiers = []
         self.lookup_blockifier = {} # lookup for all blocks
-        
         self.build_blockifiers(BLOCKIFIER_DATA)
-        
         self.default_blockifier = self.get_blockifier_with_key("paragraph")
-
-#   this is the old build function i had
-#    def build_blockifiers(self, setup_data:list=[]) -> None:
-#        for block_data in setup_data:
-#            key = block_data["name"]
-#            blockifier = block_data["class"](**block_data)
-#            setattr(self, key, blockifier)
-#            self.blockifiers.append(blockifier)
-#            self.lookup_blockifier[key] = blockifier
-#            if blockifier.nested:
-#                self.nested_blockifiers.append(blockifier)
-#        self.blockifiers.sort(key=lambda x: x.priority)
-#        self.nested_blockifiers.sort(key=lambda x: x.nestedpriority)
         
     def build_blockifiers(self, blocks:list=[]) -> None:
 
@@ -114,59 +99,50 @@ class Blockifier:
         footnotes = self.get_blockifier_with_key("footnotes")
         if footnotes.flagged:
             block_list.append(footnotes.getFootnotes())
-
-    def find_next_block(self, lines:list=[], index_max:int=1) -> tuple:
-        #print(f"find_next_block")
-        # loop until we find the start of a viable line
-        #index_max = len(lines)
-        for index_start in range(index_max - 1):
-            # if the line is empty, move to next line
-            if not len(lines[index_start]):
-                continue
-
-            # boundary test loops over all the boundaries we have
-            # and determines which boundary it is
-            for blockifier in self.blockifiers:
-                #if blockifier.name == "paragraph":
-                #    print(f"blockifier: {blockifier.name}")
-
-                if lines[index_start].startswith(blockifier.left):
-                    # once we find the boundary, we look for the closing boundary 
-                    # so increase the current index
-                    for index_stop in range(index_start+1, index_max):
-                        
-                        if lines[index_stop] == blockifier.right:
-                            #print(f"block lines: {index_start} - {index_stop}")
-                            #print(lines[index_start:index_stop])
-
-                            # if the line here is empty, we slice here
-                            if not len(lines[index_stop]):
-                                return self.extract_block(blockifier, lines, index_start, index_stop)
-
-                            # if not we slice at the next index
-                            return self.extract_block(blockifier, lines, index_start, index_stop + 1)
-
-        return self.extract_block(self.default_blockifier, lines, 0, index_max)
+    
+    def find_next_block(self, chunk:str="") -> tuple:
+        #print("find_next_block")
+        #print(chunk)
+        for blockifier in self.blockifiers:
+            
+            match = blockifier.pattern.match(chunk)
+            
+            if match:
+                #print(f"blockifier: {blockifier.name}")
+                end = match.end()
+                
+                before = chunk[:end-1]
+                after = chunk[end::].strip()
+                
+                block = blockifier.blockify(before.split("\n"))
+                
+                return (block, after)
+                
+        block = self.default_blockifier.blockify(chunk.split("\n"))
+        return (block, "")
     
     def find_blocks(self, lines:list=[]):
-        #print(f"find_blocks")
-        """loop over the lines to detect blocks"""
-        pos_cur = 0
-        pos_max = len(lines)
-
-        while pos_cur < pos_max:
-            new_block, index_c = self.find_next_block(lines[pos_cur:], pos_max - pos_cur)
+        chunk = "\n".join(lines).strip()
+        chunk_length = len(chunk)
+        
+        while chunk_length:
+            print(chunk_length)
+            #print("find_block generator")
+            block, chunk = self.find_next_block(chunk)
 
             # sometimes a block will return negative, so check for that
-            if new_block:
-                if type(new_block) == list:
-                    for _ in new_block:
+            if block:
+                if type(block) == list:
+                    for _ in block:
                         yield _
                 else:
-                    yield new_block
+                    yield block
 
             # adjust the current position
-            pos_cur = pos_cur + index_c
+            if chunk_length == len(chunk):
+                print("break find_blocks")
+                break
+            chunk_length = len(chunk)
 
     def convert_source_to_lines(self, source:str="") -> list:
         #print(f"convert_source_to_lines")
@@ -183,17 +159,21 @@ class Blockifier:
         lines = self.convert_source_to_lines(source)
         block_gen = self.find_blocks(lines)
         for b in block_gen:
-            #print(f"block: {b['type']}")
+            print(f"block: {b['type']}")
             block_list.append(b)
         return block_list
 
     def run_blockify(self, source:str="") -> list:
-        #print(f"run_blockify")
+        print(f"[run_blockify]")
+        print(f"[run_blockify][reset_nested_banks]")
         self.reset_nested_banks()
+        print(f"[run_blockify][blockify]")
         block_list = self.blockify(source)
+        print(f"[run_blockify][process_nested_blockifiers]")
         self.process_nested_blockifiers()
+        print(f"[run_blockify][add_footnotes]")
         self.add_footnotes(block_list)
         return block_list
 
 
-BIG_BLOCKIFIER = Blockifier()
+NEW_BIG_BLOCKIFIER = NewBlockifier()
