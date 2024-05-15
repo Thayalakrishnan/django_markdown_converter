@@ -20,13 +20,17 @@ class ParagraphBlockifier(BaseBlockifier):
         super().__init__(**PARAGRAPH_BLOCK_DATA)
     
     def blockify(self, lines:list=[]):
+        
         p_blocks = []
         for p in lines:
             p = p.strip()
             if len(p):
                 block = self.create_block(chunk=p, lines=lines)
                 p_blocks.append(block)
-
+                
+        #print(f"blockify paragraph")
+        #print(p_blocks)
+        
         if len(p_blocks):
             return p_blocks
         return {}

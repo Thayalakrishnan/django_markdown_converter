@@ -10,7 +10,7 @@ from django_markdown_converter.blocks.meta import MetaBlockifier
 from django_markdown_converter.blocks.footnote import FootnoteBlockifier
 from django_markdown_converter.blocks.table import TableBlockifier
 from django_markdown_converter.blocks.paragraph import ParagraphBlockifier
-from django_markdown_converter.blocks.list import ListBlockifier
+from django_markdown_converter.blocks.list import OrderedListBlockifier, UnOrderedListBlockifier
 from django_markdown_converter.blocks.definitionlist import DefinitionListBlockifier
 from django_markdown_converter.blocks.svg import SVGBlockifier
 
@@ -26,7 +26,8 @@ BLOCKIFIER_DATA = [
     FootnoteBlockifier,
     TableBlockifier,
     ParagraphBlockifier,
-    ListBlockifier,
+    OrderedListBlockifier,
+    UnOrderedListBlockifier,
     DefinitionListBlockifier,
     SVGBlockifier,
 ]
@@ -115,6 +116,7 @@ class Blockifier:
             block_list.append(footnotes.getFootnotes())
 
     def find_next_block(self, lines:list=[], index_max:int=1) -> tuple:
+        #print(f"find_next_block")
         # loop until we find the start of a viable line
         #index_max = len(lines)
         for index_start in range(index_max - 1):
@@ -125,6 +127,7 @@ class Blockifier:
             # boundary test loops over all the boundaries we have
             # and determines which boundary it is
             for blockifier in self.blockifiers:
+                #print(f"blockifier: {blockifier.name}")
 
                 if lines[index_start].startswith(blockifier.left):
                     # once we find the boundary, we look for the closing boundary 
@@ -132,6 +135,8 @@ class Blockifier:
                     for index_stop in range(index_start+1, index_max):
                         
                         if lines[index_stop] == blockifier.right:
+                            #print(f"block lines: {index_start} - {index_stop}")
+                            #print(lines[index_start:index_stop])
 
                             # if the line here is empty, we slice here
                             if not len(lines[index_stop]):
@@ -143,6 +148,7 @@ class Blockifier:
         return self.extract_block(self.default_blockifier, lines, 0, index_max)
     
     def find_blocks(self, lines:list=[]):
+        #print(f"find_blocks")
         """loop over the lines to detect blocks"""
         pos_cur = 0
         pos_max = len(lines)
@@ -162,6 +168,7 @@ class Blockifier:
             pos_cur = pos_cur + index_c
 
     def convert_source_to_lines(self, source:str="") -> list:
+        #print(f"convert_source_to_lines")
         """convert the source string into lines we like"""
         source = source.replace('\r', '')
         lines = source.split("\n")
@@ -170,14 +177,17 @@ class Blockifier:
         return lines
             
     def blockify(self, source:str="") -> list:
+        #print(f"blockify")
         block_list = []
         lines = self.convert_source_to_lines(source)
         block_gen = self.find_blocks(lines)
         for b in block_gen:
+            #print(f"block: {b['type']}")
             block_list.append(b)
         return block_list
 
     def run_blockify(self, source:str="") -> list:
+        #print(f"run_blockify")
         self.reset_nested_banks()
         block_list = self.blockify(source)
         self.process_nested_blockifiers()

@@ -11,7 +11,7 @@ META_BLOCK_DATA = {
     "priority": 10,
     "nestedpriority": 0,
 }
-LIST_BLOCK_DATA = {
+UNORDERED_LIST_BLOCK_DATA = {
     "pattern": r'^(?P<indentation>\s*)(?P<marker>.+?)\s+(?P<content>(?P<item>.+?)(?=\n{1}|$)(?P<rest>(?:\s{0,}.*(?:\n|$))+)?)',
     "name": "list",
     "left": "- ",
@@ -22,7 +22,8 @@ LIST_BLOCK_DATA = {
     "priority": 20,
     "nestedpriority": 5,
 }
-LIST_BLOCK_DATA = {
+
+ORDERED_LIST_BLOCK_DATA = {
     "pattern": r'^(?P<indentation>\s*)(?P<marker>.+?)\s+(?P<content>(?P<item>.+?)(?=\n{1}|$)(?P<rest>(?:\s{0,}.*(?:\n|$))+)?)',
     "name": "ordered",
     "left": "1.",
@@ -149,7 +150,7 @@ PARAGRAPH_BLOCK_DATA = {
     "pattern": r'(?P<content>(?:.*(?:\n|$))+)',
     "name": "paragraph",
     "left": "",
-    "right": "\n",
+    "right": "",
     "flagged": False,
     "singleline": False,
     "nested": False,

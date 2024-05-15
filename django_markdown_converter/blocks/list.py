@@ -1,7 +1,7 @@
 import re
 from django_markdown_converter.blocks.base import BaseBlockifier
 from typing import Generator
-from django_markdown_converter.blockifiers.blockifier_data import LIST_BLOCK_DATA
+from django_markdown_converter.blockifiers.blockifier_data import UNORDERED_LIST_BLOCK_DATA, ORDERED_LIST_BLOCK_DATA
 
 '''
 list_ul_processor
@@ -11,8 +11,8 @@ class ListBlockifier(BaseBlockifier):
     """ Process list blocks. """
     __slots__ = ("pattern_li", "pattern_ul", "pattern_ol", "pattern_ul_or_ol",)
     
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(**LIST_BLOCK_DATA)
+    #def __init__(self, *args, **kwargs) -> None:
+    #    super().__init__(**LIST_BLOCK_DATA)
             
     def setUp(self, *args, **kwargs) -> None:
         self.pattern_li = re.compile(r'^(?P<indentation>\s*)(?P<marker>.+?)\s+(?P<content>(?P<item>.+?)(?=\n{1}|$)(?P<rest>(?:\s{0,}.*(?:\n|$))+)?)')
@@ -172,3 +172,14 @@ class ListBlockifier(BaseBlockifier):
             "content": content
         }
 
+
+
+class OrderedListBlockifier(ListBlockifier):
+    
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(**ORDERED_LIST_BLOCK_DATA)
+        
+class UnOrderedListBlockifier(ListBlockifier):
+    
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(**UNORDERED_LIST_BLOCK_DATA)

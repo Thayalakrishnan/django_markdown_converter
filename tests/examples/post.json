@@ -1,0 +1,1026 @@
+[
+    {
+        "type": "meta",
+        "props": {},
+        "data": {
+            "title": "Markdown Test",
+            "author": "Lawen Thayalakrishnan",
+            "tags": "markdown, python, parser"
+        }
+    },
+    {
+        "type": "heading",
+        "props": {
+            "level": 2,
+            "id": "paragraphs"
+        },
+        "data": "Paragraphs"
+    },
+    {
+        "type": "heading",
+        "props": {
+            "level": 3,
+            "id": "basic-paragraphs"
+        },
+        "data": "Basic Paragraphs"
+    },
+    {
+        "type": "paragraph",
+        "props": {},
+        "data": "Voluptatem eos aperiam dolorem numquam quisquam. Cupiditate reprehenderit beatae ab inventore libero. Accusantium explicabo optio debitis magni sint earum excepturi. Dicta aliquid cupiditate. Consequuntur temporibus maxime voluptates similique. Aut maiores <code>Inline code</code> hic laudantium distinctio. Aliquid magni expedita voluptatem illo laudantium illo. Quidem occaecati voluptas odit ex aspernatur eius consectetur blanditiis. Aperiam ullam iure soluta animi voluptatem pariatur nesciunt voluptatibus. Fuga iste in."
+    },
+    {
+        "type": "paragraph",
+        "props": {},
+        "data": "Voluptatem eos aperiam dolorem numquam quisquam. Cupiditate reprehenderit beatae ab inventore libero. Accusantium explicabo optio debitis magni sint earum excepturi. Dicta aliquid cupiditate. Consequuntur temporibus maxime voluptates similique. Aut maiores <code>Inline code</code> hic laudantium distinctio. Aliquid magni expedita voluptatem illo laudantium illo. Quidem occaecati voluptas odit ex aspernatur eius consectetur blanditiis. Aperiam ullam iure soluta animi voluptatem pariatur nesciunt voluptatibus. Fuga iste in."
+    },
+    {
+        "type": "heading",
+        "props": {
+            "level": 3,
+            "id": "paragraphs-with-inline-markup"
+        },
+        "data": "paragraphs with inline markup"
+    },
+    {
+        "type": "paragraph",
+        "props": {},
+        "data": "Eaque dolorum cumque minima asperiores voluptatum laborum provident. Esse suscipit adipisci debitis non voluptatum. Id accusamus optio iste similique cupiditate facere asperiores perspiciatis. Hic voluptatum neque ullam <code>Inline code</code> odio iste nam porro dolorum. Sit autem consequatur nam nisi totam possimus dolor quibusdam debitis. Quod adipisci sequi facere sunt error consectetur veritatis laboriosam sunt. Saepe iure ea quibusdam et iure aliquam ipsam <code>Inline code</code> soluta deserunt. Debitis maxime voluptatum similique. Sapiente fuga molestias expedita illo <code>Some longer inline code</code> sequi ea quo sed. Temporibus amet commodi quae esse repudiandae voluptatum labore officiis modi. Eaque dolorum cumque minima asperiores voluptatum laborum provident. Esse suscipit adipisci debitis non voluptatum. Id accusamus optio iste similique cupiditate facere <del>The world is flat</del> Hic voluptatum neque ullam <code>Inline code</code> odio iste nam porro dolorum. Sit autem consequatur nam nisi totam possimus dolor quibusdam debitis. Quod adipisci sequi facere sunt error consectetur veritatis laboriosam sunt. Saepe iure ea quibusdam et iure aliquam ipsam <code>Inline code</code> soluta deserunt. Debitis maxime voluptatum similique. Sapiente fuga molestias expedita illo <code>Some longer inline code</code> sequi ea quo sed. Temporibus amet commodi quae esse repudiandae voluptatum labore officiis modi. This is some supersript X<sup>2</sup> in the middle of a paragraph and then some super<sub>script</sub> ! This is some <em>italicized text</em> in the middle of a paragraph! This is some <strong>bold text</strong> in the middle of a paragraph!"
+    },
+    {
+        "type": "heading",
+        "props": {
+            "level": 3,
+            "id": "paragraphs-with-footnotes"
+        },
+        "data": "paragraphs with footnotes"
+    },
+    {
+        "type": "paragraph",
+        "props": {},
+        "data": "Voluptatem eos aperiam dolorem numquam quisquam <sup id=\"fnref:footnote1\"><a class=\"footnote-ref\" href=\"#fn:footnote1\">1</a></sup>. Cupiditate reprehenderit beatae ab inventore libero. Accusantium explicabo optio debitis magni sint earum excepturi. Dicta aliquid cupiditate. Consequuntur temporibus maxime voluptates similique. Aut maiores hic laudantium distinctio<sup id=\"fnref:footnote2\"><a class=\"footnote-ref\" href=\"#fn:footnote2\">2</a></sup>. Aliquid magni expedita voluptatem illo laudantium illo. Quidem occaecati voluptas odit ex aspernatur eius consectetur blanditiis. Aperiam ullam iure soluta animi voluptatem pariatur nesciunt voluptatibus. Fuga iste in."
+    },
+    {
+        "type": "paragraph",
+        "props": {},
+        "data": "Voluptatem eos aperiam dolorem numquam quisquam. Cupiditate reprehenderit beatae ab inventore libero. Accusantium explicabo optio debitis magni sint earum excepturi. Dicta aliquid cupiditate. Consequuntur temporibus maxime voluptates similique. Aut maiores hic laudantium distinctio. Aliquid magni expedita voluptatem illo laudantium illo. Quidem occaecati voluptas odit ex aspernatur eius consectetur blanditiis. Aperiam ullam iure soluta animi voluptatem pariatur nesciunt voluptatibus. Fuga iste in <sup id=\"fnref:footnote3\"><a class=\"footnote-ref\" href=\"#fn:footnote3\">3</a></sup>."
+    },
+    {
+        "type": "paragraph",
+        "props": {},
+        "data": "Voluptatem eos aperiam dolorem numquam quisquam. Cupiditate reprehenderit beatae ab inventore libero. Accusantium explicabo optio debitis magni sint earum excepturi. Dicta aliquid cupiditate. Consequuntur temporibus maxime voluptates similique. Aut maiores hic laudantium distinctio. Aliquid magni expedita voluptatem illo laudantium illo. Quidem occaecati voluptas odit ex aspernatur eius consectetur blanditiis <sup id=\"fnref:footnote4\"><a class=\"footnote-ref\" href=\"#fn:footnote4\">4</a></sup>. Aperiam ullam iure soluta animi voluptatem pariatur nesciunt voluptatibus. Fuga iste in."
+    },
+    {
+        "type": "heading",
+        "props": {
+            "level": 2,
+            "id": "images"
+        },
+        "data": "Images"
+    },
+    {
+        "type": "heading",
+        "props": {
+            "level": 3,
+            "id": "basic-image"
+        },
+        "data": "basic image"
+    },
+    {
+        "type": "image",
+        "props": {
+            "type": "image",
+            "subtype": "still",
+            "title": "Title for a basic image",
+            "alt": "This is an example of a basic image in markdown",
+            "height": "1080",
+            "width": "1920",
+            "caption": "Gif demonstrating the GUIs live plotting ability."
+        },
+        "data": "https://thayalakrishnan-lawen-prod-media.s3.ap-southeast-2.amazonaws.com/media/images/covers/image1.jpg"
+    },
+    {
+        "type": "heading",
+        "props": {
+            "level": 3,
+            "id": "basic-image-with-caption"
+        },
+        "data": "basic image with caption"
+    },
+    {
+        "type": "image",
+        "props": {
+            "type": "image",
+            "subtype": "still",
+            "title": "Title for a basic image with a caption",
+            "alt": "This is an example of a basic image in markdown with a caption",
+            "height": "1080",
+            "width": "1920",
+            "caption": "This is an example of a caption being included with a basic image."
+        },
+        "data": "https://thayalakrishnan-lawen-prod-media.s3.ap-southeast-2.amazonaws.com/media/images/covers/image2.jpg"
+    },
+    {
+        "type": "heading",
+        "props": {
+            "level": 3,
+            "id": "animated-image-with-caption"
+        },
+        "data": "animated image with caption"
+    },
+    {
+        "type": "image",
+        "props": {
+            "type": "image",
+            "subtype": "animated",
+            "title": "Title for a animated image with a caption",
+            "alt": "This is an example of a animated image in markdown with a caption",
+            "height": "1080",
+            "width": "1920",
+            "caption": "This is an example of a caption being included with an animated image."
+        },
+        "data": "https://thayalakrishnan-lawen-prod-media.s3.amazonaws.com/media/images/demogifs/sphere_plot_full.webp"
+    },
+    {
+        "type": "heading",
+        "props": {
+            "level": 3,
+            "id": "svg-image"
+        },
+        "data": "SVG Image"
+    },
+    {
+        "type": "image",
+        "props": {
+            "type": "image",
+            "subtype": "still",
+            "title": "A high level overview of the data flow through this website.",
+            "alt": "This figure depicts, at a high level, the data flow of this website.",
+            "height": "1920",
+            "width": "1080",
+            "caption": "A high level overview of the data flow through this website."
+        },
+        "data": "https://thayalakrishnan-lawen-prod-media.s3.amazonaws.com/media/markdownx/2023/03/01/5cb0f16b-34d8-4f6d-9c18-bfaad2eec2bb.svg"
+    },
+    {
+        "type": "heading",
+        "props": {
+            "level": 2,
+            "id": "code-blocks"
+        },
+        "data": "Code Blocks"
+    },
+    {
+        "type": "heading",
+        "props": {
+            "level": 3,
+            "id": "code-block"
+        },
+        "data": "Code Block"
+    },
+    {
+        "type": "code",
+        "props": {
+            "language": "python",
+            "filename": "main.py"
+        },
+        "data": "<code><span id=\"line-1\"><span class=\"k\">for</span> <span class=\"n\">i</span> <span class=\"ow\">in</span> <span class=\"nb\">range</span><span class=\"p\">(</span><span class=\"mi\">20</span><span class=\"p\">):</span>\n</span><span id=\"line-2\">    <span class=\"nb\">print</span><span class=\"p\">(</span><span class=\"n\">i</span><span class=\"p\">)</span>\n</span></code>\n"
+    },
+    {
+        "type": "heading",
+        "props": {
+            "level": 3,
+            "id": "large-code-block"
+        },
+        "data": "Large Code Block"
+    },
+    {
+        "type": "code",
+        "props": {
+            "language": "python",
+            "filename": "playerawards.py"
+        },
+        "data": "<code><span id=\"line-1\"><span class=\"kn\">from</span> <span class=\"nn\">nba_api.stats.endpoints</span> <span class=\"kn\">import</span> <span class=\"n\">playerawards</span> <span class=\"k\">as</span> <span class=\"n\">pa</span>\n</span><span id=\"line-2\">\n</span><span id=\"line-3\"><span class=\"k\">def</span> <span class=\"nf\">DataReturn</span><span class=\"p\">(</span><span class=\"n\">dataset</span><span class=\"p\">):</span>\n</span><span id=\"line-4\">    <span class=\"n\">headers</span><span class=\"p\">,</span> <span class=\"n\">data</span> <span class=\"o\">=</span> <span class=\"n\">dataset</span><span class=\"p\">[</span><span class=\"s2\">&quot;headers&quot;</span><span class=\"p\">],</span> <span class=\"n\">dataset</span><span class=\"p\">[</span><span class=\"s2\">&quot;data&quot;</span><span class=\"p\">]</span>\n</span><span id=\"line-5\">    <span class=\"k\">if</span> <span class=\"p\">(</span><span class=\"nb\">len</span><span class=\"p\">(</span><span class=\"n\">data</span><span class=\"p\">)</span> <span class=\"o\">==</span> <span class=\"mi\">0</span><span class=\"p\">):</span>            <span class=\"c1\"># no return value</span>\n</span><span id=\"line-6\">        <span class=\"nb\">print</span><span class=\"p\">(</span><span class=\"s1\">&#39;No Values&#39;</span><span class=\"p\">)</span>\n</span><span id=\"line-7\">        <span class=\"k\">return</span> <span class=\"p\">[]</span>\n</span><span id=\"line-8\">    <span class=\"k\">elif</span> <span class=\"p\">(</span><span class=\"nb\">len</span><span class=\"p\">(</span> <span class=\"n\">data</span> <span class=\"p\">)</span> <span class=\"o\">==</span> <span class=\"mi\">1</span><span class=\"p\">):</span>        <span class=\"c1\"># one row</span>\n</span><span id=\"line-9\">        <span class=\"k\">return</span> <span class=\"n\">data</span><span class=\"p\">[</span><span class=\"mi\">0</span><span class=\"p\">]</span>\n</span><span id=\"line-10\">    <span class=\"k\">else</span><span class=\"p\">:</span>                           <span class=\"c1\"># multiple rows</span>\n</span><span id=\"line-11\">        <span class=\"k\">return</span> <span class=\"n\">data</span>\n</span><span id=\"line-12\">\n</span><span id=\"line-13\"><span class=\"k\">def</span> <span class=\"nf\">getPlayerAccolades</span><span class=\"p\">(</span><span class=\"n\">player_id</span><span class=\"p\">):</span>\n</span><span id=\"line-14\">    <span class=\"n\">player</span> <span class=\"o\">=</span> <span class=\"n\">pa</span><span class=\"o\">.</span><span class=\"n\">PlayerAwards</span><span class=\"p\">(</span><span class=\"n\">player_id</span><span class=\"o\">=</span><span class=\"n\">player_id</span><span class=\"p\">)</span><span class=\"o\">.</span><span class=\"n\">player_awards</span>\n</span><span id=\"line-15\">    <span class=\"k\">return</span> <span class=\"n\">DataReturn</span><span class=\"p\">(</span><span class=\"n\">player</span><span class=\"o\">.</span><span class=\"n\">get_dict</span><span class=\"p\">())</span>\n</span><span id=\"line-16\">\n</span><span id=\"line-17\"><span class=\"k\">def</span> <span class=\"nf\">CreateCounter</span><span class=\"p\">(</span><span class=\"n\">dataset</span><span class=\"p\">,</span> <span class=\"n\">position</span><span class=\"p\">):</span>\n</span><span id=\"line-18\">    <span class=\"n\">values</span> <span class=\"o\">=</span> <span class=\"p\">[</span><span class=\"n\">_</span><span class=\"p\">[</span><span class=\"n\">position</span><span class=\"p\">]</span> <span class=\"k\">for</span> <span class=\"n\">_</span> <span class=\"ow\">in</span> <span class=\"n\">dataset</span><span class=\"p\">]</span>\n</span><span id=\"line-19\">    <span class=\"n\">dict_counter</span> <span class=\"o\">=</span> <span class=\"nb\">dict</span><span class=\"o\">.</span><span class=\"n\">fromkeys</span><span class=\"p\">(</span><span class=\"nb\">set</span><span class=\"p\">(</span><span class=\"n\">values</span><span class=\"p\">),</span> <span class=\"mi\">0</span><span class=\"p\">)</span>\n</span><span id=\"line-20\">    <span class=\"p\">[</span><span class=\"n\">dict_counter</span><span class=\"p\">[</span><span class=\"n\">_</span><span class=\"p\">]</span> <span class=\"o\">+</span> <span class=\"mi\">1</span> <span class=\"k\">for</span> <span class=\"n\">_</span> <span class=\"ow\">in</span> <span class=\"n\">values</span><span class=\"p\">]</span>\n</span><span id=\"line-21\">    <span class=\"nb\">print</span><span class=\"p\">(</span><span class=\"n\">dict_counter</span><span class=\"p\">)</span>\n</span><span id=\"line-22\">    <span class=\"k\">return</span> <span class=\"n\">dict_counter</span>\n</span></code>\n"
+    },
+    {
+        "type": "heading",
+        "props": {
+            "level": 3,
+            "id": "code-block-with-caption"
+        },
+        "data": "Code Block With Caption"
+    },
+    {
+        "type": "heading",
+        "props": {
+            "level": 2,
+            "id": "tables"
+        },
+        "data": "Tables"
+    },
+    {
+        "type": "heading",
+        "props": {
+            "level": 3,
+            "id": "small-table"
+        },
+        "data": "Small Table"
+    },
+    {
+        "type": "table",
+        "props": {
+            "id": "small-table",
+            "caption": "small table of values"
+        },
+        "data": {
+            "header": [
+                "Column 1 Title",
+                "Column 2 Title"
+            ],
+            "body": [
+                [
+                    "Row 1 Column 1",
+                    "Row 1 Column 2"
+                ],
+                [
+                    "Row 2 Column 1",
+                    "Row 2 Column 2"
+                ]
+            ]
+        }
+    },
+    {
+        "type": "heading",
+        "props": {
+            "level": 3,
+            "id": "big-table"
+        },
+        "data": "Big Table"
+    },
+    {
+        "type": "table",
+        "props": {
+            "id": "big-table",
+            "caption": "big table of values"
+        },
+        "data": {
+            "header": [
+                "Column 1 Title",
+                "Column 2 Title",
+                "Column 3 Title",
+                "Column 4 Title",
+                "Column 5 Title",
+                "Column 6 Title"
+            ],
+            "body": [
+                [
+                    "Row 1 Column 1",
+                    "Row 1 Column 2",
+                    "Row 1 Column 3",
+                    "Row 1 Column 4",
+                    "Row 1 Column 5",
+                    "Row 1 Column 6"
+                ],
+                [
+                    "Row 2 Column 1",
+                    "Row 2 Column 2",
+                    "Row 2 Column 3",
+                    "Row 2 Column 4",
+                    "Row 2 Column 5",
+                    "Row 2 Column 6"
+                ],
+                [
+                    "Row 3 Column 1",
+                    "Row 3 Column 2",
+                    "Row 3 Column 3",
+                    "Row 3 Column 4",
+                    "Row 3 Column 5",
+                    "Row 3 Column 6"
+                ],
+                [
+                    "Row 4 Column 1",
+                    "Row 4 Column 2",
+                    "Row 4 Column 3",
+                    "Row 4 Column 4",
+                    "Row 4 Column 5",
+                    "Row 4 Column 6"
+                ],
+                [
+                    "Row 5 Column 1",
+                    "Row 5 Column 2",
+                    "Row 5 Column 3",
+                    "Row 5 Column 4",
+                    "Row 5 Column 5",
+                    "Row 5 Column 6"
+                ]
+            ]
+        }
+    },
+    {
+        "type": "heading",
+        "props": {
+            "level": 2,
+            "id": "markdown-lists"
+        },
+        "data": "Markdown lists"
+    },
+    {
+        "type": "heading",
+        "props": {
+            "level": 3,
+            "id": "ordered-list"
+        },
+        "data": "Ordered List"
+    },
+    {
+        "type": "list",
+        "level": 0,
+        "tag": "ol",
+        "children": [
+            {
+                "type": "item",
+                "tag": "li",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 1"
+                    }
+                ]
+            },
+            {
+                "type": "item",
+                "tag": "li",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 2"
+                    }
+                ]
+            },
+            {
+                "type": "item",
+                "tag": "li",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 3"
+                    }
+                ]
+            },
+            {
+                "type": "item",
+                "tag": "li",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 4"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "type": "heading",
+        "props": {
+            "level": 3,
+            "id": "nested-ordered-lists"
+        },
+        "data": "nested ordered lists"
+    },
+    {
+        "type": "list",
+        "level": 0,
+        "tag": "ol",
+        "children": [
+            {
+                "type": "item",
+                "tag": "li",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 1"
+                    }
+                ]
+            },
+            {
+                "type": "item",
+                "tag": "li",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 2"
+                    }
+                ]
+            },
+            {
+                "type": "item",
+                "tag": "li",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 3"
+                    }
+                ]
+            },
+            {
+                "type": "list",
+                "level": 4,
+                "tag": "ol",
+                "children": [
+                    {
+                        "type": "item",
+                        "tag": "li",
+                        "data": [
+                            {
+                                "type": "paragraph",
+                                "props": {},
+                                "data": "Indented Item 1"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "item",
+                        "tag": "li",
+                        "data": [
+                            {
+                                "type": "paragraph",
+                                "props": {},
+                                "data": "Indented Item 2"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "item",
+                "tag": "li",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 4"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "type": "heading",
+        "props": {
+            "level": 3,
+            "id": "unordered-list"
+        },
+        "data": "Unordered List"
+    },
+    {
+        "type": "list",
+        "level": 0,
+        "tag": "ul",
+        "children": [
+            {
+                "type": "item",
+                "tag": "li",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 1"
+                    }
+                ]
+            },
+            {
+                "type": "item",
+                "tag": "li",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 2"
+                    }
+                ]
+            },
+            {
+                "type": "item",
+                "tag": "li",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 3"
+                    }
+                ]
+            },
+            {
+                "type": "item",
+                "tag": "li",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 4"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "type": "heading",
+        "props": {
+            "level": 3,
+            "id": "nested-unordered-lists"
+        },
+        "data": "nested unordered lists"
+    },
+    {
+        "type": "list",
+        "level": 0,
+        "tag": "ul",
+        "children": [
+            {
+                "type": "item",
+                "tag": "li",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 1"
+                    }
+                ]
+            },
+            {
+                "type": "item",
+                "tag": "li",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 2"
+                    }
+                ]
+            },
+            {
+                "type": "item",
+                "tag": "li",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 3"
+                    }
+                ]
+            },
+            {
+                "type": "list",
+                "level": 4,
+                "tag": "ul",
+                "children": [
+                    {
+                        "type": "item",
+                        "tag": "li",
+                        "data": [
+                            {
+                                "type": "paragraph",
+                                "props": {},
+                                "data": "Indented Item 1"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "item",
+                        "tag": "li",
+                        "data": [
+                            {
+                                "type": "paragraph",
+                                "props": {},
+                                "data": "Indented Item 2"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "item",
+                "tag": "li",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 4"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "type": "heading",
+        "props": {
+            "level": 2,
+            "id": "blockquotes"
+        },
+        "data": "Blockquotes"
+    },
+    {
+        "type": "heading",
+        "props": {
+            "level": 3,
+            "id": "blockquote"
+        },
+        "data": "blockquote"
+    },
+    {
+        "type": "blockquote",
+        "props": {},
+        "data": [
+            {
+                "type": "paragraph",
+                "props": {},
+                "data": "blockquote"
+            }
+        ]
+    },
+    {
+        "type": "blockquote",
+        "props": {
+            "cite": "www.google.com"
+        },
+        "data": [
+            {
+                "type": "paragraph",
+                "props": {},
+                "data": "blockquote"
+            },
+            {
+                "type": "paragraph",
+                "props": {},
+                "data": "blockquote"
+            }
+        ]
+    },
+    {
+        "type": "heading",
+        "props": {
+            "level": 3,
+            "id": "nested-blockquote"
+        },
+        "data": "Nested Blockquote"
+    },
+    {
+        "type": "blockquote",
+        "props": {},
+        "data": [
+            {
+                "type": "paragraph",
+                "props": {},
+                "data": "Outside Quote"
+            },
+            {
+                "type": "blockquote",
+                "props": {},
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Inside Quote"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "type": "heading",
+        "props": {
+            "level": 3,
+            "id": "blockquotes-with-other-markdown"
+        },
+        "data": "blockquotes with other markdown"
+    },
+    {
+        "type": "blockquote",
+        "props": {
+            "cite": "www.google.com"
+        },
+        "data": [
+            {
+                "type": "heading",
+                "props": {
+                    "level": 2,
+                    "id": "blockquote-with-markdown"
+                },
+                "data": "Blockquote with markdown"
+            },
+            {
+                "type": "paragraph",
+                "props": {},
+                "data": "A Paragraph is the default element. How about some <strong>inline markdown</strong>?"
+            },
+            {
+                "type": "list",
+                "level": 0,
+                "tag": "ul",
+                "children": [
+                    {
+                        "type": "item",
+                        "tag": "li",
+                        "data": [
+                            {
+                                "type": "paragraph",
+                                "props": {},
+                                "data": "list item 1"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "item",
+                        "tag": "li",
+                        "data": [
+                            {
+                                "type": "paragraph",
+                                "props": {},
+                                "data": "list item 2"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "item",
+                        "tag": "li",
+                        "data": [
+                            {
+                                "type": "paragraph",
+                                "props": {},
+                                "data": "list item 3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "type": "heading",
+        "props": {
+            "level": 2,
+            "id": "admonitions"
+        },
+        "data": "Admonitions"
+    },
+    {
+        "type": "heading",
+        "props": {
+            "level": 3,
+            "id": "with-title"
+        },
+        "data": "With Title"
+    },
+    {
+        "type": "admonition",
+        "props": {
+            "type": "note",
+            "title": "Note Title"
+        },
+        "data": [
+            {
+                "type": "paragraph",
+                "props": {},
+                "data": "this is an admonition."
+            }
+        ]
+    },
+    {
+        "type": "admonition",
+        "props": {
+            "type": "warning",
+            "title": "Warning Title"
+        },
+        "data": [
+            {
+                "type": "paragraph",
+                "props": {},
+                "data": "For warnings."
+            }
+        ]
+    },
+    {
+        "type": "admonition",
+        "props": {
+            "type": "important",
+            "title": "Important Title"
+        },
+        "data": [
+            {
+                "type": "paragraph",
+                "props": {},
+                "data": "For important info."
+            }
+        ]
+    },
+    {
+        "type": "admonition",
+        "props": {
+            "type": "caution",
+            "title": "Caution Title"
+        },
+        "data": [
+            {
+                "type": "paragraph",
+                "props": {},
+                "data": "for cautioning."
+            }
+        ]
+    },
+    {
+        "type": "admonition",
+        "props": {
+            "type": "tip",
+            "title": "Tip Title"
+        },
+        "data": [
+            {
+                "type": "paragraph",
+                "props": {},
+                "data": "for tips and tricks."
+            },
+            {
+                "type": "paragraph",
+                "props": {},
+                "data": "multiline admontion."
+            }
+        ]
+    },
+    {
+        "type": "heading",
+        "props": {
+            "level": 3,
+            "id": "without-title"
+        },
+        "data": "Without Title"
+    },
+    {
+        "type": "admonition",
+        "props": {
+            "type": "question",
+            "title": ""
+        },
+        "data": [
+            {
+                "type": "paragraph",
+                "props": {},
+                "data": "further ideas, further links etc."
+            }
+        ]
+    },
+    {
+        "type": "admonition",
+        "props": {
+            "type": "quote",
+            "title": ""
+        },
+        "data": [
+            {
+                "type": "paragraph",
+                "props": {},
+                "data": "extracts from the text."
+            }
+        ]
+    },
+    {
+        "type": "admonition",
+        "props": {
+            "type": "comment",
+            "title": ""
+        },
+        "data": [
+            {
+                "type": "paragraph",
+                "props": {},
+                "data": "comments or opinions."
+            }
+        ]
+    },
+    {
+        "type": "admonition",
+        "props": {
+            "type": "docs",
+            "title": ""
+        },
+        "data": [
+            {
+                "type": "paragraph",
+                "props": {},
+                "data": "Manuals, listings, diagrams, graphics etc."
+            },
+            {
+                "type": "paragraph",
+                "props": {},
+                "data": "multiline admontion."
+            }
+        ]
+    },
+    {
+        "type": "heading",
+        "props": {
+            "level": 2,
+            "id": "definition-lists"
+        },
+        "data": "Definition Lists"
+    },
+    {
+        "type": "definitions",
+        "props": {},
+        "data": {
+            "term": "First Term",
+            "definition": "This is the definition of the first term."
+        }
+    },
+    {
+        "type": "definitions",
+        "props": {},
+        "data": {
+            "term": "Second Term",
+            "definition": "This is one definition of the second term."
+        }
+    },
+    {
+        "type": "heading",
+        "props": {
+            "level": 2,
+            "id": "link-handling"
+        },
+        "data": "Link Handling"
+    },
+    {
+        "type": "heading",
+        "props": {
+            "level": 3,
+            "id": "paragraph-with-links"
+        },
+        "data": "paragraph with links"
+    },
+    {
+        "type": "paragraph",
+        "props": {},
+        "data": "To include a link, we place the link text in brackets and immediately follow it with the link text in parentheses like <a href=\"https://lawen.thayalakrishnan.com\" title=\"external link to this link\">this link</a> to the homepage! We can emphasise <strong><a href=\"https://lawen.thayalakrishnan.com\" title=\"external link to the link\">the link</a></strong> by enclosing the markdown in double asterisks. The same applies to single asterisk to italise <a href=\"https://lawen.thayalakrishnan.com\" title=\"external link to the link\">the link</a>. Use angle brackets, to render the link raw <a href=\"://lawen.thayalakrishnan.com\">://lawen.thayalakrishnan.com</a>. This is an email address <a href=\"mailto:example@email.com\">example@email.com</a> in the middle of a paragraph!"
+    },
+    {
+        "type": "footnotes",
+        "props": {},
+        "data": [
+            {
+                "index": 1,
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Footnote definition."
+                    }
+                ]
+            },
+            {
+                "index": 2,
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Footnote definition and some inline <code>code</code>."
+                    }
+                ]
+            },
+            {
+                "index": 3,
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Footnote definition."
+                    },
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "If we indent the paragraph we cant put as much content here as we would like."
+                    },
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "This is a multiline footnote. It also does not matter where we put the footnote definition!"
+                    }
+                ]
+            },
+            {
+                "index": 4,
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Footnote definition."
+                    }
+                ]
+            }
+        ]
+    }
+]

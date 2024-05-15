@@ -42,6 +42,13 @@ def ReadSourceFromFile(read_from:str="") -> str:
         source = file.read()
     return source
 
+def ReadJSONFromFile(read_from:str="") -> str:
+    """open markdown file return the contents"""
+    with open(read_from, 'r') as file:
+        data = json.load(file)
+    return data
+
+
 def WriteJSONToFile(write_too:str="", data:list=[]) -> str:
     """write JSON data to file"""
     with open(write_too, "w") as json_file:
