@@ -20,12 +20,12 @@ def test_basic_usage_from_source():
     path_to_file = "tests/examples/post.md"
     path_to_json = "tests/examples/post.json"
     md = ReadSourceFromFile(path_to_file)
-    output_expected = ReadJSONFromFile(path_to_json)
-    output = Blockify(md)
-    assert isinstance(output, list)
-    assert isinstance(output_expected, list)
+    blocks_expected = ReadJSONFromFile(path_to_json)
+    blocks = Blockify(md)
+    assert isinstance(blocks, list)
+    assert isinstance(blocks_expected, list)
     
-    for o, o_e in zip(output, output_expected):
-        assert o["type"] == o_e["type"]
+    for block, block_e in zip(blocks, blocks_expected):
+        assert block["type"] == block_e["type"]
     
 

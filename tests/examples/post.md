@@ -159,8 +159,9 @@ def CreateCounter(dataset, position):
 > blockquote
 
 > { cite="www.google.com" }
-> blockquote
-> blockquote
+> blockquote sentence 1
+> 
+> blockquote sentence 2
 
 ### Nested Blockquote
 

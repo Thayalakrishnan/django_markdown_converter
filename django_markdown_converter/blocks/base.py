@@ -50,6 +50,10 @@ class BaseBlockifier:
     def setUp(self, *args, **kwargs) -> None:
         """override this method to do additional setup outside of the init"""
         pass
+    
+    def test_lines(self, *args, **kwargs) -> None:
+        """use this method to test the block"""
+        pass
 
     def blockify(self, lines:list=[]) -> dict:
         """takes lines and return a block"""

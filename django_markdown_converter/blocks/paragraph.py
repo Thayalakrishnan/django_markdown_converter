@@ -29,7 +29,10 @@ class ParagraphBlockifier(BaseBlockifier):
                 p_blocks.append(block)
                 
         #print(f"blockify paragraph")
-        #print(p_blocks)
+        if len(p_blocks) > 1:
+            print("blocks")
+            for b in p_blocks:
+                print(b)
         
         if len(p_blocks):
             return p_blocks

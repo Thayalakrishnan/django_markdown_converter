@@ -127,7 +127,8 @@ class Blockifier:
             # boundary test loops over all the boundaries we have
             # and determines which boundary it is
             for blockifier in self.blockifiers:
-                #print(f"blockifier: {blockifier.name}")
+                #if blockifier.name == "paragraph":
+                #    print(f"blockifier: {blockifier.name}")
 
                 if lines[index_start].startswith(blockifier.left):
                     # once we find the boundary, we look for the closing boundary 
@@ -145,6 +146,24 @@ class Blockifier:
                             # if not we slice at the next index
                             return self.extract_block(blockifier, lines, index_start, index_stop + 1)
 
+        return self.extract_block(self.default_blockifier, lines, 0, index_max)
+    
+    def new_find_next_block(self, lines:list=[], index_max:int=1) -> tuple:
+        for index_start in range(index_max - 1):
+            # skip lines that are empty
+            if not len(lines[index_start]):
+                continue
+            for blockifier in self.blockifiers:
+                chunk = "\n".join(lines[index_start::])
+                match = blockifier.pattern.match(chunk)
+                if match:
+                if lines[index_start].startswith(blockifier.left):
+                    for index_stop in range(index_start+1, index_max):
+                        if lines[index_stop] == blockifier.right:
+                            if not len(lines[index_stop]):
+                                return self.extract_block(blockifier, lines, index_start, index_stop)
+                            return self.extract_block(blockifier, lines, index_start, index_stop + 1)
+                        
         return self.extract_block(self.default_blockifier, lines, 0, index_max)
     
     def find_blocks(self, lines:list=[]):
