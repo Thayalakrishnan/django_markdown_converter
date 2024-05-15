@@ -191,7 +191,10 @@ raw_pat = r'^(?P<content>(?P<indentation>\s*)(?P<marker>.+?)\s+(?P<item>.+?)(?=\
 # this works real well except for breakages in the list 
 raw_pat = r'^(?P<content>(?P<indentation>\s*)(?P<marker>.+?)\s+(?P<item>.+?)(?=\n{1}|$))+(?:\n|$)'
 
+# this works real well except for breakages in the list 
 raw_pat = r'^(?P<content>(?P<indentation>\s*)(?P<marker>.+?)\s+(?P<item>.+?)(?:\n|$))(?:\n|$)'
+
+raw_pat = r'^(?P<content>(?P<indentation>\s*)(?P<marker>.+?)\s+(?P<item>.+?)?(?:\n|$))(?:\s*\n|$)'
 
 chunk = "\n".join(test_lines)
 
@@ -219,13 +222,113 @@ if match.group('content'):
 #    for m in matches:
 #        print(dir(m))
         
-matches = pattern.finditer(chunk)
+matches = pattern.match(chunk)
 print(type(matches))
 if matches:
+    print(match)
+    #for m in matches:
+    #    #print(m.start())
+    #    #print(len(m.group("indentation")))
+    #    print(m.group("item"))
+    #    #print(type(m))
+
+# %%
+import re
+
+test_lines = [
+    '- List item 1',
+    '- List item 2',
+    '    - Indented List 2 Item 1',
+    '    - Indented List 2 Item 2',
+    '        - Indented List 2 Item 2 Item 1',
+    '        - Indented List 2 Item 2 Item 2',
+    '        - Indented List 2 Item 2 Item 3',
+    '    - Indented List 2 Item 3',
+    '',
+    '',
+    '- List item 3',
+    '    - Indented List 3 Item 1',
+    '    - Indented List 3 Item 2',
+    '',
+]
+chunk = "\n".join(test_lines)
+
+raw_pat = r'^(?P<indentation>\s*)(?P<marker>.+?)\s+(?P<content>(?P<item>.+?)(?=\n{1}|$)(?P<rest>(?:\s{0,}.*(?:\n|$))+)?)'
+raw_pat = r'^(?P<content>(?P<indentation>\s*)(?P<marker>.+?)\s+(?P<item>.+?)(?=\n{1}|$)(?P<rest>(?:\s{0,}.*(?:\n|$))+)?)'
+
+# this works real well except for breakages in the list 
+raw_pat = r'^(?P<content>(?P<indentation>\s*)(?P<marker>.+?)\s+(?P<item>.+?)(?=\n{1}|$))+(?:\n|$)'
+
+# this works real well except for breakages in the list 
+raw_pat = r'^(?P<content>(?P<indentation>\s*)(?P<marker>.+?)\s+(?P<item>.+?)(?:\n|$))(?:\n|$)'
+
+raw_pat = r'^(?P<content>(?P<indentation>\s*)(?P<marker>.+?)\s+(?P<item>.+?)(?:\n|$))+?(?:\s*\n|$)'
+
+# match lines that start with a dash and some or none indentation
+# match as many of these lines as you can contiguously
+#raw_pat = r'^(?:(?:\s*-.*)(?:\n|$)+?)(?:\n\n|\s*\n|$)'
+#raw_pat = r'^(\s*-.*\n)+?(\n|$)'
+raw_pat = r'(^\s*-.*$)+?(?!\S)'
+raw_pat = r'((^\s*-.*$))(?!\S)+?'
+
+pattern = re.compile(raw_pat, re.MULTILINE | re.DOTALL)
+pattern = re.compile(raw_pat, re.MULTILINE)
+
+match = pattern.match(chunk)
+
+print(repr(chunk))
+print("size:" + str(len(chunk)))
+
+if match:
+    #if match.group('content'):
+    #    content = match.group('content')
+    #    print(content)
+        
+    print(f"regs: {match.regs}")
+    #print(f"endpos: {match.endpos}")
+    #print(f"string: {match.string}")
+    print(f"start: {match.start()}")
+    print(f"end: {match.end()}")
+    
+    #print(f"indentation: {match.group('indentation')}")
+    #print(f"marker: {match.group('marker')}")
+    #print(f"item: {match.group('item')}")
+
+#matches = pattern.findall(chunk)
+#print(type(matches))
+#if matches:
+#    for m in matches:
+#        print(dir(m))
+        
+#match = pattern.match(chunk)
+#
+#if match:
+#    print(match)
+#    listblock = chunk[match.start():match.end()]
+#    #print(repr(listblock))
+#    print(listblock)
+    
+    
+matches = pattern.finditer(chunk)
+
+if matches:
     for m in matches:
-        #print(m.start())
-        print(len(m.group("indentation")))
-        print(m.group("item"))
-        #print(type(m))
+        print("new block")
+        listblock = chunk[m.start():m.end()]
+        print(listblock)
+print("done")
+# %%
+import re
+
+text = "line that ends with apple\n but are not followed by banana\n" 
+text = "first apple\n first peach\n second apple\n first orange\n third apple\n first banana\n" 
+raw_pattern = r'^(.*apple$)+?(?!.*banana)'
+raw_pattern = r'^(.*apple)$(?:(?!.*banana))'
+raw_pattern = r'(^.*apple$)(?:\n)(?!.*banana)'
+
+pattern = re.compile(raw_pattern, re.MULTILINE | re.DOTALL)
+pattern = re.compile(raw_pattern, re.MULTILINE)
+matches = pattern.findall(text)
+print(matches)
 
 # %%
