@@ -17,6 +17,13 @@ def test_blockifier_creation():
 
 
 def test_basic_usage_from_source():
+    """
+    here we read the example converted markdown and json files
+    so that we can quickly compare if the conversions are correct
+    the md file represents our markdown file
+    the json file represents our expected output when 
+    converting the md file
+    """
     path_to_file = "tests/examples/post.md"
     path_to_json = "tests/examples/post.json"
     md = ReadSourceFromFile(path_to_file)
