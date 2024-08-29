@@ -5,7 +5,7 @@
 
 from django_markdown_converter.blocks.base import BaseBlockifier
 from django_markdown_converter.blockifiers.blockifier_data import PARAGRAPH_BLOCK_DATA
-from django_markdown_converter.inlineifiers.inline_parser import InlineParser
+from django_markdown_converter.inlineifiers.new_inline_parser import InlineParser
 
 '''
 need to be mindful that a paragraph block may also, unwittingly
@@ -29,17 +29,21 @@ class ParagraphBlockifier(BaseBlockifier):
                 p_blocks.append(block)
                 
         #print(f"blockify paragraph")
-        if len(p_blocks) > 1:
-            print("blocks")
-            for b in p_blocks:
-                print(b)
+        #if len(p_blocks) > 1:
+        #    print("blocks")
+        #    for b in p_blocks:
+        #        print(b)
         
         if len(p_blocks):
             return p_blocks
         return {}
     
     def get_data(self, chunk, *args, **kwargs):
-        return "".join(InlineParser([chunk]))
+        #print("get data")
+        #print(repr(chunk))
+        #print(InlineParser(chunk))
+        return InlineParser(chunk)
+        #return "".join(InlineParser([chunk]))
     
     def get_props(self, *args, **kwargs):
         return {}

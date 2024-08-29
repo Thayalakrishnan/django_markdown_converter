@@ -26,10 +26,10 @@ def test_nested_list():
     assert "list" == output["type"]
     assert "ul" == output["tag"]
     
-    for b in output["children"]:
-        print(b)
-        #for c in b["children"]:
-        #    print(c)
+    #for b in output["children"]:
+    #    print(b)
+    #    #for c in b["children"]:
+    #    #    print(c)
         
-    assert "yeet" == output["tag"]
+    #assert "yeet" == output["tag"]
 

@@ -38,24 +38,9 @@ class Blockifier:
         self.blockifiers = []
         self.nested_blockifiers = []
         self.lookup_blockifier = {} # lookup for all blocks
-        
         self.build_blockifiers(BLOCKIFIER_DATA)
-        
         self.default_blockifier = self.get_blockifier_with_key("paragraph")
 
-#   this is the old build function i had
-#    def build_blockifiers(self, setup_data:list=[]) -> None:
-#        for block_data in setup_data:
-#            key = block_data["name"]
-#            blockifier = block_data["class"](**block_data)
-#            setattr(self, key, blockifier)
-#            self.blockifiers.append(blockifier)
-#            self.lookup_blockifier[key] = blockifier
-#            if blockifier.nested:
-#                self.nested_blockifiers.append(blockifier)
-#        self.blockifiers.sort(key=lambda x: x.priority)
-#        self.nested_blockifiers.sort(key=lambda x: x.nestedpriority)
-        
     def build_blockifiers(self, blocks:list=[]) -> None:
 
         for block in blocks:
@@ -167,8 +152,10 @@ class Blockifier:
 
             # adjust the current position
             pos_cur = pos_cur + index_c
-
-    def convert_source_to_lines(self, source:str="") -> list:
+            
+            
+    @staticmethod
+    def convert_source_to_lines(source:str="") -> list:
         #print(f"convert_source_to_lines")
         """convert the source string into lines we like"""
         source = source.replace('\r', '')
