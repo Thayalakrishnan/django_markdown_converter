@@ -1,3 +1,4 @@
+import re
 TAB_LENGTH = 4
 
 META_BLOCK_DATA = r'^---\s*\n(?P<content>.*?)\n\s*---\s*(?:\n\s*|$)'
@@ -13,8 +14,6 @@ HR_BLOCK_DATA = r'^\s*(?P<content>\*\*\*)\s*(?:\n|$)'
 HEADING_BLOCK_DATA = r'^(?P<level>#{1,6})\s+(?P<content>.*?)(?:\{(?P<attrs>.*?)\})?\s*(?:\n|$)'
 IMAGE_BLOCK_DATA = r'!\[(?P<attrs>.*?)\]\((?P<content>.*?)\)'
 PARAGRAPH_BLOCK_DATA = r'(?P<content>.*?)(?:\n|$)(?P<after>.*?)'
-
-
 
 SVG_BLOCK_DATA = r'^<svg (?P<attrs>[^>]*)>(?P<between>.*?)</svg>(?P<after>.*)$'
 PARAGRAPH_BLOCK_DATA = r'^(?P<content>.*?)(?:\n\n)(?P<after>.*?)$'
@@ -32,9 +31,15 @@ def find_next(content:str="", patterns:list=[]):
     generator that goes to work finding the next block
     it will yield the block
     """
-    for p in patterns:
-        content.match
-    pass
+    raw_pattern = r'(?P<chunk>```.*?```|.*?)\n\n'
+    pattern = re.compile(raw_pattern, re.MULTILINE | re.DOTALL)
+    match = pattern.finditer(content)
+    
+    for index, m in enumerate(match):
+        chunk = m.group("chunk")
+        for pat in patterns:
+            submatch = pat.match(chunk)
+            
 
 
 def blockify(content:str=""):
