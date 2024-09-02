@@ -14,13 +14,18 @@ BLOCKQUOTE_BLOCK_DATA: (?:^>\s+.*?$){1,}(?:\n\n|\n$)
 META_BLOCK_DATA = r'^(?:---\s*)(?:\n)(?P<content>.*?)(?:---\s*)(?:\n|$)'
 DEFINITIONLIST_BLOCK_DATA = r'(?P<content>\:\s+(?P<term>.+?)(?=\n{2}|$)\n\:\s+(?P<definition>.+?)(?=\n{2}|$))'
 FOOTNOTE_BLOCK_DATA = r'(?P<content>\[\^(?P<index>.+?)\]:\s*\n(?P<between>(?: {4,}.*(?:\n|$))+))'
+
 ADMONITION_BLOCK_DATA = r'(?P<content>!!!\s+(?P<type>[a-zA-Z]+)?\s*(?:\s+["\'](?P<title>[^"\']+?)["\'])?\s*\n(?P<between>(?: {4,}.*(?:\n|$))+))'
+
 CODE_BLOCK_DATA = r'(?P<content>(?P<start>^(?:```))\s*(\{(?P<attrs>.*?)\})\n(?P<between>.*?)(?<=\n)(?P<stop>(?:```))\s*)'
+CODE_BLOCK_DATA = r'^(?:```\s*)(?:\{(?P<attrs>.*?)\})?\n(?P<content>.*?)(?:```\s*?)$'
 
 HR_BLOCK_DATA = r'^(?P<content>[\*\-]{3,})\s*(?:\n|$)'
 TABLE_BLOCK_DATA = r'^(?P<content>(?:\|(?P<header>.*?)\|\s*\n)(?:\|(?P<settings>.*?)\|\s*\n)(?P<between>(?:.*(?:\|\n|\|$))+)(?:(?:\{\s*(?P<attrs>.*?)\s*\})?))'
+
 TABLE_BLOCK_DATA = r'(?P<content>(?:^\|.*?\|\n){1,}(?:\{.*?\})?)'
-BLOCKQUOTE_BLOCK_DATA = r'(?P<content>(?:^>\s+.*?$){1,}(?:\n\n|\n$))'
+TABLE_BLOCK_DATA = r'^(?P<header>\|.*?\|\n)(?P<break>\|.*?\|\n)(?P<content>\|.*?\|(\n|$)){1,}(?:\{(?P<attrs>.*?)\})?'
+
 
 BLOCKQUOTE_BLOCK_DATA = r'(?P<content>(?:\>.*)(?:\n\>.*){1,})(?:\{(?P<attrs>.*?)\})?'
 HEADING_BLOCK_DATA = r'^(?P<content>(?P<level>\#{1,6})\s+(?P<text>.*?)(?:\{(?P<attrs>.*?)\})?\s*)(?:\n|$)'
@@ -31,9 +36,6 @@ UNORDERED_LIST_BLOCK_DATA = r'(?P<content>(\s*-\s.*?\n){1,})'
 PARAGRAPH_BLOCK_DATA = r'(?P<content>.*?)(?:\n|\n\n|$)'
 
 EXTRACT_ATTRS = r'(?P<before>.*)\{(?P<attrs>.*?)\}(?P<after>.*)'
-NEWLINE_REPLACE = r'\n{3,}'
-NEWLINE_REPLACE = r'^\n{3,}'
-NEWLINE_REPLACE = r'^\n{2,}'
 NEWLINE_REPLACE = re.compile(r'^\n{2,}', re.MULTILINE | re.DOTALL)
 
 patterns = [
@@ -77,14 +79,15 @@ loop over the content and spit out chunks
 for index, m in enumerate(match):
     chunk = m.group("chunk")
     #print("chunk -------------------------")
-    print(f"\nchunk {index} --------------------")
-    print(repr(chunk))
+    #print(f"\nchunk {index} --------------------")
+    #print(repr(chunk))
     # determine the type of block each chunk is
     for label, pattern, items in patterns:
         submatch = pattern.match(chunk)
         if submatch:
-            print(f"{label}")
+            #print(f"{label}")
             #print(f"\n{index} - {label} --------------------")
+            print(f"{index} - {label} --------------------")
             #content = submatch.group("content")
             
             # check the content for attributes
