@@ -50,6 +50,14 @@ def CreateCounter(dataset, position):
     return dict_counter
 ```
 
+
+
+## Line break
+
+---
+
+***
+
 ## Table
 
 | Column 1 Title | Column 2 Title |
@@ -105,6 +113,19 @@ def CreateCounter(dataset, position):
 > - list item 1
 > - list item 2
 > - list item 3
+>
+{ cite="www.google.com" }
+
+
+>
+> > ## Blockquote heading
+> > A Paragraph is the default element. How about some **inline markdown**?
+>
+> > A second nested block in a blockquote with some **inline markdown**?
+> >
+> > - list item 1
+> > - list item 2
+> > - list item 3
 >
 { cite="www.google.com" }
 
