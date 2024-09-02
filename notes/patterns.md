@@ -4,6 +4,26 @@
 (?:\n\{.*?\})?
 ```
 
+### rules
+
+#### none
+- meta
+#### after
+- unordered list
+- ordered list
+- definition list
+- admonition
+- footnote
+- table
+- blockquote
+- hr
+- paragraph
+
+#### inline
+- code
+- heading
+- image
+- svg
 
 ## table
 ```re
@@ -17,6 +37,26 @@
 (?:\>.*(?:\n\>.*)*)
 (?:\>.*)(?:\n\>.*){1,}
 ```
+
+## openers
+
+```md
+###
+--- 
+| 
+- 
+1. 
+\`\`\`
+!!!
+[^
+: 
+> 
+***
+![
+<svg
+
+```
+
 
 
 ```re

@@ -1,4 +1,10 @@
 import re
+"""
+edge cases
+- rogue spacing
+- rogue attrs for blocks
+"""
+
 TAB_LENGTH = 4
 
 META_BLOCK_DATA = r'^---\s*\n(?P<content>.*?)\n\s*---\s*(?:\n\s*|$)'
@@ -18,13 +24,18 @@ PARAGRAPH_BLOCK_DATA = r'(?P<content>.*?)(?:\n|$)(?P<after>.*?)'
 SVG_BLOCK_DATA = r'^<svg (?P<attrs>[^>]*)>(?P<between>.*?)</svg>(?P<after>.*)$'
 PARAGRAPH_BLOCK_DATA = r'^(?P<content>.*?)(?:\n\n)(?P<after>.*?)$'
 
-def process(content:str=""):
+def process_input_content(content:str=""):
     """
     homogenise the content so we always have the correct 
     inputs
     """
     pass
 
+
+def process_chunk(chunk):
+    # receive chunk
+    # extract attrs
+    return
 
 def find_next(content:str="", patterns:list=[]):
     """

@@ -10,6 +10,7 @@ parse the inline content
 BLOCKQUOTE_BLOCK_DATA: ^(?P<content>(?:(?:^\>\s+)(\{(?P<attrs>.*?)\})?\s*(?:\n))?(?P<between>(?:\>\s+.*(?:\n|$))+))
 BLOCKQUOTE_BLOCK_DATA: (?:^>\s+.*?$){1,}(?:\n\n|\n$)
 """
+AATRS_AT_BLOCK_END = r'(?:\{(?P<attrs>.*?)\})?'
 
 META_BLOCK_DATA = r'^(?:---\s*)(?:\n)(?P<content>.*?)(?:---\s*)(?:\n|$)'
 DEFINITIONLIST_BLOCK_DATA = r'(?P<content>\:\s+(?P<term>.+?)(?=\n{2}|$)\n\:\s+(?P<definition>.+?)(?=\n{2}|$))'
@@ -26,7 +27,6 @@ TABLE_BLOCK_DATA = r'^(?P<content>(?:\|(?P<header>.*?)\|\s*\n)(?:\|(?P<settings>
 TABLE_BLOCK_DATA = r'(?P<content>(?:^\|.*?\|\n){1,}(?:\{.*?\})?)'
 TABLE_BLOCK_DATA = r'^(?P<header>\|.*?\|\n)(?P<break>\|.*?\|\n)(?P<content>\|.*?\|(\n|$)){1,}(?:\{(?P<attrs>.*?)\})?'
 
-
 BLOCKQUOTE_BLOCK_DATA = r'(?P<content>(?:\>.*)(?:\n\>.*){1,})(?:\{(?P<attrs>.*?)\})?'
 HEADING_BLOCK_DATA = r'^(?P<content>(?P<level>\#{1,6})\s+(?P<text>.*?)(?:\{(?P<attrs>.*?)\})?\s*)(?:\n|$)'
 IMAGE_BLOCK_DATA = r'(?P<content>!\[(?P<attrs>.*?)\]\((?P<src>.*?)\))'
@@ -36,6 +36,8 @@ UNORDERED_LIST_BLOCK_DATA = r'(?P<content>(\s*-\s.*?\n){1,})'
 PARAGRAPH_BLOCK_DATA = r'(?P<content>.*?)(?:\n|\n\n|$)'
 
 EXTRACT_ATTRS = r'(?P<before>.*)\{(?P<attrs>.*?)\}(?P<after>.*)'
+
+# ensure that blocks are all separated by the same newlines
 NEWLINE_REPLACE = re.compile(r'^\n{2,}', re.MULTILINE | re.DOTALL)
 
 patterns = [
@@ -44,7 +46,7 @@ patterns = [
     ["footnote", FOOTNOTE_BLOCK_DATA, []],
     ["admonition", ADMONITION_BLOCK_DATA, []],
     ["code", CODE_BLOCK_DATA, []],
-    ["table", TABLE_BLOCK_DATA, []],
+    ["table", TABLE_BLOCK_DATA, ["header", "body", "break", "attrs"]],
     ["blockquote", BLOCKQUOTE_BLOCK_DATA, []],
     ["hr", HR_BLOCK_DATA, []],
     ["heading", HEADING_BLOCK_DATA, []],
@@ -52,7 +54,7 @@ patterns = [
     ["svg", SVG_BLOCK_DATA, []],
     ["unordered list", UNORDERED_LIST_BLOCK_DATA, []],
     ["ordered list", ORDERED_LIST_BLOCK_DATA, []],
-    ["paragraph", PARAGRAPH_BLOCK_DATA, []],
+    ["paragraph", PARAGRAPH_BLOCK_DATA, ["content"]],
 ]
 
 

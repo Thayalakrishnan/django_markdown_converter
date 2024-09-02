@@ -1,17 +1,33 @@
 import re
-from django_markdown_converter.helpers.helpers import ReadSourceFromFile
 
-EXTRACT_ATTRS = r'(?P<before>.*)\{(?P<attrs>.*?)\}(?P<after>.*)'
-NEWLINE_REPLACE = r'\n{3,}'
-NEWLINE_REPLACE = r'^\n{2,}'
+def print_lines(content):
+    lines = content.split("\n")
+    for i in lines:
+        print(repr(i))
+    return "\n".join(lines)
 
-NEWLINE_REPLACE_RAW = r'^\n{2,}'
-NEWLINE_REPLACE_PATTERN = re.compile(NEWLINE_REPLACE_RAW, re.MULTILINE | re.DOTALL)
+def process_input_content(content:str="")-> str:
+    # create and compile pattern
+    NEWLINE_REPLACE_RAW = r'^\n{2,}'
+    NEWLINE_REPLACE_PATTERN = re.compile(NEWLINE_REPLACE_RAW, re.MULTILINE | re.DOTALL)
+    
+    # replace the newlines
+    processed_content = content.strip("\n ")
+    processed_content = re.sub(NEWLINE_REPLACE_PATTERN, "\n", processed_content)
+    
+    # add new lines at the end for matcing purposes
+    processed_content = processed_content + "\n\n"
+    return processed_content
 
-path_to_file = "notes/examples/post.md"
-raw_chunk = ReadSourceFromFile(path_to_file)
+def space_replace_content(content:str="")-> str:
+    SPACE_REPLACE = r'(?:.{1})\s(?:.{1})'
+    SPACE_REPLACE = r'(?=.)\s(?=.)'
+    SPACE_REPLACE_PATTERN = re.compile(SPACE_REPLACE, re.MULTILINE)
+    processed_content = re.sub(SPACE_REPLACE_PATTERN, "•", content)
+    return processed_content
 
-raw_chunk = """## heading
+raw_content = """
+## heading
 
 
 
@@ -25,16 +41,16 @@ This is the third sentence.
 
 
 """
+
 print("before -----------------------------")
-raw_chunk = raw_chunk.split("\n")
-for i in raw_chunk:
-    print(repr(i))
-raw_chunk = "\n".join(raw_chunk)
-raw_chunk = re.sub(NEWLINE_REPLACE_PATTERN, "\n", raw_chunk)
-raw_chunk = raw_chunk.split("\n")
+print_lines(raw_content)
 
 print("after ------------------------------")
-for i in raw_chunk:
-    print(repr(i))
+raw_content = process_input_content(raw_content)
+print_lines(raw_content)
+
+print("after ------------------------------")
+raw_content = space_replace_content(raw_content)
+print_lines(raw_content)
 
 print("done -------------------------------")
