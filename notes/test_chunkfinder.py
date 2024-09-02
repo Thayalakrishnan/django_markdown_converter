@@ -11,7 +11,7 @@ BLOCKQUOTE_BLOCK_DATA: ^(?P<content>(?:(?:^\>\s+)(\{(?P<attrs>.*?)\})?\s*(?:\n))
 BLOCKQUOTE_BLOCK_DATA: (?:^>\s+.*?$){1,}(?:\n\n|\n$)
 """
 
-META_BLOCK_DATA = r'^(?P<content>---\s*\n(?P<between>.*?)\n\s*---\s*(?:\n\s*|$))'
+META_BLOCK_DATA = r'^(?:---\s*)(?:\n)(?P<content>.*?)(?:---\s*)(?:\n|$)'
 DEFINITIONLIST_BLOCK_DATA = r'(?P<content>\:\s+(?P<term>.+?)(?=\n{2}|$)\n\:\s+(?P<definition>.+?)(?=\n{2}|$))'
 FOOTNOTE_BLOCK_DATA = r'(?P<content>\[\^(?P<index>.+?)\]:\s*\n(?P<between>(?: {4,}.*(?:\n|$))+))'
 ADMONITION_BLOCK_DATA = r'(?P<content>!!!\s+(?P<type>[a-zA-Z]+)?\s*(?:\s+["\'](?P<title>[^"\']+?)["\'])?\s*\n(?P<between>(?: {4,}.*(?:\n|$))+))'
@@ -76,23 +76,28 @@ loop over the content and spit out chunks
 """
 for index, m in enumerate(match):
     chunk = m.group("chunk")
+    #print("chunk -------------------------")
+    print(f"\nchunk {index} --------------------")
+    print(repr(chunk))
     # determine the type of block each chunk is
     for label, pattern, items in patterns:
         submatch = pattern.match(chunk)
         if submatch:
-            #print(f"{index} - {label} --------------------")
-            content = submatch.group("content")
+            print(f"{label}")
+            #print(f"\n{index} - {label} --------------------")
+            #content = submatch.group("content")
             
             # check the content for attributes
-            m_attrs = pattern_attrs.match(content)
-            if m_attrs:
-                # if there are attrs, extract them
-                print("attrs -------------------------")
-                print(m_attrs.group("attrs"))
-                # return the content without the attrs
-                content = m_attrs.group("before") + m_attrs.group("after")
+            #m_attrs = pattern_attrs.match(content)
+            #if m_attrs:
+            #    # if there are attrs, extract them
+            #    print("attrs -------------------------")
+            #    print(m_attrs.group("attrs"))
+            #    # return the content without the attrs
+            #    content = m_attrs.group("before") + m_attrs.group("after")
             #else:
                 #print("content -------------------------")
+            
             #print(content)
             break
 
