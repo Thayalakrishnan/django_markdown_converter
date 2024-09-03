@@ -70,3 +70,64 @@ PARAGRAPH_BLOCK_DATA = r'(?P<content>.*?)(?:\n|\n\n|$)'
 EXTRACT_ATTRS = r'(?P<before>.*)\{(?P<attrs>.*?)\}(?P<after>.*)'
 
 ```
+
+
+### meta
+```re
+^(?:---\s*)(?:\n)(?P<content>.*?)(?:---\s*)(?:\n|$)
+```
+
+### definition list
+```re
+\:\s+(?P<term>.+?)(?=\n{2}|$)\n\:\s+(?P<definition>.+?)(?=\n{2}|$)
+```
+
+### footnote
+```re
+\[\^(?P<index>.+?)\]:\s*\n(?P<content>(?: {4,}.*(?:\n|$))+)
+```
+
+### admonition
+```re
+!!!\s+(?P<type>[a-zA-Z]+)?\s*(?:\s+["\'](?P<title>[^"\']+?)["\'])?\s*\n(?P<between>(?: {4,}.*(?:\n|$))+)
+```
+
+### code
+```re
+```
+
+### table
+```re
+```
+
+### blockquote
+```re
+```
+
+### hr
+```re
+```
+
+### heading
+```re
+```
+
+### image
+```re
+```
+
+### svg
+```re
+```
+
+### unordered list
+```re
+```
+
+### ordered list
+```re
+```
+
+### paragraph
+```re
+```

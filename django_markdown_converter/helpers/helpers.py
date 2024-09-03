@@ -35,6 +35,12 @@ def build_single_line_fenced_pattern_given_boundaries(left, right):
 def convert_array_of_colon_separated_values_to_dict(lines):
     return lines
 
+def print_lines(content):
+    lines = content.split("\n")
+    for i in lines:
+        print(repr(i))
+    return "\n".join(lines)
+
 
 def ReadSourceFromFile(read_from:str="") -> str:
     """open markdown file return the contents"""
