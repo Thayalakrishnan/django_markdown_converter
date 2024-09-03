@@ -75,6 +75,9 @@ EXTRACT_ATTRS = r'(?P<before>.*)\{(?P<attrs>.*?)\}(?P<after>.*)'
 ### meta
 ```re
 ^(?:---\s*)(?:\n)(?P<content>.*?)(?:---\s*)(?:\n|$)
+# simple
+^---.*?$.*?^---.*?$
+^---.*?---$
 ```
 
 ### definition list
@@ -85,22 +88,45 @@ EXTRACT_ATTRS = r'(?P<before>.*)\{(?P<attrs>.*?)\}(?P<after>.*)'
 ### footnote
 ```re
 \[\^(?P<index>.+?)\]:\s*\n(?P<content>(?: {4,}.*(?:\n|$))+)
+# simple
+(?:^\[\^.+?\]:.*?$)(?:.*?)(?:\n\n|\n$)
 ```
 
 ### admonition
 ```re
 !!!\s+(?P<type>[a-zA-Z]+)?\s*(?:\s+["\'](?P<title>[^"\']+?)["\'])?\s*\n(?P<between>(?: {4,}.*(?:\n|$))+)
+# simple
+(?:^!!!.*?$)(?:.*?)(?:\n$|\n\n)
 ```
 
 ### code
 ```re
+^```.*?\n(?P<between>.*?)(?<=\n)(?:```)\s*$
+
+## simple
+^```.*?```\s*?$
+## complex
 ```
+
 
 ### table
 ```re
+
 ```
 
 ### blockquote
+```re
+```
+
+### unordered list
+```re
+```
+
+### ordered list
+```re
+```
+
+### paragraph
 ```re
 ```
 
@@ -117,17 +143,5 @@ EXTRACT_ATTRS = r'(?P<before>.*)\{(?P<attrs>.*?)\}(?P<after>.*)'
 ```
 
 ### svg
-```re
-```
-
-### unordered list
-```re
-```
-
-### ordered list
-```re
-```
-
-### paragraph
 ```re
 ```
