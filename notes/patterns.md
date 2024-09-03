@@ -112,6 +112,9 @@ EXTRACT_ATTRS = r'(?P<before>.*)\{(?P<attrs>.*?)\}(?P<after>.*)'
 ### table
 ```re
 
+# simple
+(?:^\|.*?\|$)+?(?!\n\|)
+(?:^\|.*?\| *?$)+?(?!\n\|)
 ```
 
 ### blockquote
