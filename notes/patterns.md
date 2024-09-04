@@ -79,11 +79,19 @@ EXTRACT_ATTRS = r'(?P<before>.*)\{(?P<attrs>.*?)\}(?P<after>.*)'
 ^---.*?$.*?^---.*?$
 ^---.*?---$
 ```
+props:
+- 
+
+
 
 ### definition list
 ```re
 \:\s+(?P<term>.+?)(?=\n{2}|$)\n\:\s+(?P<definition>.+?)(?=\n{2}|$)
 ```
+props:
+- attrs
+- term
+- definition
 
 ### footnote
 ```re
@@ -91,6 +99,8 @@ EXTRACT_ATTRS = r'(?P<before>.*)\{(?P<attrs>.*?)\}(?P<after>.*)'
 # simple
 (?:^\[\^.+?\]:.*?$)(?:.*?)(?:\n\n|\n$)
 ```
+props:
+- attrs
 
 ### admonition
 ```re
@@ -98,6 +108,10 @@ EXTRACT_ATTRS = r'(?P<before>.*)\{(?P<attrs>.*?)\}(?P<after>.*)'
 # simple
 (?:^!!!.*?$)(?:.*?)(?:\n$|\n\n)
 ```
+props:
+- attrs
+- type
+- title
 
 ### code
 ```re
@@ -107,44 +121,81 @@ EXTRACT_ATTRS = r'(?P<before>.*)\{(?P<attrs>.*?)\}(?P<after>.*)'
 ^```.*?```\s*?$
 ## complex
 ```
+props:
+- attrs
+- language
 
 
 ### table
 ```re
-
 # simple
 (?:^\|.*?\|$)+?(?!\n\|)
 (?:^\|.*?\| *?$)+?(?!\n\|)
+## Flags: multiline
+(?:^\|.*?\|\s*?\n)+(?!\n\|) 
+# complex 
+## Flags: multiline, dotall
+^(?P<header>\|.*?\|\n)(?P<break>\|.*?\|\n)(?P<body>\|.*?\|(\n|$)){1,}(?:\{(?P<attrs>.*?)\})? 
 ```
+props:
+- attrs
+- header
+- body
+- footer
 
 ### blockquote
 ```re
+# simple
+(?:>.*?\n)+(?!>\n)
 ```
+props:
+- attrs
+- citation
+
 
 ### unordered list
 ```re
 ```
+props:
+- attrs
 
 ### ordered list
 ```re
 ```
+props:
+- attrs
 
 ### paragraph
 ```re
 ```
+props:
+- attrs
 
 ### hr
 ```re
 ```
+props:
+- attrs
+
 
 ### heading
 ```re
 ```
+props:
+- attrs
+- level
+
 
 ### image
 ```re
 ```
+props:
+- attrs
+- subtype
 
 ### svg
 ```re
 ```
+props:
+- attrs
+
