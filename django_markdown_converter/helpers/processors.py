@@ -2,6 +2,15 @@ import re
 
 
 def process_input_content(content:str="")-> str:
+    """
+    transform the content by replacing multiple newline characters
+    with a single newline character. 
+    essentially we wan to ensure that the content is spaced out properly
+    so that the blocks can be properly detected
+    we also want to strip and leading or trailing whitespace
+    finally , we add some newlines at the end to ensure proper padding 
+    when parsing the content into blocks
+    """
     # create and compile pattern
     NEWLINE_REPLACE_RAW = r'^\n{2,}'
     NEWLINE_REPLACE_PATTERN = re.compile(NEWLINE_REPLACE_RAW, re.MULTILINE | re.DOTALL)
@@ -15,6 +24,9 @@ def process_input_content(content:str="")-> str:
     return processed_content
 
 def space_replace_content(content:str="")-> str:
+    """
+    replace the space between detected words with a new symbol
+    """
     SPACE_REPLACE = r'(?:.{1})\s(?:.{1})'
     SPACE_REPLACE = r'(?=.)\s(?=.)'
     SPACE_REPLACE_PATTERN = re.compile(SPACE_REPLACE, re.MULTILINE)
@@ -24,6 +36,12 @@ def space_replace_content(content:str="")-> str:
 
 
 def extract_attrs(content:str="")-> str:
+    """
+    recieve a block of content that may have attributes
+    we want to:
+    - extract those attributes
+    - return the content with the attributes removed
+    """
     # attrs
     attrs = ""
     EXTRACT_ATTRS = r'(?P<before>.*)\{(?P<attrs>.*?)\}(?P<after>.*)'
