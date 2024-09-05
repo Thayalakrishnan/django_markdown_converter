@@ -4,7 +4,7 @@ import re
 """
 
 
-META_PATTERN = (r'^---.*?^---.*?(?=^\n)', re.MULTILINE | re.DOTALL)
+META_PATTERN = (r'^---.*?^---', re.MULTILINE | re.DOTALL)
 CODE_PATTERN = (r'(?:^```.*?$\n)(?:.*?$\n)+?(?:^```)', re.MULTILINE)
 HR_PATTERN = (r'^(?:[\*\-]{3,} *(?:\s?\{.*?\})?$)', re.MULTILINE)
 HEADING_PATTERN = (r'^\#+\s+.*?$\n', re.MULTILINE)
@@ -25,6 +25,7 @@ FOOTNOTE_PATTERN = (r'^\[\^\d+\]\:\n.*$', re.MULTILINE | re.DOTALL)
 
 TABLE_PATTERN = (r'(?:^\|.*?\| *?$\n)+(?:\{.*?\})?', re.MULTILINE)
 TABLE_PATTERN = (r'(?:^\|.*?\| *?\n)(?:.*?)+(?:\{.*?\})?', re.MULTILINE)
+TABLE_PATTERN = (r'(?:^\|.*?\|$(?:\n|$))+(?:\{.*?\})?', re.MULTILINE)
 
 """
 """
