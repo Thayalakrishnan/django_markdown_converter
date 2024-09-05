@@ -72,34 +72,6 @@ def CreateCounter(dataset, position):
 | Row 1 Column 1| Row 1 Column 2 |
 | Row 2 Column 1| Row 2 Column 2 |
 
-## Ordered List
-
-1. Item 1
-2. Item 2
-3. Item 3
-4. Item 4
-
-5. Item 1
-6. Item 2
-7. Item 3
-    1. Indented Item 1
-    2. Indented Item 2
-8. Item 4
-
-## Unordered List
-
-- Item 1
-- Item 2
-- Item 3
-- Item 4
-
-- Item 1
-- Item 2
-- Item 3
-    - Indented Item 1
-    - Indented Item 2
-- Item 4
-
 ## Blockquote
 
 > blockquote
@@ -135,6 +107,39 @@ def CreateCounter(dataset, position):
 >
 { cite="www.google.com" }
 
+## Paragraph with links
+
+To include a link, we place the link text in brackets and immediately follow it with the link text in parentheses like [this link](https://lawen.thayalakrishnan.com) to the homepage! We can emphasise **[the link](https://lawen.thayalakrishnan.com)** by enclosing the markdown in double asterisks. The same applies to single asterisk to italise [the link](https://lawen.thayalakrishnan.com). Use angle brackets, to render the link raw <https://lawen.thayalakrishnan.com>. This is an email address <example@email.com> in the middle of a paragraph!
+
+
+## Ordered List
+
+1. Item 1
+2. Item 2
+3. Item 3
+4. Item 4
+
+5. Item 1
+6. Item 2
+7. Item 3
+    1. Indented Item 1
+    2. Indented Item 2
+8. Item 4
+
+## Unordered List
+
+- Item 1
+- Item 2
+- Item 3
+- Item 4
+
+- Item 1
+- Item 2
+- Item 3
+    - Indented Item 1
+    - Indented Item 2
+- Item 4
+
 ## Admonition
 
 !!! note "Note Title"
@@ -155,19 +160,21 @@ def CreateCounter(dataset, position):
         print(i)
     ```
 
-!!! question
+!!! top question
     further ideas, further links etc.
+{ cite="www.google.com" }
 
 ## Definition Lists
 
-: First Term
+First Term
 : This is the definition of the first term.
 
-: Second Term
+Second Term
 : This is one definition of the second term.
 : This is another definition of the second term.
 
-## Paragraph with links
 
-To include a link, we place the link text in brackets and immediately follow it with the link text in parentheses like [this link](https://lawen.thayalakrishnan.com) to the homepage! We can emphasise **[the link](https://lawen.thayalakrishnan.com)** by enclosing the markdown in double asterisks. The same applies to single asterisk to italise [the link](https://lawen.thayalakrishnan.com). Use angle brackets, to render the link raw <https://lawen.thayalakrishnan.com>. This is an email address <example@email.com> in the middle of a paragraph!
-
+Third Term
+: This is one definition of the third term.
+: This is another definition of the third term.
+{ cite="www.google.com" }

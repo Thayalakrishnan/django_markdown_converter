@@ -12,8 +12,10 @@ def block_iterator(content:str=""):
     chunks = BLOCK_PATTERN.finditer(content)
     for index, chunk in enumerate(chunks):
         block = chunk.group("block")
+        print(f"{index} ----------------------------")
         print(repr(block))
-        yield remove_trailing_whitespace(block), index
+        #yield remove_trailing_whitespace(block), index
+        yield block, index
 
 
 def block_detector(block:str="", index:int=0):
