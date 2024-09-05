@@ -16,7 +16,9 @@ raw_chunk = ReadSourceFromFile(path_to_file)
 raw_chunk = process_input_content(raw_chunk)
 
 for index, label, content, attrs in block_parser(raw_chunk):
-    print(f"{index} ----- {label}")
+    #print(f"{index} ----- {label}")
+    print(f"---------------")
+    pass
 
 
 """

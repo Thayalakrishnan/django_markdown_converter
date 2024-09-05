@@ -102,6 +102,9 @@ props:
 !!!\s+(?P<type>[a-zA-Z]+)?\s*(?:\s+["\'](?P<title>[^"\']+?)["\'])?\s*\n(?P<between>(?: {4,}.*(?:\n|$))+)
 # simple
 (?:^!!!.*?$)(?:.*?)(?:\n$|\n\n)
+(?:^!!!.*?\n)(?:.*?\n)+?(?=^\n) # multiline
+(?:^!!!.*?$)(?:.*?)(?=^\n) # multiline, dotall
+
 ```
 props:
 - attrs
