@@ -81,7 +81,7 @@ def CreateCounter(dataset, position):
 > - list item 2
 > - list item 3
 >
-{ cite="www.google.com" }
+
 
 
 >
@@ -108,12 +108,12 @@ To include a link, we place the link text in brackets and immediately follow it 
 3. Item 3
 4. Item 4
 
-5. Item 1
-6. Item 2
-7. Item 3
+1. Item 1
+2. Item 2
+3. Item 3
     1. Indented Item 1
     2. Indented Item 2
-8. Item 4
+4. Item 4
 
 ## Unordered List
 
