@@ -5,8 +5,6 @@ import re
 
 
 META_PATTERN = (r'^---.*?^---.*?(?=^\n)', re.MULTILINE | re.DOTALL)
-
-
 CODE_PATTERN = (r'(?:^```.*?$\n)(?:.*?$\n)+?(?:^```)', re.MULTILINE)
 TABLE_PATTERN = (r'(?:^\|.*?\| *?$\n)+(?:\{.*?\})?', re.MULTILINE)
 BLOCKQUOTE_PATTERN = (r'(?:^> *?.*?$\n)+(?:\{.*?\})?', re.MULTILINE)
@@ -16,17 +14,11 @@ IMAGE_PATTERN = (r'^!\[.*?\]\(.*?\)', re.MULTILINE | re.DOTALL)
 SVG_PATTERN = (r'^<svg\s[^>]*>(?:.*?)</svg>', re.MULTILINE | re.DOTALL)
 ORDERED_LIST_PATTERN = (r'(?:^ *\d+\. +.*?\n)+(?=^\n)?', re.MULTILINE | re.DOTALL)
 PARAGRAPH_PATTERN = (r'(?:.*?)(?:\n|\n\n|$)', re.MULTILINE | re.DOTALL)
-
 UNORDERED_LIST_PATTERN = (r'(?:^ *- +.*?\n)+(?=^\n)?', re.MULTILINE | re.DOTALL)
 ADMONITION_PATTERN = (r'(?:^!!!.*?\n$)', re.MULTILINE | re.DOTALL)
-
-
-DEFINITIONLIST_PATTERN = (r'(?:^.+?$\n)(?:\: .*?$\n)+?(?:\{.*?\})?', re.MULTILINE)
-DEFINITIONLIST_PATTERN = (r'^.+?$(?:\n\: .*?$)+(?:\n\{.*?\})?', re.MULTILINE)
 DEFINITIONLIST_PATTERN = (r'^.+?$\n(?:\: .*?$\n)+(?:\{.*?\})?', re.MULTILINE)
 
-
-FOOTNOTE_PATTERN = (r'(?:^\[\^.*?$\n)(?:.*?)(?=^\n)', re.MULTILINE | re.DOTALL)
+FOOTNOTE_PATTERN = (r'(?:^\[\^.*?$\n)(?:.*?)(?=\n\n)', re.MULTILINE | re.DOTALL)
 
 """
 """
