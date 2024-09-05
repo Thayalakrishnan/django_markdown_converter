@@ -17,8 +17,7 @@ PARAGRAPH_PATTERN = (r'(?:.*?)(?:\n|\n\n|$)', re.MULTILINE | re.DOTALL)
 UNORDERED_LIST_PATTERN = (r'(?:^ *- +.*?\n)+(?=^\n)?', re.MULTILINE | re.DOTALL)
 ADMONITION_PATTERN = (r'(?:^!!!.*?\n$)', re.MULTILINE | re.DOTALL)
 DEFINITIONLIST_PATTERN = (r'^.+?$\n(?:\: .*?$\n)+(?:\{.*?\})?', re.MULTILINE)
-
-FOOTNOTE_PATTERN = (r'(?:^\[\^.*?$\n)(?:.*?)(?=\n\n)', re.MULTILINE | re.DOTALL)
+FOOTNOTE_PATTERN = (r'(?:^\[\^.*?$\n)(?:.*?)(?=\n\n|\n$)', re.MULTILINE | re.DOTALL)
 
 """
 """

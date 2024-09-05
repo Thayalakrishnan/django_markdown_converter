@@ -28,7 +28,8 @@ def tab_replace_content(content:str="")-> str:
     """
     replace the space between detected words with a new symbol
     """
-    processed_content = re.sub(r'\t', " ", content)
+    processed_content = content.strip(" \n")
+    processed_content = re.sub(r'\t', " ", processed_content)
     return processed_content
 
 

@@ -8,17 +8,6 @@ tags: markdown, python, parser
 
 Pargraph 4 **eos** aperiam dolorem numquam quisquam [^1]. Cupiditate ==reprehenderit== beatae ab inventore libero. Accusantium explicabo optio debitis magni sint earum excepturi. Dicta aliquid cupiditate. Consequuntur temporibus `code` voluptates _similique_. Aut maiores hic laudantium distinctio[^2]. Aliquid magni expedita voluptatem illo laudantium illo. Quidem occaecati voluptas odit^5^ ex aspernatur eius ~~consectetur~~ blanditiis. Aperiam ullam iure soluta animi voluptatem pariatur nesciunt voluptatibus. Fuga iste in.
 
-## Footnotes
-
-[^1]:
-    Footnote 1.
-
-[^2]:
-    Footnote 2 and some inline `code`.
-    If we indent the paragraph we cant put as much content here as we would like.
-    
-    This is a multiline footnote. It also does not matter where we put the footnote definition!
-
 ## Image
 
 ![ blocktype="image" subtype="still" title="Title for a basic image with a caption" alt="This is an example of a basic image in markdown with a caption" height="1080" width="1920" caption="This is an example of a caption being included with a basic image." ](https://thayalakrishnan-lawen-prod-media.s3.ap-southeast-2.amazonaws.com/media/images/covers/image2.jpg)
@@ -178,3 +167,23 @@ Third Term
 : This is one definition of the third term.
 : This is another definition of the third term.
 { cite="www.google.com" }
+
+## Footnotes
+
+[^1]:
+    Footnote 1.
+
+[^2]:
+    Footnote 2 and some inline `code`.
+    If we indent the paragraph we cant put as much content here as we would like.
+    
+    This is a multiline footnote. It also does not matter where we put the footnote definition!
+
+[^3]:
+    Footnote 3 and some inline `code`.
+    If we indent the paragraph we cant put as much content here as we would like.
+    
+    This is a multiline footnote. It also does not matter where we put the footnote definition!
+    { cite="www.google.com" }    
+
+## Done
