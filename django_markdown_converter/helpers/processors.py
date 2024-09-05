@@ -23,6 +23,25 @@ def process_input_content(content:str="")-> str:
     processed_content = processed_content + "\n\n"
     return processed_content
 
+
+def tab_replace_content(content:str="")-> str:
+    """
+    replace the space between detected words with a new symbol
+    """
+    processed_content = re.sub(r'\t', " ", content)
+    return processed_content
+
+
+def remove_trailing_whitespace(content:str="")-> str:
+    """
+    replace the space between detected words with a new symbol
+    """
+    pattern_raw = r'\s+$'
+    pattern = re.compile(pattern_raw, re.MULTILINE | re.DOTALL)
+    processed_content = re.sub(pattern, "", content)
+    return processed_content
+
+
 def space_replace_content(content:str="")-> str:
     """
     replace the space between detected words with a new symbol

@@ -1,5 +1,6 @@
 from django_markdown_converter.patterns.block import BLOCK_PATTERN, BLOCK_PATTERNS
-from django_markdown_converter.helpers.processors import extract_attrs
+from django_markdown_converter.helpers.processors import extract_attrs, remove_trailing_whitespace
+
 
 def block_iterator(content:str=""):
     """
@@ -9,7 +10,7 @@ def block_iterator(content:str=""):
     chunks = BLOCK_PATTERN.finditer(content)
     for index, chunk in enumerate(chunks):
         block = chunk.group("block")
-        yield block, index
+        yield remove_trailing_whitespace(block), index
 
 
 def block_detector(block:str="", index:int=0):

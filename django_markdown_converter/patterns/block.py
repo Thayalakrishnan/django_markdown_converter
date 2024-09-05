@@ -19,7 +19,7 @@ HR_BLOCK_DATA = r'^(?P<content>[\*\-]{3,})\s*(?:\n|$)'
 TABLE_BLOCK_DATA = r'^(?P<content>(?:\|(?P<header>.*?)\|\s*\n)(?:\|(?P<settings>.*?)\|\s*\n)(?P<between>(?:.*(?:\|\n|\|$))+)(?:(?:\{\s*(?P<attrs>.*?)\s*\})?))'
 
 TABLE_BLOCK_DATA = r'(?P<content>(?:^\|.*?\|\n){1,}(?:\{.*?\})?)'
-TABLE_BLOCK_DATA = r'^(?P<header>\|.*?\|\n)(?P<break>\|.*?\|\n)(?P<body>\|.*?\|(\n|$)){1,}(?:\{(?P<attrs>.*?)\})?'
+TABLE_BLOCK_DATA = r'^(?P<header>\|.*?\|\n)(?P<break>\|.*?\|\n)(?P<content>\|.*?\|(\n|$)){1,}(?:\{(?P<attrs>.*?)\})?'
 
 
 BLOCKQUOTE_BLOCK_DATA = r'(?P<content>(?:\>.*)(?:\n\>.*){1,})(?:\{(?P<attrs>.*?)\})?'
