@@ -30,20 +30,18 @@ def block_detector(block:str="", index:int=0):
         if submatch:
             #content = submatch.group("content")
             content = submatch.group(0)
-            if block != content:
-                print(f"{index} {label} ---------------------{False}\n")
-                print("before ----------\n")
-                print(repr(block))
-                print("\n")
-                print("after ----------\n")
-                print(repr(content))
-                print("\n\n")
-            #else:
-            #    print(f"{index} {label} ---------------------{True}")
+            #if block != content:
+            #    print("bad match")
+            #    continue
             attrs = ""
             # check the content for attributes
             if contains_attrs:
-                content, attrs = extract_attrs(content)
+                content, attrs = extract_attrs(block)
+                if attrs:
+                    print(f"{index} | {repr(attrs)}")
+                else:
+                    print("\nNO ATTRS DETECTED\n")
+                    print(block)
             return index, label, content, attrs
 
 

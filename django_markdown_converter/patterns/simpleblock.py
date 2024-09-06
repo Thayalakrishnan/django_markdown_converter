@@ -7,7 +7,7 @@ import re
 META_PATTERN = (r'^---.*?^---', re.MULTILINE | re.DOTALL)
 CODE_PATTERN = (r'(?:^```.*?$\n)(?:.*?$\n)+?(?:^```)', re.MULTILINE)
 HR_PATTERN = (r'^(?:[\*\-]{3,} *(?:\s?\{.*?\})?$)', re.MULTILINE)
-HEADING_PATTERN = (r'^\#+\s+.*?$\n', re.MULTILINE)
+HEADING_PATTERN = (r'^\#+\s+.*?$', re.MULTILINE)
 IMAGE_PATTERN = (r'^!\[.*?\]\(.*?\)', re.MULTILINE | re.DOTALL)
 SVG_PATTERN = (r'^<svg\s[^>]*>(?:.*?)</svg>', re.MULTILINE | re.DOTALL)
 PARAGRAPH_PATTERN = (r'(?:.*?)(?:\n|\n\n|$)', re.MULTILINE | re.DOTALL)
