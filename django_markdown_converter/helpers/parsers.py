@@ -1,7 +1,7 @@
 #from django_markdown_converter.patterns.block import BLOCK_PATTERN, BLOCK_PATTERNS
 from django_markdown_converter.patterns.block import BLOCK_PATTERN
 from django_markdown_converter.patterns.simpleblock import BLOCK_PATTERNS
-from django_markdown_converter.helpers.processors import extract_attrs, remove_trailing_whitespace
+from django_markdown_converter.helpers.processors import extract_attrs
 
 
 def block_iterator(content:str=""):
@@ -12,6 +12,7 @@ def block_iterator(content:str=""):
     chunks = BLOCK_PATTERN.finditer(content)
     for index, chunk in enumerate(chunks):
         block = chunk.group("block")
+        #print(repr(block))
         #block =  remove_trailing_whitespace(block)
         yield block, index
 
@@ -25,25 +26,21 @@ def block_detector(block:str="", index:int=0):
     attrs = ""
     # extract any attrs that are in this block
     block, attrs = extract_attrs(block)
-    
     for label, pattern, props in BLOCK_PATTERNS:
         submatch = pattern.match(block)
         if submatch:
             #content = submatch.group("content")
             content = submatch.group(0)
-            #if block != content:
-            #    print("bad match")
-            #    continue
             # check the content for attributes
+            #print(f"{index} | {repr(attrs)} |")
             if attrs:
                 #print(f"---------------------------------------------\n")
-                print(f"{index} | {repr(attrs)} |")
-                #print(content)
+                #print(f"{index} | {repr(attrs)} |")
+                pass
             else:
                 print("\nNO ATTRS DETECTED\n")
                 print(block)
             return index, label, content, attrs
-
 
 def block_parser(content:str=""):
     """

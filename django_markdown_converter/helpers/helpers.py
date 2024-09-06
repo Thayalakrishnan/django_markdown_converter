@@ -19,10 +19,10 @@ LAMBDA_HELPERS = {
     "leftstrip": lambda x: x.lstrip(),
     "strip-and-split-by-colon": lambda x: x.strip().split(":"),
     "filter-len-2": lambda y: len(y)==2,
-    
+
     "map-array-to-tuple": lambda z: (z[0].strip(), z[1].strip()),
     "map-strip-and-split-by": lambda x, y: x.strip().split(y),
-    
+
     "filter-empties": lambda x: len(x),
     "filter-len-by": lambda x, y: len(x)==y,
 }
@@ -59,3 +59,9 @@ def WriteJSONToFile(write_too:str="", data:list=[]) -> str:
     """write JSON data to file"""
     with open(write_too, "w") as json_file:
         json.dump(data, json_file, indent=4)
+
+
+def WriteToMDFile(write_too:str="", data:str="") -> str:
+    """write string data to Markdown"""
+    with open(f"{write_too}.md", "w") as file:
+        file.write(data)

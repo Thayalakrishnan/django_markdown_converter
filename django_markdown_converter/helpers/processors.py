@@ -67,7 +67,7 @@ def excise(content:str="", target:str="", before:str="(?P<before>.*)", after:str
     excised = ""
     if match:
         excised = match.group(2)
-        content = match.group(1) + match.group(3)
+        content = match.group(1).strip() + match.group(3).strip()
     return content, excised
 
 
@@ -88,4 +88,23 @@ def extract_metablock(content:str="")-> str:
     - extract those attributes
     - return the content with the attributes removed
     """
-    return excise(content=content, target=r'(?P<target>(?:^---.*?\n^\n))', before="(?P<before>.*?)")
+    processed_content, meta = excise(content=content, target=r'(?P<target>(?:^---.*?\n^\n))', before="(?P<before>.*?)", after="(?P<after>.*)")
+    processed_content = processed_content + "\n\n"
+    return processed_content, meta
+
+
+
+
+def process_props(props:str="")-> dict:
+    """
+    receive a string that represents key value pairs
+    we want to:
+    - extract those attributes
+    - return them as a dict
+    """
+    PATTERN_RAW = r'(\S*?)\=(\".*?\")|(\S*?)\=(\'.*?\')'
+    PATTERN_RAW = r'(\S*?)\=(?P<open>[\"\'])(.*?)(?P=open)'
+    props = props.strip()
+    vals = re.findall(PATTERN_RAW, props, re.MULTILINE | re.DOTALL)
+    vals = [(_[0], _[2]) for _ in vals]
+    return dict(vals)

@@ -19,7 +19,7 @@ DEFINITIONLIST_PATTERN = r'^.+?$\n(?:\: .*$)'
 FOOTNOTE_PATTERN = r'^\[\^\d+\]\:\n.*$'
 IMAGE_PATTERN = r'^!\[.*?\]\(.*?\)'
 ORDERED_LIST_PATTERN = r'(?:^ *\d+\. +.*$)+'
-PARAGRAPH_PATTERN = r'.*?'
+PARAGRAPH_PATTERN = r'.*'
 SVG_PATTERN = r'^<svg\s[^>]*>(?:.*?)</svg>'
 UNORDERED_LIST_PATTERN = r'(?:^ *- +.*$)+'
 
