@@ -4,7 +4,7 @@ import re
 """
 
 
-META_PATTERN = (r'^---.*?^---', re.MULTILINE | re.DOTALL)
+META_PATTERN = (r'^---.*?^---$', re.MULTILINE | re.DOTALL)
 CODE_PATTERN = (r'(?:^```.*?$\n)(?:.*?$\n)+?(?:^```)', re.MULTILINE)
 HR_PATTERN = (r'^(?:[\*\-]{3,} *(?:\s?\{.*?\})?$)', re.MULTILINE)
 HEADING_PATTERN = (r'^\#+\s+.*?$', re.MULTILINE)

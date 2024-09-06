@@ -55,9 +55,14 @@ def find_next(content:str="", patterns:list=[]):
 
 def blockify(content:str=""):
     """
-    generator that goes to work finding the next block
-    it will yield the block
     """
     root = {"type": "root", "children": []}
-    
+    # process content
+    ## strip whitespace and ensure correct block spacing
+    # extract meta block
+    # loop over blocks and create first pass of block elements
+    ## ensure any footnotes encountered are added to the back and not the 
+    ## flow, we can also do this last after the first pass
+    # loop over elements that may nested block level elements
+    # convert inline markup
     pass

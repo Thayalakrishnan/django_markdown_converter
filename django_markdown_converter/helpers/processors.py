@@ -54,6 +54,21 @@ def space_replace_content(content:str="")-> str:
     processed_content = re.sub(SPACE_REPLACE_PATTERN, "•", content)
     return processed_content
 
+def excise(content:str="", target:str="", before:str="(?P<before>.*)", after:str="(?P<after>.*)")-> tuple[str, str]:
+    """
+    given a regex pattern, we want to:
+    - scan the pattern
+    - excise the content if present
+    - return content and the excised bit
+    """
+    pattern = f'{before}{target}{after}'
+    pattern = re.compile(pattern, re.MULTILINE | re.DOTALL)
+    match = pattern.match(content)
+    excised = ""
+    if match:
+        excised = match.group(2)
+        content = match.group(1) + match.group(3)
+    return content, excised
 
 
 def extract_attrs(content:str="")-> str:
@@ -63,15 +78,14 @@ def extract_attrs(content:str="")-> str:
     - extract those attributes
     - return the content with the attributes removed
     """
-    # attrs
-    attrs = ""
-    EXTRACT_ATTRS = r'(?P<before>.*)\{(?P<attrs>.*?)\}(?P<after>.*)'
-    ATTRS_PATTERN = re.compile(EXTRACT_ATTRS, re.MULTILINE | re.DOTALL)
-    
-    match = ATTRS_PATTERN.match(content)
-    if match:
-        ## if there are attrs, extract them
-        attrs = match.group("attrs")
-        ## return the content without the attrs
-        content = match.group("before") + match.group("after")
-    return content, attrs
+    return excise(content=content, target=r'\{(?P<attrs>.*?)\}')
+
+
+def extract_metablock(content:str="")-> str:
+    """
+    recieve a block of content that may have attributes
+    we want to:
+    - extract those attributes
+    - return the content with the attributes removed
+    """
+    return excise(content=content, target=r'(?P<target>(?:^---.*?\n^\n))',before="(?P<before>.*?)")

@@ -13,10 +13,7 @@ def block_iterator(content:str=""):
     for index, chunk in enumerate(chunks):
         block = chunk.group("block")
         block =  remove_trailing_whitespace(block)
-        #print(f"{index} ----------------------------")
-        #print(repr(block))
         yield block, index
-        #yield block, index
 
 
 def block_detector(block:str="", index:int=0):
