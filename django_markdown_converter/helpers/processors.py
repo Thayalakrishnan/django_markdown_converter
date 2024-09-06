@@ -78,7 +78,7 @@ def extract_attrs(content:str="")-> str:
     - extract those attributes
     - return the content with the attributes removed
     """
-    return excise(content=content, target=r'\{(?P<attrs>.*?)\}')
+    return excise(content=content, target=r'\{(?P<attrs>.*?)\}', after="(?P<after>$)")
 
 
 def extract_metablock(content:str="")-> str:
@@ -88,4 +88,4 @@ def extract_metablock(content:str="")-> str:
     - extract those attributes
     - return the content with the attributes removed
     """
-    return excise(content=content, target=r'(?P<target>(?:^---.*?\n^\n))',before="(?P<before>.*?)")
+    return excise(content=content, target=r'(?P<target>(?:^---.*?\n^\n))', before="(?P<before>.*?)")

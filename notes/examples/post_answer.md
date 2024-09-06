@@ -1,4 +1,3 @@
-meta
 heading
 paragraph
 paragraph

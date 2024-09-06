@@ -135,6 +135,8 @@ props:
 
 ## Flags: multiline
 (?:^\|.*?\|\s*?\n)+(?!\n\|) 
+(?:^\|.*?\|\s*?\n)+(?:$)
+(?:^\|.*?\|\s*?$\n?)+
 
 # complex 
 ## Flags: multiline, dotall

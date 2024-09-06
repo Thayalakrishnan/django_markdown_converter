@@ -12,7 +12,7 @@ def block_iterator(content:str=""):
     chunks = BLOCK_PATTERN.finditer(content)
     for index, chunk in enumerate(chunks):
         block = chunk.group("block")
-        block =  remove_trailing_whitespace(block)
+        #block =  remove_trailing_whitespace(block)
         yield block, index
 
 
@@ -22,7 +22,11 @@ def block_detector(block:str="", index:int=0):
     of block content using the block patterns list. 
     """
     # determine the type of block each chunk is
-    for label, pattern, props, contains_attrs in BLOCK_PATTERNS:
+    attrs = ""
+    # extract any attrs that are in this block
+    block, attrs = extract_attrs(block)
+    
+    for label, pattern, props in BLOCK_PATTERNS:
         submatch = pattern.match(block)
         if submatch:
             #content = submatch.group("content")
@@ -30,15 +34,14 @@ def block_detector(block:str="", index:int=0):
             #if block != content:
             #    print("bad match")
             #    continue
-            attrs = ""
             # check the content for attributes
-            if contains_attrs:
-                content, attrs = extract_attrs(block)
-                if attrs:
-                    print(f"{index} | {repr(attrs)}")
-                else:
-                    print("\nNO ATTRS DETECTED\n")
-                    print(block)
+            if attrs:
+                #print(f"---------------------------------------------\n")
+                print(f"{index} | {repr(attrs)} |")
+                #print(content)
+            else:
+                print("\nNO ATTRS DETECTED\n")
+                print(block)
             return index, label, content, attrs
 
 

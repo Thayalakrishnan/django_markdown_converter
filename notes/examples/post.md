@@ -21,18 +21,15 @@ To include a link, we place the link text in brackets and immediately follow it 
 
 ## Code Block { blocktype="heading" }
 
-
 ```python
 from nba_api.stats.endpoints import playerawards as pa
 ```
 { blocktype="code" filename="playerawards.py" }
 
-
 ```
 from nba_api.stats.endpoints import playerawards as pa
 ```
 { blocktype="code" }
-
 
 ```python
 from nba_api.stats.endpoints import playerawards as pa
@@ -59,7 +56,6 @@ def CreateCounter(dataset, position):
     return dict_counter
 ```
 { blocktype="code" language="python" }
-
 
 ```md
 > blockquote
@@ -148,9 +144,9 @@ def CreateCounter(dataset, position):
 { blocktype="o list" }
 
 1. Multiline Item 1, line 1.
-   Multiline Item 1, line 2
+   Multiline Item 1, line 2.
    
-   Multiline Item 1, line 3 after double line break
+   Multiline Item 1, line 3 after double line break.
 2. Item 2
 3. Item 3
 4. Item 4
@@ -267,4 +263,4 @@ Third Term
     This is a multiline footnote. It also does not matter where we put the footnote definition!
 { blocktype="footnote" }
 
-## Done { blocktype="heading" } { blocktype="heading" }
+## Done { blocktype="heading" }
