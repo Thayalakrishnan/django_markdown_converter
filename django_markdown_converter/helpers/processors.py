@@ -81,7 +81,40 @@ def extract_attrs(content:str="")-> str:
     return excise(content=content, target=r'\{(?P<attrs>.*?)\}', after="(?P<after>$)")
 
 
-def extract_metablock(content:str="")-> str:
+def process_meta_block(meta:str="")-> dict:
+    """
+    recieve a meta block
+    we want to:
+    - extract the attributes
+    - return the content with the attributes removed
+    """
+    kvs_dict = {}
+    meta, attrs = extract_attrs(content=meta)
+    
+    attrs = process_props(attrs)
+    if attrs:
+        kvs_dict.update(attrs)
+        
+    PATTERN_RAW = r'^---(?P<data>.*?)\n^---'
+    pattern = re.compile(PATTERN_RAW, re.MULTILINE | re.DOTALL)
+    match = pattern.match(meta)
+    if match:
+        data = match.group("data").strip()
+        data = data.split("\n")
+        kvs = []
+        for d in data:
+            key, value = d.split(":")
+            key = key.strip()
+            value = value.strip()
+            kvs.append((key, value))
+        
+        if kvs:
+            kvs_dict.update(dict(kvs))
+            return kvs_dict
+    return kvs_dict
+
+
+def extract_meta_block(content:str="")-> str:
     """
     recieve a block of content that may have attributes
     we want to:
@@ -90,9 +123,7 @@ def extract_metablock(content:str="")-> str:
     """
     processed_content, meta = excise(content=content, target=r'(?P<target>(?:^---.*?\n^\n))', before="(?P<before>.*?)", after="(?P<after>.*)")
     processed_content = processed_content + "\n\n"
-    return processed_content, meta
-
-
+    return processed_content, process_meta_block(meta)
 
 
 def process_props(props:str="")-> dict:

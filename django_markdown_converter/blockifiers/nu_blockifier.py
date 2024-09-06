@@ -1,6 +1,6 @@
 import re
 
-from django_markdown_converter.helpers.processors import process_input_content, extract_metablock, process_props
+from django_markdown_converter.helpers.processors import process_input_content, extract_meta_block, process_props
 from django_markdown_converter.helpers.parsers import block_parser
 
 """
@@ -67,7 +67,7 @@ def blockify(content:str=""):
     processed_content = process_input_content(content)
 
     # extract meta block
-    processed_content, meta = extract_metablock(processed_content)
+    processed_content, meta = extract_meta_block(processed_content)
     root["meta"] = meta
 
     # loop over blocks and create first pass of block elements
