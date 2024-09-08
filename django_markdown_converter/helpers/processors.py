@@ -110,8 +110,6 @@ def process_meta_block(meta:str="")-> dict:
         if not lines:
             return kvs_dict
         
-        kvs = [tuple(map(lambda x: x.strip(), line.split(":"))) for line in lines]
-        
         kvs = process_meta_values(data)
         
         if kvs:
@@ -135,6 +133,10 @@ def process_meta_values(content:str="")-> dict:
     """
     receive the innards of a meta block 
     process this data and return key value pairs as a dict
+    always returnsa  dict
+    the pattern will only select key value pairs
+    each match will return a tuple that can then create a dictionary
+    meta keys must be unique
     """
     PATTERN_RAW = r'^(?P<key>.*?)(?:\:\s*)(?P<value>.*?)(?:\n|$)'
     PATTERN = re.compile(PATTERN_RAW, re.MULTILINE | re.DOTALL)

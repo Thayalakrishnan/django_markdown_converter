@@ -33,6 +33,7 @@ test a normal metablock
 test a metablock with attributes attached
 test empty meta block
 test incorrectly formatted metablock
+test non unique meta keys
 """
 def test_process_meta_block_empty():
     content = [
@@ -78,6 +79,31 @@ def test_process_meta_block_normal():
 def test_process_meta_block_with_props():
     content = [
         "---",
+        "title: test title",
+        "author: firstname lastname",
+        "tags: tag1,tag2,tag3",
+        "---",
+        "{ blocktype='meta' }",
+    ]
+    content = "\n".join(content)
+    
+    expected = {
+        "blocktype": "meta",
+        "title": "test title",
+        "author": "firstname lastname",
+        "tags": "tag1,tag2,tag3",
+    }
+    
+    ret = process_meta_block(content)
+    
+    # test correct return value
+    assert isinstance(ret, dict)
+    assert expected == ret
+    
+def test_process_meta_block_non_unique_keys():
+    content = [
+        "---",
+        "title: test title",
         "title: test title",
         "author: firstname lastname",
         "tags: tag1,tag2,tag3",
