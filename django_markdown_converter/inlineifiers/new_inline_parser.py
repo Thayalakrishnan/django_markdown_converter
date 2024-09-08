@@ -17,7 +17,7 @@ R_CONTENT_FOOTNOTE = r'(?P<content>(?P<index>\d+?))'
 
 # inline image
 R_CONTENT_INLINE_IMAGE = r'(?P<content>(?P<alt>.*?)\]\((?P<src>.*?))'
-R_CONTENT_INLINE_IMAGE = r'(?P<content>(?P<attrs>.*?)\]\((?P<src>.*?))'
+R_CONTENT_INLINE_IMAGE = r'(?P<content>(?P<props>.*?)\]\((?P<src>.*?))'
 
 # inline LINK
 R_CONTENT_LINK = r'(?P<content>(?P<title>.*?)\]\((?P<to>.*?))'
@@ -27,8 +27,8 @@ R_EMAIL = r'(?P<content>(?P<email>\S+@\S+))'
 # [pattern, tag, type, props]
 # if we have a custom vue element, replace the tag with that element
 CASES_LIST = [
-    #[ ("<repolink ", r'(?P<content>(?P<attrs>.*?)\>(?P<text>.*?))', "</repolink>"), "IRepolink", ["attrs", "text"] ],
-    [ ("<navlink ", r'(?P<content>(?P<attrs>.*?)\>(?P<text>.*?))', "</navlink>"), "INavlink", ["attrs", "text"] ],
+    #[ ("<repolink ", r'(?P<content>(?P<props>.*?)\>(?P<text>.*?))', "</repolink>"), "IRepolink", ["props", "text"] ],
+    [ ("<navlink ", r'(?P<content>(?P<props>.*?)\>(?P<text>.*?))', "</navlink>"), "INavlink", ["props", "text"] ],
     [ ("`", r'(?P<content>.*?)', "`"), "ICode", [] ],
     #[ ("`", r'(?P<content>[^`]+?)', "`"), [] ],
     [ ("<", R_EMAIL, ">"), "email", ["email"] ],
@@ -47,7 +47,7 @@ CASES_LIST = [
     [ ("_", R_CONTENT_NO_WSPACE, "_"),  "em", [] ],
     [ ("*", r"(?P<content>[^*]+?)", "*"),  "em", [] ],
     [ ("_", r"(?P<content>[^_]+?)", "_"),  "em", [] ],
-    [ ("![", R_CONTENT_INLINE_IMAGE, ")"), "IImage", ["attrs", "src"] ],
+    [ ("![", R_CONTENT_INLINE_IMAGE, ")"), "IImage", ["props", "src"] ],
     [ ("[^", R_CONTENT_FOOTNOTE, "]"), "IFootnote", ["index"] ],
     [ ("[", R_CONTENT_LINK,")"),  "ILink", ["to", "title"] ],
     [ ("^", R_CONTENT_NO_WSPACE, "^"), "sup", [] ],
@@ -141,13 +141,13 @@ def convert_text(cases:list=[], line:str="", level:list=[]):
             if boundary.props:
                 props = {}
                 for prop in boundary.props:
-                    if prop == "attrs":
-                        # if the props is attrs, then we have a series of key value pairs
+                    if prop == "props":
+                        # if the props is props, then we have a series of key value pairs
                         # we should be able to split them into their individual properties
                         rawprop = match.group(prop)
                         if "=" in rawprop:
-                            attrs = rawprop.strip().split(" ")
-                            for attr in attrs:
+                            props = rawprop.strip().split(" ")
+                            for attr in props:
                                 k,v = attr.split("=")
                                 props[k] = v.strip("'\"")
                         else:

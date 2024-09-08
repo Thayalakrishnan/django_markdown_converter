@@ -28,19 +28,19 @@ UNORDERED_LIST_PATTERN = r'(?:^ *- +.*$)+'
 """
 BLOCK_PATTERNS = [
     #["meta", META_PATTERN, ["content"]],
-    ["definition list", DEFINITIONLIST_PATTERN, ["term", "definition", "attrs"]],
-    ["footnote", FOOTNOTE_PATTERN, ["index", "content", "attrs"]],
-    ["admonition", ADMONITION_PATTERN, ["attrs"]],
-    ["code", CODE_PATTERN, ["attrs"]],
-    ["table", TABLE_PATTERN, ["header", "body", "break", "attrs"]],
-    ["blockquote", BLOCKQUOTE_PATTERN, ["attrs"]],
-    ["hr", HR_PATTERN, ["attrs"]],
-    ["heading", HEADING_PATTERN, ["attrs"]],
-    ["image", IMAGE_PATTERN, ["attrs"]],
-    ["svg", SVG_PATTERN, ["attrs"]],
-    ["unordered list", UNORDERED_LIST_PATTERN, ["attrs"]],
-    ["ordered list", ORDERED_LIST_PATTERN, ["attrs"]],
-    ["paragraph", PARAGRAPH_PATTERN, ["attrs", "content"]], # paragraph pattern must go last
+    ["definition list", DEFINITIONLIST_PATTERN, ["term", "definition", "props"]],
+    ["footnote", FOOTNOTE_PATTERN, ["index", "content", "props"]],
+    ["admonition", ADMONITION_PATTERN, ["props"]],
+    ["code", CODE_PATTERN, ["props"]],
+    ["table", TABLE_PATTERN, ["header", "body", "break", "props"]],
+    ["blockquote", BLOCKQUOTE_PATTERN, ["props"]],
+    ["hr", HR_PATTERN, ["props"]],
+    ["heading", HEADING_PATTERN, ["props"]],
+    ["image", IMAGE_PATTERN, ["props"]],
+    ["svg", SVG_PATTERN, ["props"]],
+    ["unordered list", UNORDERED_LIST_PATTERN, ["props"]],
+    ["ordered list", ORDERED_LIST_PATTERN, ["props"]],
+    ["paragraph", PARAGRAPH_PATTERN, ["props", "content"]], # paragraph pattern must go last
 ]
 
 # compile PATTERNS

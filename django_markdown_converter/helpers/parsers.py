@@ -1,7 +1,7 @@
 #from django_markdown_converter.patterns.block import BLOCK_PATTERN, BLOCK_PATTERNS
 from django_markdown_converter.patterns.block import BLOCK_PATTERN
 from django_markdown_converter.patterns.simpleblock import BLOCK_PATTERNS
-from django_markdown_converter.helpers.processors import extract_attrs
+from django_markdown_converter.helpers.processors import extract_props
 
 
 def block_iterator(content:str=""):
@@ -23,24 +23,24 @@ def block_detector(block:str="", index:int=0):
     of block content using the block patterns list. 
     """
     # determine the type of block each chunk is
-    attrs = ""
-    # extract any attrs that are in this block
-    block, attrs = extract_attrs(block)
+    props = ""
+    # extract any props that are in this block
+    block, props = extract_props(block)
     for label, pattern, props in BLOCK_PATTERNS:
         submatch = pattern.match(block)
         if submatch:
             #content = submatch.group("content")
             content = submatch.group(0)
             # check the content for attributes
-            #print(f"{index} | {repr(attrs)} |")
-            if attrs:
+            #print(f"{index} | {repr(props)} |")
+            if props:
                 #print(f"---------------------------------------------\n")
-                #print(f"{index} | {repr(attrs)} |")
+                #print(f"{index} | {repr(props)} |")
                 pass
             else:
                 print("\nNO ATTRS DETECTED\n")
                 print(block)
-            return index, label, content, attrs
+            return index, label, content, props
 
 def block_parser(content:str=""):
     """

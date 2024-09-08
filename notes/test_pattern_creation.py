@@ -1,6 +1,6 @@
 import re
 from django_markdown_converter.helpers.helpers import ReadSourceFromFile
-from django_markdown_converter.helpers.processors import process_input_content, extract_attrs
+from django_markdown_converter.helpers.processors import process_input_content, extract_props
 from django_markdown_converter.helpers.parsers import block_parser
 from django_markdown_converter.patterns.block import BLOCK_PATTERNS, BLOCK_PATTERN
 

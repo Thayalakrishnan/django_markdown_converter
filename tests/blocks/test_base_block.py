@@ -14,23 +14,23 @@ def create_pattern(pattern):
     left = f"^(?P<left>{pattern})"
     right = f"(?P<right>{pattern})" + r"(?:\s*\n\s*|\n\s*|$)"
     #right = f"(?P<right>{pattern})(?:\n\s*|$)"
-    attrs = r"(?:\{(?P<attrs>.*?)\})?"
+    props = r"(?:\{(?P<props>.*?)\})?"
     wspace = r"\s*"
     nl = r"\n"
     content = r"(?P<content>.*?)"
     end = r"(?:\n\s*|$)"
     gap = r"(?:\n|\n\s*|\s*)"
-    #gen_pattern=r'^@@@\s*(?:\{(?P<attrs>.*?)\})?\s*\n(?P<content>.*?)\n\s*@@@\s*(?:\n\s*|$)'
-    #gen_pattern=f"{start}{left}{attrs}{gap}{content}{gap}{wspace}{right}{end}"
-    #gen_pattern=f"{start}{left}{gap}{attrs}{gap}{content}{gap}{right}{end}"
-    gen_pattern=f"{left}{gap}{attrs}{gap}{content}{gap}{right}"
+    #gen_pattern=r'^@@@\s*(?:\{(?P<props>.*?)\})?\s*\n(?P<content>.*?)\n\s*@@@\s*(?:\n\s*|$)'
+    #gen_pattern=f"{start}{left}{props}{gap}{content}{gap}{wspace}{right}{end}"
+    #gen_pattern=f"{start}{left}{gap}{props}{gap}{content}{gap}{right}{end}"
+    gen_pattern=f"{left}{gap}{props}{gap}{content}{gap}{right}"
     return gen_pattern
 
 
 def create_base_blockifier():
     pattern = "@@@"
     return BaseBlockifier(
-        #pattern=r'^@@@\s*(?:\{(?P<attrs>.*?)\})?\s*\n(?P<content>.*?)\n\s*@@@\s*(?:\n\s*|$)',
+        #pattern=r'^@@@\s*(?:\{(?P<props>.*?)\})?\s*\n(?P<content>.*?)\n\s*@@@\s*(?:\n\s*|$)',
         #pattern=r'^@@@\s*\n(?P<content>.*?)\n\s*@@@\s*(?:\n\s*|$)',
         pattern=create_pattern(pattern),
         name="base",
@@ -113,7 +113,7 @@ def test_method_get_data():
 def test_method_get_matched_group():
     pass
 
-def test_method_get_attrs():
+def test_method_get_props():
     pass
 
 def test_method_reset_bank():

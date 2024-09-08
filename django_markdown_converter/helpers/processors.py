@@ -71,14 +71,14 @@ def excise(content:str="", target:str="", before:str="(?P<before>.*)", after:str
     return content, excised
 
 
-def extract_attrs(content:str="")-> str:
+def extract_props(content:str="")-> str:
     """
     recieve a block of content that may have attributes
     we want to:
     - extract those attributes
     - return the content with the attributes removed
     """
-    return excise(content=content, target=r'\{(?P<attrs>.*?)\}', after="(?P<after>$)")
+    return excise(content=content, target=r'\{(?P<props>.*?)\}', after="(?P<after>$)")
 
 
 def process_meta_block(meta:str="")-> dict:
@@ -89,24 +89,30 @@ def process_meta_block(meta:str="")-> dict:
     - return the content with the attributes removed
     """
     kvs_dict = {}
-    meta, attrs = extract_attrs(content=meta)
+    meta, props = extract_props(content=meta)
+    props = process_props(props)
     
-    attrs = process_props(attrs)
-    if attrs:
-        kvs_dict.update(attrs)
+    if props:
+        kvs_dict.update(props)
         
     PATTERN_RAW = r'^---(?P<data>.*?)\n^---'
     pattern = re.compile(PATTERN_RAW, re.MULTILINE | re.DOTALL)
     match = pattern.match(meta)
+    
     if match:
         data = match.group("data").strip()
-        data = data.split("\n")
-        kvs = []
-        for d in data:
-            key, value = d.split(":")
-            key = key.strip()
-            value = value.strip()
-            kvs.append((key, value))
+        
+        if not data:
+            return kvs_dict
+        
+        lines = data.split("\n")
+        
+        if not lines:
+            return kvs_dict
+        
+        kvs = [tuple(map(lambda x: x.strip(), line.split(":"))) for line in lines]
+        
+        kvs = process_meta_values(data)
         
         if kvs:
             kvs_dict.update(dict(kvs))
@@ -125,6 +131,18 @@ def extract_meta_block(content:str="")-> str:
     processed_content = processed_content + "\n\n"
     return processed_content, process_meta_block(meta)
 
+def process_meta_values(content:str="")-> dict:
+    """
+    receive the innards of a meta block 
+    process this data and return key value pairs as a dict
+    """
+    PATTERN_RAW = r'^(?P<key>.*?)(?:\:\s*)(?P<value>.*?)(?:\n|$)'
+    PATTERN = re.compile(PATTERN_RAW, re.MULTILINE | re.DOTALL)
+    kvps = PATTERN.findall(content)
+    
+    if kvps:
+        return dict(kvps)
+    return {}
 
 def process_props(props:str="")-> dict:
     """

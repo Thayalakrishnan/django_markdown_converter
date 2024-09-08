@@ -11,7 +11,7 @@ raw_chunk = [
     '{ id="small-table" caption="small table of values" }',
 ]
 chunk = "\n".join(raw_chunk)
-raw_pat = r'^(?:\|(?P<header>.*?)\|\s*\n)(?:\|(?P<settings>.*?)\|\s*\n)(?P<content>(?:.*(?:\|\n|\|$))+)(?:(?:\{\s*(?P<attrs>.*?)\s*\})?)' # this works
+raw_pat = r'^(?:\|(?P<header>.*?)\|\s*\n)(?:\|(?P<settings>.*?)\|\s*\n)(?P<content>(?:.*(?:\|\n|\|$))+)(?:(?:\{\s*(?P<props>.*?)\s*\})?)' # this works
 
 pattern = re.compile(raw_pat, re.MULTILINE | re.DOTALL)
 match = pattern.search(chunk)
@@ -32,9 +32,9 @@ print(lines)
 content = [[_.strip() for _ in line[1:-1].strip().split("|") if len(_) > 0] for line in lines if len(line)]
 
 print(content)
-#if match.group('attrs'):
-#    print("attrs")
-#    print(match.group('attrs'))
+#if match.group('props'):
+#    print("props")
+#    print(match.group('props'))
     
 print("done")
 
