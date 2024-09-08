@@ -61,17 +61,16 @@ def excise(content:str="", target:str="", before:str="(?P<before>.*)", after:str
     - excise the content if present
     - return content and the excised bit
     """
-    pattern = f'{before}{target}{after}'
-    pattern = re.compile(pattern, re.MULTILINE | re.DOTALL)
+    pattern_raw = f'{before}{target}{after}'
+    pattern = re.compile(pattern_raw, re.MULTILINE | re.DOTALL)
     match = pattern.match(content)
-    excised = ""
+    
     if match:
-        excised = match.group(2)
-        content = match.group(1).strip() + match.group(3).strip()
-    return content, excised
+        return match.group(1).strip() + match.group(3).strip(), match.group(2)
+    return content, ""
 
 
-def extract_props(content:str="")-> str:
+def excise_props(content:str="")-> str:
     """
     recieve a block of content that may have attributes
     we want to:
@@ -87,9 +86,11 @@ def process_meta_block(meta:str="")-> dict:
     we want to:
     - extract the attributes
     - return the content with the attributes removed
+    - return a dict with the values from the metablock as a dict
+    and the extracted props merged
     """
     kvs_dict = {}
-    meta, props = extract_props(content=meta)
+    meta, props = excise_props(content=meta)
     props = process_props(props)
     
     if props:
@@ -117,13 +118,15 @@ def process_meta_block(meta:str="")-> dict:
             return kvs_dict
     return kvs_dict
 
-
 def extract_meta_block(content:str="")-> str:
     """
-    recieve a block of content that may have attributes
-    we want to:
-    - extract those attributes
-    - return the content with the attributes removed
+    recieve a block of content that may have a meta block
+    - check if there is a metablock
+    - if there is, extract it
+        - check for attached props, excise them and process them
+        - process the meta block to extract its key value pairs
+    - create the meta block
+    - return the meta block and the content without the meta
     """
     processed_content, meta = excise(content=content, target=r'(?P<target>(?:^---.*?\n^\n))', before="(?P<before>.*?)", after="(?P<after>.*)")
     processed_content = processed_content + "\n\n"
@@ -141,7 +144,6 @@ def process_meta_values(content:str="")-> dict:
     PATTERN_RAW = r'^(?P<key>.*?)(?:\:\s*)(?P<value>.*?)(?:\n|$)'
     PATTERN = re.compile(PATTERN_RAW, re.MULTILINE | re.DOTALL)
     kvps = PATTERN.findall(content)
-    
     if kvps:
         return dict(kvps)
     return {}

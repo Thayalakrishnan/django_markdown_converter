@@ -73,9 +73,6 @@ def test_process_meta_block_normal():
     assert isinstance(ret, dict)
     assert expected == ret
     
-    
-
-
 def test_process_meta_block_with_props():
     content = [
         "---",
@@ -99,22 +96,25 @@ def test_process_meta_block_with_props():
     # test correct return value
     assert isinstance(ret, dict)
     assert expected == ret
-    
+
+
 def test_process_meta_block_non_unique_keys():
+    """
+    when converting a tuple pair into a dict, 
+    non-unique values are just updated in the dict
+    """
     content = [
         "---",
-        "title: test title",
-        "title: test title",
+        "title: test title 1",
+        "title: test title 2",
         "author: firstname lastname",
         "tags: tag1,tag2,tag3",
         "---",
-        "{ blocktype='meta' }",
     ]
     content = "\n".join(content)
     
     expected = {
-        "blocktype": "meta",
-        "title": "test title",
+        "title": "test title 2",
         "author": "firstname lastname",
         "tags": "tag1,tag2,tag3",
     }

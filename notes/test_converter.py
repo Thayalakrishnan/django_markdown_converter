@@ -5,7 +5,8 @@ import os
 
     
 md = """---
-title:  Markdown Test
+title:  Markdown Test 1
+title:  Markdown Test 2
 author: Lawen Thayalakrishnan
 tags: markdown, python, parser
 ---
@@ -28,6 +29,8 @@ if match:
     if data:
         kvps = KVP_PATTERN.findall(data)
         print(kvps)
+        print(dict(kvps))
+        
 
     #    lines = data.split("\n")
     #    if lines:
