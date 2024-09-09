@@ -14,12 +14,12 @@ path_to_file = "notes/examples/post.md"
 raw_chunk = ReadSourceFromFile(path_to_file)
 
 print("processed -------------------------")
+
+
 raw_chunk = process_input_content(raw_chunk)
 raw_chunk, meta = extract_meta_block(raw_chunk)
 
 print(meta)
-
-
 
 """
 for index, label, content, props in block_parser(raw_chunk):

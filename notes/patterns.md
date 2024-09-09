@@ -1,3 +1,32 @@
+## structures
+- fenced: opens and closes with the same pattern
+  - code
+  - meta
+- consecutive items that have the same prefix, or prefix pattern
+  - u list 
+  - o list
+  - table
+  - blockquote
+- opening and closing on new line
+  - footnote
+  - admonition
+- opening with a pattern closing with a different pattern
+  - heading
+  - image
+  - svg
+  - hr
+- combo
+  - d list
+- other
+  - paragraph
+
+## inline styling
+- these elements can have inline styling
+- paragraph, olist, u list, blockquote, footnote, admonition, heading, d list, table
+## nested block level content
+- these elements can have block level elements nested inside of their structure
+  - olist, u list, blockquote, footnote, admonition
+
 ## attrs
 ```re
 (?:\{.*?\})?

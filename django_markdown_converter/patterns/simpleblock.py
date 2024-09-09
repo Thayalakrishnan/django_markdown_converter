@@ -21,6 +21,7 @@ IMAGE_PATTERN = r'^!\[.*?\]\(.*?\)'
 ORDERED_LIST_PATTERN = r'(?:^ *\d+\. +.*$)+'
 PARAGRAPH_PATTERN = r'.*'
 SVG_PATTERN = r'^<svg\s[^>]*>(?:.*?)</svg>'
+HTML_PATTERN = r'^<(?P<el>\S+)\s[^>]*>(?:.*?)</(?P=el)>' # to match generic HTML, ensure that it doesnt target codeblock html lol
 UNORDERED_LIST_PATTERN = r'(?:^ *- +.*$)+'
 
 """

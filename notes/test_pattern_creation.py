@@ -1,31 +1,42 @@
+# %%
 import re
-from django_markdown_converter.helpers.helpers import ReadSourceFromFile
-from django_markdown_converter.helpers.processors import process_input_content, excise_props
-from django_markdown_converter.helpers.parsers import block_parser
-from django_markdown_converter.patterns.block import BLOCK_PATTERNS, BLOCK_PATTERN
 
+META_PATTERN_RAW = r'^(?:---\s*)(?:\n)(?P<content>.*?)(?:---\s*)(?:\n|$)'
+DEFINITIONLIST_PATTERN_RAW = r'(?P<content>\:\s+(?P<term>.+?)(?=\n{2}|$)\n\:\s+(?P<definition>.+?)(?=\n{2}|$))'
+FOOTNOTE_PATTERN_RAW = r'(?P<content>\[\^(?P<index>.+?)\]:\s*\n(?P<between>(?: {4,}.*(?:\n|$))+))'
+
+ORDERED_LIST_PATTERN_RAW = r'(?P<content>(\s*\d+\.\s.*?\n){1,})'
+UNORDERED_LIST_PATTERN_RAW = r'(?P<content>(\s*-\s.*?\n){1,})'
+PARAGRAPH_PATTERN_RAW = r'(?P<content>.*?)(?:\n|\n\n|$)'
+
+ATTRS_PATTERN = r'(?:\{(?P<props>.*?)\})?'
+ATTRS_PATTERN = r'(?:\s*\{(?P<props>.*?)\})?'
+
+BLOCKQUOTE_PATTERN_RAW = r'(?P<content>(?<=^\> ).*?(?=\n|$))' # this is a findall situation
+BLOCKQUOTE_PATTERN_RAW = r'(?P<content>(?:^\> .*?\n)+)' # this is a match situation
+
+ADMONITION_PATTERN_RAW = r'(?:^!!!\s+(?P<type>\S+)?\s*(?:["\'](?P<title>[^"\']+?)["\'])?\s*\n)(?P<content>(?: {1,}.*(?:\n|$)))+'
+
+HR_PATTERN_RAW = r'^(?P<content>[\*\-]{3,})\s*(?:\s*?\{(?P<props>.*?)\})?(?:\n|$)'
+HEADING_PATTERN_RAW = r'^(?P<level>\#{1,})\s+(?P<content>.*?)(?:\s*?\{(?P<props>.*?)\})?(?:$|\n)'
+IMAGE_PATTERN_RAW = r'^\!\[(?P<alt>.*?)\]\((?P<src>\S*?)\s(?P<title>.*?)?\)(?:\s*?\{(?P<props>.*?)\})?'
+SVG_PATTERN_RAW = r'^<svg\s(?P<attrs>[^>]*)>(?P<content>.*?)</svg>(?:\s*?\{(?P<props>.*?)\})?'
+CODE_PATTERN_RAW = r'(?:^```(?P<language>\S+)\s*\n)(?P<content>(?:^.*?\n)+)(?:^```.*?\n)(?:\{(?P<props>.*?)\})?'
+TABLE_PATTERN_RAW = r'(?P<header>^\|.*?\|\n)(?P<break>^\|.*?\|\n)(?P<body>(?:^\|.*?\|\n){1,})(?:\{(?P<props>.*?)\})?'
+
+PATTERN = re.compile(ADMONITION_PATTERN_RAW, re.MULTILINE | re.DOTALL)
+
+
+input_content = """!!! note "Note Title"
+    line 1.
+    line 2.
 """
-loop over the content and spit out chunks
-process the chunks
-create a big block tree
-parse the inline content
-"""
-
-TABLE_PATTERN = r'(?:^\|.*?\|\n){1,}'
-ATTRS_PATTERN = r'(?:\{.*?\})?'
-LAM_CONTENT_WRAPPER = lambda pat: f'(?P<content>{pat}{ATTRS_PATTERN})'
-
-PATTERN = re.compile(LAM_CONTENT_WRAPPER(TABLE_PATTERN), re.MULTILINE | re.DOTALL)
-
-input_content = """| Column 1 Title | Column 2 Title |
-| ----------- | ----------- |
-| Row 1 Column 1| Row 1 Column 2 |
-| Row 2 Column 1| Row 2 Column 2 |
-{ id="small-table" caption="small table of values" }
-"""
-
 
 match = PATTERN.match(input_content)
 
 if match:
-    print(match.groups())
+    print(match.groupdict())
+    #print(match)
+
+
+# %%

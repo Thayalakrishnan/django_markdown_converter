@@ -3,7 +3,6 @@ import re
 """
 """
 
-
 META_BLOCK_DATA = r'^(?:---\s*)(?:\n)(?P<content>.*?)(?:---\s*)(?:\n|$)'
 DEFINITIONLIST_BLOCK_DATA = r'(?P<content>\:\s+(?P<term>.+?)(?=\n{2}|$)\n\:\s+(?P<definition>.+?)(?=\n{2}|$))'
 FOOTNOTE_BLOCK_DATA = r'(?P<content>\[\^(?P<index>.+?)\]:\s*\n(?P<between>(?: {4,}.*(?:\n|$))+))'
@@ -27,6 +26,8 @@ SVG_BLOCK_DATA = r'(?P<content><svg\s(?P<props>[^>]*)>(?P<between>.*?)</svg>)'
 ORDERED_LIST_BLOCK_DATA = r'(?P<content>(\s*\d+\.\s.*?\n){1,})'
 UNORDERED_LIST_BLOCK_DATA = r'(?P<content>(\s*-\s.*?\n){1,})'
 PARAGRAPH_BLOCK_DATA = r'(?P<content>.*?)(?:\n|\n\n|$)'
+
+GENERIC_HTML_CONTENT = r'(?P<content><svg\s(?P<props>[^>]*)>(?P<between>.*?)</svg>)'
 
 # other patterns
 AATRS_AT_BLOCK_END = r'(?:\{(?P<props>.*?)\})?'

@@ -1,42 +1,65 @@
 # %%
 import re
-from pathlib import Path
-import os
-
     
-md = """---
-title:  Markdown Test 1
-title:  Markdown Test 2
-author: Lawen Thayalakrishnan
-tags: markdown, python, parser
----
+md = """## this is a heading
+ 
+ 
+this is a pargraph of content. this is a pargraph of content. this is a pargraph of content.
+this is a pargraph of content. this is a pargraph of content. this is a pargraph of content.
+
+
+## this is another heading 
+
+- list item 1, sentence 1. 
+   
+  list item 1, sentence 2.
+- list item 2
+- list item 3
+
+
+this is a second pargraph of content. this is a pargraph of content. this is a pargraph of content. 
+this is a second pargraph of content. this is a pargraph of content. this is a pargraph of content. 
+
+################################################################################
 """
+# %%
+#print(repr(md))
+print(md)
 
-kvs_dict = {}
+# create and compile pattern
+NEWLINE_REPLACE_RAW = r'^\n{2,}'
+NEWLINE_REPLACE_PATTERN = re.compile(NEWLINE_REPLACE_RAW, re.MULTILINE | re.DOTALL)
 
-META_PATTERN_RAW = r'^---(?P<data>.*?)\n^---'
-META_PATTERN = re.compile(META_PATTERN_RAW, re.MULTILINE | re.DOTALL)
 
-KVP_PATTERN_RAW = r'^(?P<key>.*?)(?:\:\s*)(?P<value>.*?)(?:\n|$)'
-KVP_PATTERN = re.compile(KVP_PATTERN_RAW, re.MULTILINE | re.DOTALL)
+# replace the newlines
+processed_content = md.strip("\n ")
+processed_content = re.sub(NEWLINE_REPLACE_PATTERN, "💩\n", processed_content)
 
-match = META_PATTERN.match(md)
+# add new lines at the end for matcing purposes
+processed_content = processed_content + "\n\n"
 
-if match:
-    data = match.group("data").strip()
-    print(data)
-    
-    if data:
-        kvps = KVP_PATTERN.findall(data)
-        print(kvps)
-        print(dict(kvps))
-        
+#print(repr(processed_content))
+print(processed_content)
+# %%
+PATTERN_RAW = r'^.*?$'
+PATTERN_RAW = r'^' # match start of every line
+PATTERN_RAW = r'$' # match end of every line
+PATTERN_RAW = r'\s$(?<!^)' # match whitespace at end of line
+PATTERN_RAW = r' $(?<!^\s)'
+PATTERN_RAW = r' $(?<!^)'
+PATTERN_RAW = r'(?!^ +?\n) $'
+PATTERN_RAW = r'(?!^😃+?\n)😃$'
+PATTERN_RAW = r'(?<!^ )(?: $)'
 
-    #    lines = data.split("\n")
-    #    if lines:
-    #        kvs = [tuple(map(lambda x: x.strip(), line.split(":"))) for line in lines]
-    #        if kvs:
-    #            kvs_dict.update(dict(kvs))
+PATTERN = re.compile(PATTERN_RAW, re.MULTILINE | re.DOTALL)
 
-#print(kvs_dict)
+# replace the newlines
+#processed_content = md.strip("\n ")
+processed_content = re.sub(PATTERN, "💩", md)
+
+# add new lines at the end for matcing purposes
+processed_content = processed_content + "\n\n"
+
+#print(repr(processed_content))
+print(processed_content)
 # %%

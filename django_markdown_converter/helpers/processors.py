@@ -7,7 +7,9 @@ def process_input_content(content:str="")-> str:
     with a single newline character. 
     essentially we wan to ensure that the content is spaced out properly
     so that the blocks can be properly detected
-    we also want to strip and leading or trailing whitespace
+    we also want to strip some of the leading or trailing whitespace
+    but not sure if it will work well due to line breaks in multi-line blocks and nested blocks
+    - for example admonitions which may have nested line breaks will lose their lines inbetween, as well list blocks
     finally , we add some newlines at the end to ensure proper padding 
     when parsing the content into blocks
     """
