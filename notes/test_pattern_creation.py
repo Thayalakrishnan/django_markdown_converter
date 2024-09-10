@@ -11,8 +11,12 @@ ORDERED_LIST_PATTERN_RAW = r'(?P<content>(\s*\d+\.\s.*?\n){1,})'
 PARAGRAPH_PATTERN_RAW = r'(?P<content>.*?)(?:\n|\n\n|$)' # one shot
 
 ## findall
-UNORDERED_LIST_PATTERN_RAW = r'(?:^ *- (?P<item>.*?)\n)' # findall
 UNORDERED_LIST_PATTERN_RAW = r'(?P<content>(?:^ *- .*?\n)+)' # match
+UNORDERED_LIST_PATTERN_RAW = r'^ *- ' # split
+UNORDERED_LIST_PATTERN_RAW = r'(?<=^- ).*?(?:\n|$)(?: {2}.*(?:\n|$))*' # MULTILINE findall
+
+ORDERED_LIST_PATTERN_RAW = r'^ *\d+\. ' # split
+ORDERED_LIST_PATTERN_RAW = r'(?:(?<=^\d\. )|(?<=^\d\d\. )).*?(?:\n|$)(?: {2}.*(?:\n|$))*' # MULTILINE findall
 
 BLOCKQUOTE_PATTERN_RAW = r'(?P<content>(?<=^\> ).*?(?=\n|$))' # findall
 BLOCKQUOTE_PATTERN_RAW = r'(?P<content>(?:^\> .*?\n)+)' # match
@@ -68,15 +72,16 @@ else:
 
 # %%
 import re
+
 LIST_PATTERN_RAW = r'^ *- '
+
+LIST_PATTERN_RAW = r'^ *\d+\. ' # split
 PATTERN = re.compile(LIST_PATTERN_RAW, re.MULTILINE | re.DOTALL)
-input_content = """- item 1
-- item 2
+input_content = """1. item 1
+2. item 2
   
   yeet
-- item 3
-
-fdfdfefe
+3. item 3
 """
 
 items = re.split(PATTERN, input_content)
@@ -86,17 +91,58 @@ if items:
 # %%
 ## findall
 import re
+"""
+(?:(?<=- ).*?\n)(?:^ {2}.*?\n)*
+((?<=^- ).*?(?=^- ))(?(1)|.*)
+
+(?<=^- ).*?\n(?=^- |$)
+(?<=^- ).*?\n(?=^- |$)
+"""
 
 PATTERN_RAW = r'(?:^ *?- .*?\n)(?:^ {2}.*?\n)*(?!\n^ *?- )'
-PATTERN_RAW = r'(?:(?<=^- ).*?\n)(?:^ {2}.*?\n)*(?!\n^- )'
 PATTERN_RAW = r'(?:(?<=^- ).*?\n)(?:(?<=^ {2}).*?\n)*(?!\n^- )'
-PATTERN = re.compile(PATTERN_RAW, re.MULTILINE | re.DOTALL)
+PATTERN_RAW = r'(?:(?<=^- ).*?\n)(?:^ {2}.*?\n)*(?!\n^- )'
+
+PATTERN_RAW = r'(?:^- ).*?(?:^ {2}.*?\n)*(?!\n^- )'
+PATTERN_RAW = r'(?<=^- ).*?(?=^- )'
+PATTERN_RAW = r'(?<=^- ).*?\n(?=^- |$)'
+
+PATTERN_RAW = r'(?<=^- ).*(?:(?P<line>\n^  )(?(line).*|))*'
+PATTERN_RAW = r'((?<=^- ).*(?:(\n^  )(?(1).*|))*)'
+PATTERN_RAW = r'(?<=^- ).*?(?:\n|$)(?: {2}.*(?:\n|$))*'
+PATTERN = re.compile(PATTERN_RAW, re.MULTILINE)
 
 input_content = """- item 1
 - item 2
   
   yeet
 - item 3
+"""
+
+match = PATTERN.findall(input_content)
+
+if items:
+    #print(match.groupdict())
+    print(match)
+    print(len(match))
+else:
+    print("no items")
+# %%
+# %%
+## findall
+import re
+"""
+(?<=^\d\.)(?(1)(.*\n)|(.*))|(?<=^\d\d\.)(?(1)(.*\n)|(.*))
+"""
+PATTERN_RAW = r'(?<=^\d\. ).*?(?:\n|$)(?: {2}.*(?:\n|$))*'
+PATTERN_RAW = r'(?:(?<=^\d\. )|(?<=^\d\d\. )).*?(?:\n|$)(?: {2}.*(?:\n|$))*'
+PATTERN = re.compile(PATTERN_RAW, re.MULTILINE)
+
+input_content = """1. item 1
+2. item 2
+  
+  yeet
+3. item 3
 """
 
 match = PATTERN.findall(input_content)
