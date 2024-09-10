@@ -20,6 +20,7 @@ ORDERED_LIST_PATTERN_RAW = r'(?:(?<=^\d\. )|(?<=^\d\d\. )).*?(?:\n|$)(?: {2}.*(?
 
 BLOCKQUOTE_PATTERN_RAW = r'(?P<content>(?<=^\> ).*?(?=\n|$))' # findall
 BLOCKQUOTE_PATTERN_RAW = r'(?P<content>(?:^\> .*?\n)+)' # match
+BLOCKQUOTE_PATTERN_RAW = r'(?<=^> ).*\n' # findall MULTILINE
 
 ## header body
 TABLE_PATTERN_RAW = r'(?P<header>^\|.*?\|\n)(?P<break>^\|.*?\|\n)(?P<body>(?:^\|.*?\|\n){1,})(?:\{(?P<props>.*?)\})?'
@@ -143,6 +144,28 @@ input_content = """1. item 1
   
   yeet
 3. item 3
+"""
+
+match = PATTERN.findall(input_content)
+
+if items:
+    #print(match.groupdict())
+    print(match)
+    print(len(match))
+else:
+    print("no items")
+# %%
+# %%
+## findall
+import re
+"""
+"""
+PATTERN_RAW = r'(?<=^> ).*\n'
+PATTERN = re.compile(PATTERN_RAW, re.MULTILINE)
+
+input_content = """> item 1
+> > item 2
+> item 3
 """
 
 match = PATTERN.findall(input_content)
