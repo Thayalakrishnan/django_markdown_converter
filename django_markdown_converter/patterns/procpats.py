@@ -55,8 +55,12 @@ class Patties:
         if self.process == "findall":
             m = self.pattern.findall(content)
             if m:
-                block["data"] = m
+                block["data"] = content
         elif self.process == "headerbody":
+            m = self.pattern.match(content)
+            if m:
+                block["data"] = m.groupdict()
+        elif self.process == "oneshot":
             m = self.pattern.match(content)
             if m:
                 block["data"] = m.groupdict()
@@ -65,25 +69,21 @@ class Patties:
             if m:
                 block["data"] = m.groups("content")
             
-        return {
-            "type": self.blocktype,
-            "props": props,
-            "data": content
-        }
+        return block
 
 
 
 PROC_PATTERNS = [
     ["meta", r'^(?:---\s*)(?:\n)(?P<content>.*?)(?:---\s*)(?:\n|$)', re.MULTILINE | re.DOTALL, "captureprocess", False, False],
-    ["code", r'(?:^```(?P<language>\S+)\s*\n)(?P<content>(?:^.*?\n)+)(?:^```.*?\n)(?:\{(?P<props>.*?)\})?', re.MULTILINE | re.DOTALL, "captureprocess", False, False],
-    ["dlist", r'(?P<term>.+?)\n(?P<definition>(?:\:\s+.*?\n)+)(?:^\{(?P<props>.*?)\})?', re.MULTILINE | re.DOTALL, "headerbody", False, True],
+    ["code", r'(?:^```(?P<language>\S+)\s*\n)(?P<content>(?:^.*?\n)+)(?:^```.*?(\n|$))', re.MULTILINE | re.DOTALL, "captureprocess", False, False],
+    ["dlist", r'(?P<term>.+?)\n(?P<definition>(?:\:\s+.*?\n)+)', re.MULTILINE | re.DOTALL, "headerbody", False, True],
     ["footnote", r'^\[\^(?P<index>.+?)\]:\s*\n(?P<content>(?: {4,}.*(?:\n|$))+)', re.MULTILINE | re.DOTALL, "headerbody", True, True], # capture, header, dedent
     ["admonition", r'(?:^!!!\s+(?P<type>\S+)?\s*(?:["\'](?P<title>[^"\']+?)["\'])?\s*\n)(?P<content>(?:^ {4,}.*?(?:\n|$))+)', re.MULTILINE | re.DOTALL, "headerbody", True, True], # capture, header, dedent
-    ["table", r'(?P<header>^\|.*?\|\n)(?P<break>^\|.*?\|\n)(?P<body>(?:^\|.*?\|\n){1,})(?:\{(?P<props>.*?)\})?', re.MULTILINE | re.DOTALL, "headerbody", False, True],
-    ["hr", r'^(?P<content>[\*\-]{3,})\s*(?:\s*?\{(?P<props>.*?)\})?(?:\n|$)', re.MULTILINE | re.DOTALL, "oneshot", False, False],
-    ["heading", r'^(?P<level>\#{1,})\s+(?P<content>.*?)(?:\s*?\{(?P<props>.*?)\})?(?:$|\n)', re.MULTILINE | re.DOTALL, "oneshot", False, True],
-    ["image", r'^\!\[(?P<alt>.*?)\]\((?P<src>\S*?)\s(?P<title>.*?)?\)(?:\s*?\{(?P<props>.*?)\})?', re.MULTILINE | re.DOTALL, "oneshot", False, False],
-    ["svg", r'^<svg\s(?P<attrs>[^>]*)>(?P<content>.*?)</svg>(?:\s*?\{(?P<props>.*?)\})?', re.MULTILINE | re.DOTALL, "oneshot", False, False],
+    ["table", r'(?P<header>^\|.*?\|\n)(?P<break>^\|.*?\|\n)(?P<body>(?:^\|.*?\|\n){1,})', re.MULTILINE | re.DOTALL, "headerbody", False, True],
+    ["hr", r'^(?P<content>[\*\-]{3,})\s*(?:\n|$)', re.MULTILINE | re.DOTALL, "oneshot", False, False],
+    ["heading", r'^(?P<level>\#{1,})\s+(?P<content>.*?)(?:$|\n)', re.MULTILINE | re.DOTALL, "oneshot", False, True],
+    ["image", r'^\!\[(?P<alt>.*?)\]\((?P<src>\S*?)\s(?P<title>.*?)?\)', re.MULTILINE | re.DOTALL, "oneshot", False, False],
+    ["svg", r'^<svg\s(?P<attrs>[^>]*)>(?P<content>.*?)</svg>', re.MULTILINE | re.DOTALL, "oneshot", False, False],
     ["paragraph", r'(?P<content>.*?)(?:\n|\n\n|$)', re.MULTILINE | re.DOTALL, "oneshot", False, True],
     ["ulist", r'(?<=^- ).*?(?:\n|$)(?: {2}.*(?:\n|$))*', re.MULTILINE, "findall", True, True],
     ["blockquote", r'(?<=^> ).*\n', re.MULTILINE, "findall", True, True],

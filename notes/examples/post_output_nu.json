@@ -1,0 +1,424 @@
+[
+    {
+        "type": "heading",
+        "props": {
+            "blocktype": "heading"
+        },
+        "data": {
+            "level": "##",
+            "content": "Pargraphs"
+        }
+    },
+    {
+        "type": "paragraph",
+        "props": {
+            "blocktype": "paragraph"
+        },
+        "data": {
+            "content": "Pargraph 4 **eos** aperiam dolorem numquam quisquam [^1]. Cupiditate ==reprehenderit== beatae ab inventore libero. Accusantium explicabo optio debitis magni sint earum excepturi. Dicta aliquid cupiditate. Consequuntur temporibus `code` voluptates _similique_. Aut maiores hic laudantium distinctio[^2]. Aliquid magni expedita voluptatem illo laudantium illo. Quidem occaecati voluptas odit^5^ ex aspernatur eius ~~consectetur~~ blanditiis. Aperiam ullam iure soluta animi voluptatem pariatur nesciunt voluptatibus. Fuga iste in."
+        }
+    },
+    {
+        "type": "paragraph",
+        "props": {
+            "blocktype": "paragraph"
+        },
+        "data": {
+            "content": "To include a link, we place the link text in brackets and immediately follow it with the link text in parentheses like [this link](https://lawen.thayalakrishnan.com) to the homepage! We can emphasise **[the link](https://lawen.thayalakrishnan.com)** by enclosing the markdown in double asterisks. The same applies to single asterisk to italise [the link](https://lawen.thayalakrishnan.com). Use angle brackets, to render the link raw <https://lawen.thayalakrishnan.com>. This is an email address <example@email.com> in the middle of a paragraph!"
+        }
+    },
+    {
+        "type": "heading",
+        "props": {
+            "blocktype": "heading"
+        },
+        "data": {
+            "level": "##",
+            "content": "Image"
+        }
+    },
+    {
+        "type": "image",
+        "props": {
+            "blocktype": "image",
+            "subtype": "still",
+            "title": "Title for a basic image with a caption",
+            "alt": "This is an example of a basic image in markdown with a caption",
+            "height": "1080",
+            "width": "1920",
+            "caption": "This is an example of a caption being included with a basic image."
+        },
+        "data": "![ This is an example of a basic image in markdown with a caption ](https://thayalakrishnan-lawen-prod-media.s3.ap-southeast-2.amazonaws.com/media/images/covers/image2.jpg)"
+    },
+    {
+        "type": "heading",
+        "props": {
+            "blocktype": "heading"
+        },
+        "data": {
+            "level": "##",
+            "content": "Code Block"
+        }
+    },
+    {
+        "type": "code",
+        "props": {
+            "blocktype": "code",
+            "filename": "playerawards.py"
+        },
+        "data": [
+            "python",
+            "from nba_api.stats.endpoints import playerawards as pa\n",
+            ""
+        ]
+    },
+    {
+        "type": "code",
+        "props": {
+            "blocktype": "code"
+        },
+        "data": "```\nfrom nba_api.stats.endpoints import playerawards as pa\n```"
+    },
+    {
+        "type": "code",
+        "props": {
+            "blocktype": "code",
+            "language": "python"
+        },
+        "data": [
+            "python",
+            "from nba_api.stats.endpoints import playerawards as pa\n\ndef DataReturn(dataset):\n    headers, data = dataset[\"headers\"], dataset[\"data\"]\n    if (len(data) == 0):            # no return value\n        print('No Values')\n        return []\n    elif (len( data ) == 1):        # one row\n        return data[0]\n    else:                           # multiple rows\n        return data\n\ndef getPlayerAccolades(player_id):\n    player = pa.PlayerAwards(player_id=player_id).player_awards\n    return DataReturn(player.get_dict())\n\ndef CreateCounter(dataset, position):\n    values = [_[position] for _ in dataset]\n    dict_counter = dict.fromkeys(set(values), 0)\n    [dict_counter[_] + 1 for _ in values]\n    print(dict_counter)\n    return dict_counter\n",
+            ""
+        ]
+    },
+    {
+        "type": "code",
+        "props": {
+            "blocktype": "code"
+        },
+        "data": [
+            "md",
+            "> blockquote\n> blockquote\n\n> Outside Quote\n>\n> > Inside Quote\n>\n",
+            ""
+        ]
+    },
+    {
+        "type": "heading",
+        "props": {
+            "blocktype": "heading"
+        },
+        "data": {
+            "level": "##",
+            "content": "Line break"
+        }
+    },
+    {
+        "type": "hr",
+        "props": {
+            "blocktype": "hr"
+        },
+        "data": {
+            "content": "---"
+        }
+    },
+    {
+        "type": "hr",
+        "props": {
+            "blocktype": "hr"
+        },
+        "data": {
+            "content": "***"
+        }
+    },
+    {
+        "type": "heading",
+        "props": {
+            "blocktype": "heading"
+        },
+        "data": {
+            "level": "##",
+            "content": "Table"
+        }
+    },
+    {
+        "type": "table",
+        "props": {
+            "blocktype": "table",
+            "id": "small-table",
+            "caption": "small table of values"
+        },
+        "data": {
+            "header": "| Column 1 Title | Column 2 Title |\n",
+            "break": "| ----------- | ----------- |\n",
+            "body": "| Row 1 Column 1| Row 1 Column 2 |\n"
+        }
+    },
+    {
+        "type": "table",
+        "props": {
+            "blocktype": "table",
+            "id": "small-table",
+            "caption": "small table of values"
+        },
+        "data": {
+            "header": "| Column 1 Title | Column 2 Title |\n",
+            "break": "| ----------- | ----------- |\n",
+            "body": "| Row 1 Column 1| Row 1 Column 2 |\n"
+        }
+    },
+    {
+        "type": "heading",
+        "props": {
+            "blocktype": "heading"
+        },
+        "data": {
+            "level": "##",
+            "content": "Blockquote"
+        }
+    },
+    {
+        "type": "blockquote",
+        "props": {
+            "blocktype": "blockquote",
+            "cite": "www.google.com"
+        },
+        "data": "> blockquote\n> blockquote"
+    },
+    {
+        "type": "blockquote",
+        "props": {
+            "blocktype": "blockquote",
+            "cite": "www.google.com"
+        },
+        "data": "> Outside Quote\n>\n> > Inside Quote\n>"
+    },
+    {
+        "type": "blockquote",
+        "props": {
+            "blocktype": "blockquote",
+            "cite": "www.google.com"
+        },
+        "data": ">\n> ## Blockquote heading { blocktype=\"heading\" }\n>\n> A Paragraph is the default element. How about some **inline markdown**?\n>\n> - list item 1\n> - list item 2\n> - list item 3\n>"
+    },
+    {
+        "type": "blockquote",
+        "props": {
+            "blocktype": "blockquote",
+            "cite": "www.google.com"
+        },
+        "data": ">\n> > ## Blockquote heading { blocktype=\"heading\" }\n> > A Paragraph is the default element. How about some **inline markdown**?\n>\n> > A second nested block in a blockquote with some **inline markdown**?\n> >\n> > - list item 1\n> > - list item 2\n> > - list item 3\n>"
+    },
+    {
+        "type": "heading",
+        "props": {
+            "blocktype": "heading"
+        },
+        "data": {
+            "level": "##",
+            "content": "Ordered List"
+        }
+    },
+    {
+        "type": "olist",
+        "props": {
+            "blocktype": "o list"
+        },
+        "data": "1. Item 1\n2. Item 2\n3. Item 3\n4. Item 4"
+    },
+    {
+        "type": "olist",
+        "props": {
+            "blocktype": "o list"
+        },
+        "data": "1. Item 1\n2. Item 2\n3. Item 3\n    1. Indented Item 1\n    2. Indented Item 2\n4. Item 4"
+    },
+    {
+        "type": "olist",
+        "props": {
+            "blocktype": "o list"
+        },
+        "data": "1. Multiline Item 1, line 1.\n   Multiline Item 1, line 2.\n   \n   Multiline Item 1, line 3 after double line break.\n2. Item 2\n3. Item 3\n4. Item 4"
+    },
+    {
+        "type": "olist",
+        "props": {
+            "blocktype": "o list"
+        },
+        "data": "1. Item 1\n2. Item 2\n3. Item 3\n    1. Multiline Item 3, Subitem 1, line 1.\n       Multiline Item 3, Subitem 1, line 2.\n       \n       Multiline Item 3, Subitem 1, line 3.\n    2. Indented Item 2\n4. Item 4"
+    },
+    {
+        "type": "heading",
+        "props": {
+            "blocktype": "heading"
+        },
+        "data": {
+            "level": "##",
+            "content": "Unordered List"
+        }
+    },
+    {
+        "type": "ulist",
+        "props": {
+            "blocktype": "u list"
+        },
+        "data": "- Item 1\n- Item 2\n- Item 3\n- Item 4"
+    },
+    {
+        "type": "ulist",
+        "props": {
+            "blocktype": "u list"
+        },
+        "data": "- Item 1\n- Item 2\n- Item 3\n    - Indented Item 1\n    - Indented Item 2\n- Item 4"
+    },
+    {
+        "type": "ulist",
+        "props": {
+            "blocktype": "u list"
+        },
+        "data": "- Multiline Item 1, line 1.\n  Multiline Item 1, line 2\n   \n  Multiline Item 1, line 3 after double line break\n- Item 2\n- Item 3\n- Item 4"
+    },
+    {
+        "type": "ulist",
+        "props": {
+            "blocktype": "u list"
+        },
+        "data": "- Item 1\n- Item 2\n- Item 3\n    - Multiline Item 3, Subitem 1, line 1.\n      Multiline Item 3, Subitem 1, line 2.\n       \n      Multiline Item 3, Subitem 1, line 3.\n    - Indented Item 2\n- Item 4"
+    },
+    {
+        "type": "heading",
+        "props": {
+            "blocktype": "heading"
+        },
+        "data": {
+            "level": "##",
+            "content": "Admonition"
+        }
+    },
+    {
+        "type": "admonition",
+        "props": {
+            "blocktype": "admonition"
+        },
+        "data": {
+            "type": "note",
+            "title": "Note Title",
+            "content": "    this is an admonition."
+        }
+    },
+    {
+        "type": "admonition",
+        "props": {
+            "blocktype": "admonition"
+        },
+        "data": {
+            "type": "tip",
+            "title": "Tip Title",
+            "content": "    for tips and tricks.\n    \n    multiline admontion."
+        }
+    },
+    {
+        "type": "admonition",
+        "props": {
+            "blocktype": "admonition"
+        },
+        "data": {
+            "type": "tip",
+            "title": "Tip Title",
+            "content": "    for tips and tricks.\n    \n    multiline admontion.\n    \n    ```python\n    for i in range(5):\n        print(i)\n    ```"
+        }
+    },
+    {
+        "type": "admonition",
+        "props": {
+            "blocktype": "admonition"
+        },
+        "data": "!!! top question\n    further ideas, further links etc."
+    },
+    {
+        "type": "heading",
+        "props": {
+            "blocktype": "heading"
+        },
+        "data": {
+            "level": "##",
+            "content": "Definition Lists"
+        }
+    },
+    {
+        "type": "dlist",
+        "props": {
+            "blocktype": "dl list"
+        },
+        "data": "First Term\n: This is the definition of the first term."
+    },
+    {
+        "type": "dlist",
+        "props": {
+            "blocktype": "dl list"
+        },
+        "data": {
+            "term": "Second Term",
+            "definition": ": This is one definition of the second term.\n"
+        }
+    },
+    {
+        "type": "dlist",
+        "props": {
+            "blocktype": "dl list"
+        },
+        "data": {
+            "term": "Third Term",
+            "definition": ": This is one definition of the third term.\n"
+        }
+    },
+    {
+        "type": "heading",
+        "props": {
+            "blocktype": "heading"
+        },
+        "data": {
+            "level": "##",
+            "content": "Footnotes"
+        }
+    },
+    {
+        "type": "footnote",
+        "props": {
+            "blocktype": "footnote"
+        },
+        "data": {
+            "index": "1",
+            "content": "    Footnote 1."
+        }
+    },
+    {
+        "type": "footnote",
+        "props": {
+            "blocktype": "footnote"
+        },
+        "data": {
+            "index": "2",
+            "content": "    Footnote 2 and some inline `code`.\n    If we indent the paragraph we cant put as much content here as we would like.\n    \n    This is a multiline footnote. It also does not matter where we put the footnote definition!"
+        }
+    },
+    {
+        "type": "footnote",
+        "props": {
+            "blocktype": "footnote"
+        },
+        "data": {
+            "index": "3",
+            "content": "    Footnote 3 and some inline `code`.\n    If we indent the paragraph we cant put as much content here as we would like.\n    \n    This is a multiline footnote. It also does not matter where we put the footnote definition!"
+        }
+    },
+    {
+        "type": "heading",
+        "props": {
+            "blocktype": "heading"
+        },
+        "data": {
+            "level": "##",
+            "content": "Done"
+        }
+    }
+]

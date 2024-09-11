@@ -11,6 +11,7 @@ parse the inline content
 """
 root = []
 json_root = []
+json_root_nu = []
 path_to_file = "notes/examples/post.md"
 raw_chunk = ReadSourceFromFile(path_to_file)
 
@@ -28,7 +29,7 @@ for index, label, content, props in block_parser(raw_chunk):
     root.append(content)
     
     current_block = PATTERN_DICT[label].convert(content, props)
-    print(current_block)
+    json_root_nu.append(current_block)
     
     json_root.append({
         "blocktype": label,
@@ -38,16 +39,15 @@ for index, label, content, props in block_parser(raw_chunk):
 
 #print(json_root)
 
-"""
-write_to_file = "notes/examples/post_output"
+#write_to_file = "notes/examples/post_output"
 write_to_json_file = "notes/examples/post_output.json"
-md = "\n".join(root)
-
+write_to_json_file_nu = "notes/examples/post_output_nu.json"
 
 """
-
+md = "\n".join(root)
+"""
 
 #WriteToMDFile(write_to_file, md)
-#WriteJSONToFile(write_to_json_file, json_root)
 #yeet = process_props(' id="small-table" caption="small table of values" ')
-#print(yeet)
+#WriteJSONToFile(write_to_json_file, json_root)
+WriteJSONToFile(write_to_json_file_nu, json_root_nu)
