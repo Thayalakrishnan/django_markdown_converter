@@ -15,8 +15,8 @@ To include a link, we place the link text in brackets and immediately follow it 
 
 ## Image { blocktype="heading" }
 
-![ This is an example of a basic image in markdown with a caption ](https://thayalakrishnan-lawen-prod-media.s3.ap-southeast-2.amazonaws.com/media/images/covers/image2.jpg)
-{ blocktype="image" subtype="still" title="Title for a basic image with a caption" alt="This is an example of a basic image in markdown with a caption" height="1080" width="1920" caption="This is an example of a caption being included with a basic image." }
+![ This is an example of a basic image in markdown with a caption ](https://thayalakrishnan-lawen-prod-media.s3.ap-southeast-2.amazonaws.com/media/images/covers/image2.jpg "Title for a basic image with a caption")
+{ blocktype="image" subtype="still" height="1080" width="1920" caption="This is an example of a caption being included with a basic image." }
 
 
 ## Code Block { blocktype="heading" }
