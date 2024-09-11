@@ -7,19 +7,14 @@ ATTRS_PATTERN = r'(?:^\s*\{(?P<props>.*?)\})?'
 PADDED_CONTENT = r'(?P<content>(?: {1,}.*(?:\n|$))+)'
 """
 
-ORDERED_LIST_PATTERN_RAW = r'(?P<content>(\s*\d+\.\s.*?\n){1,})'
+"""
+for processing, different blocks may have to be processed differently
+"""
 PARAGRAPH_PATTERN_RAW = r'(?P<content>.*?)(?:\n|\n\n|$)' # one shot
 
 ## findall
-UNORDERED_LIST_PATTERN_RAW = r'(?P<content>(?:^ *- .*?\n)+)' # match
-UNORDERED_LIST_PATTERN_RAW = r'^ *- ' # split
 UNORDERED_LIST_PATTERN_RAW = r'(?<=^- ).*?(?:\n|$)(?: {2}.*(?:\n|$))*' # MULTILINE findall
-
-ORDERED_LIST_PATTERN_RAW = r'^ *\d+\. ' # split
 ORDERED_LIST_PATTERN_RAW = r'(?:(?<=^\d\. )|(?<=^\d\d\. )).*?(?:\n|$)(?: {2}.*(?:\n|$))*' # MULTILINE findall
-
-BLOCKQUOTE_PATTERN_RAW = r'(?P<content>(?<=^\> ).*?(?=\n|$))' # findall
-BLOCKQUOTE_PATTERN_RAW = r'(?P<content>(?:^\> .*?\n)+)' # match
 BLOCKQUOTE_PATTERN_RAW = r'(?<=^> ).*\n' # findall MULTILINE
 
 ## header body

@@ -26,7 +26,7 @@ def block_detector(block:str="", index:int=0):
     props = ""
     # extract any props that are in this block
     block, props = excise_props(block)
-    for label, pattern, props in BLOCK_PATTERNS:
+    for label, pattern, proplabels in BLOCK_PATTERNS:
         submatch = pattern.match(block)
         if submatch:
             #content = submatch.group("content")

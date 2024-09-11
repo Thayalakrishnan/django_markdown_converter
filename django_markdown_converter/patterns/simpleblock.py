@@ -29,7 +29,7 @@ UNORDERED_LIST_PATTERN = r'(?:^ *- +.*$)+'
 """
 BLOCK_PATTERNS = [
     #["meta", META_PATTERN, ["content"]],
-    ["definition list", DEFINITIONLIST_PATTERN, ["term", "definition", "props"]],
+    ["dlist", DEFINITIONLIST_PATTERN, ["term", "definition", "props"]],
     ["footnote", FOOTNOTE_PATTERN, ["index", "content", "props"]],
     ["admonition", ADMONITION_PATTERN, ["props"]],
     ["code", CODE_PATTERN, ["props"]],
@@ -39,8 +39,8 @@ BLOCK_PATTERNS = [
     ["heading", HEADING_PATTERN, ["props"]],
     ["image", IMAGE_PATTERN, ["props"]],
     ["svg", SVG_PATTERN, ["props"]],
-    ["unordered list", UNORDERED_LIST_PATTERN, ["props"]],
-    ["ordered list", ORDERED_LIST_PATTERN, ["props"]],
+    ["ulist", UNORDERED_LIST_PATTERN, ["props"]],
+    ["olist", ORDERED_LIST_PATTERN, ["props"]],
     ["paragraph", PARAGRAPH_PATTERN, ["props", "content"]], # paragraph pattern must go last
 ]
 

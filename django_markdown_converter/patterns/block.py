@@ -38,7 +38,7 @@ NEWLINE_REPLACE = re.compile(r'^\n{2,}', re.MULTILINE | re.DOTALL)
 """
 BLOCK_PATTERNS = [
     ["meta", META_BLOCK_DATA, ["content"], False],
-    ["definition list", DEFINITIONLIST_BLOCK_DATA, ["term", "definition", "props"], True],
+    ["dlist", DEFINITIONLIST_BLOCK_DATA, ["term", "definition", "props"], True],
     ["footnote", FOOTNOTE_BLOCK_DATA, ["index", "content", "props"], True],
     ["admonition", ADMONITION_BLOCK_DATA, ["props"], True],
     ["code", CODE_BLOCK_DATA, ["props"], True],
@@ -48,8 +48,8 @@ BLOCK_PATTERNS = [
     ["heading", HEADING_BLOCK_DATA, ["props"], True],
     ["image", IMAGE_BLOCK_DATA, ["props"], True],
     ["svg", SVG_BLOCK_DATA, ["props"], True],
-    ["unordered list", UNORDERED_LIST_BLOCK_DATA, ["props"], True],
-    ["ordered list", ORDERED_LIST_BLOCK_DATA, ["props"], True],
+    ["ulist", UNORDERED_LIST_BLOCK_DATA, ["props"], True],
+    ["olist", ORDERED_LIST_BLOCK_DATA, ["props"], True],
     ["paragraph", PARAGRAPH_BLOCK_DATA, ["props", "content"], True],
 ]
 

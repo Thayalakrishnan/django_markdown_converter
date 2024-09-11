@@ -6,7 +6,7 @@ list_ul_processor
 '''
 
 class DefinitionListBlockifier(BaseBlockifier):
-    """ Process definition list blocks """
+    """ Process dlist blocks """
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(**DEFINITIONLIST_BLOCK_DATA)
     
