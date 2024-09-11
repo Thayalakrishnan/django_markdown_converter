@@ -103,7 +103,6 @@ def CreateCounter(dataset, position):
 >
 { blocktype="blockquote" cite="www.google.com" }
 
->
 > ## Blockquote heading { blocktype="heading" }
 >
 > A Paragraph is the default element. How about some **inline markdown**?
@@ -111,14 +110,14 @@ def CreateCounter(dataset, position):
 > - list item 1
 > - list item 2
 > - list item 3
->
 { blocktype="blockquote" cite="www.google.com" }
 
 
 >
 > > ## Blockquote heading { blocktype="heading" }
+> >
 > > A Paragraph is the default element. How about some **inline markdown**?
->
+> >
 > > A second nested block in a blockquote with some **inline markdown**?
 > >
 > > - list item 1
@@ -234,13 +233,13 @@ First Term
 { blocktype="dl list" }
 
 Second Term
-: This is one definition of the second term.
-: This is another definition of the second term.
+: This is the first definition of the second term.
+: This is the second definition of the second term.
 { blocktype="dl list" }
 
 Third Term
-: This is one definition of the third term.
-: This is another definition of the third term.
+: This is the first definition of the third term.
+: This is the second definition of the third term.
 { blocktype="dl list" }
 
 ## Footnotes { blocktype="heading" }

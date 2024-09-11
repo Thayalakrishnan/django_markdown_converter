@@ -36,6 +36,8 @@ for index, label, content, props in block_parser(raw_chunk):
         "props": process_props(props),
         "data": content
     })
+    
+
 
 #print(json_root)
 

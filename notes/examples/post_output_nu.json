@@ -66,18 +66,20 @@
             "blocktype": "code",
             "filename": "playerawards.py"
         },
-        "data": [
-            "python",
-            "from nba_api.stats.endpoints import playerawards as pa\n",
-            ""
-        ]
+        "data": {
+            "language": "python",
+            "content": "from nba_api.stats.endpoints import playerawards as pa\n"
+        }
     },
     {
         "type": "code",
         "props": {
             "blocktype": "code"
         },
-        "data": "```\nfrom nba_api.stats.endpoints import playerawards as pa\n```"
+        "data": {
+            "language": null,
+            "content": "from nba_api.stats.endpoints import playerawards as pa\n"
+        }
     },
     {
         "type": "code",
@@ -85,22 +87,20 @@
             "blocktype": "code",
             "language": "python"
         },
-        "data": [
-            "python",
-            "from nba_api.stats.endpoints import playerawards as pa\n\ndef DataReturn(dataset):\n    headers, data = dataset[\"headers\"], dataset[\"data\"]\n    if (len(data) == 0):            # no return value\n        print('No Values')\n        return []\n    elif (len( data ) == 1):        # one row\n        return data[0]\n    else:                           # multiple rows\n        return data\n\ndef getPlayerAccolades(player_id):\n    player = pa.PlayerAwards(player_id=player_id).player_awards\n    return DataReturn(player.get_dict())\n\ndef CreateCounter(dataset, position):\n    values = [_[position] for _ in dataset]\n    dict_counter = dict.fromkeys(set(values), 0)\n    [dict_counter[_] + 1 for _ in values]\n    print(dict_counter)\n    return dict_counter\n",
-            ""
-        ]
+        "data": {
+            "language": "python",
+            "content": "from nba_api.stats.endpoints import playerawards as pa\n\ndef DataReturn(dataset):\n    headers, data = dataset[\"headers\"], dataset[\"data\"]\n    if (len(data) == 0):            # no return value\n        print('No Values')\n        return []\n    elif (len( data ) == 1):        # one row\n        return data[0]\n    else:                           # multiple rows\n        return data\n\ndef getPlayerAccolades(player_id):\n    player = pa.PlayerAwards(player_id=player_id).player_awards\n    return DataReturn(player.get_dict())\n\ndef CreateCounter(dataset, position):\n    values = [_[position] for _ in dataset]\n    dict_counter = dict.fromkeys(set(values), 0)\n    [dict_counter[_] + 1 for _ in values]\n    print(dict_counter)\n    return dict_counter\n"
+        }
     },
     {
         "type": "code",
         "props": {
             "blocktype": "code"
         },
-        "data": [
-            "md",
-            "> blockquote\n> blockquote\n\n> Outside Quote\n>\n> > Inside Quote\n>\n",
-            ""
-        ]
+        "data": {
+            "language": "md",
+            "content": "> blockquote\n> blockquote\n\n> Outside Quote\n>\n> > Inside Quote\n>\n"
+        }
     },
     {
         "type": "heading",
@@ -182,7 +182,7 @@
             "blocktype": "blockquote",
             "cite": "www.google.com"
         },
-        "data": "> blockquote\n> blockquote"
+        "data": "blockquote\nblockquote"
     },
     {
         "type": "blockquote",
@@ -190,7 +190,7 @@
             "blocktype": "blockquote",
             "cite": "www.google.com"
         },
-        "data": "> Outside Quote\n>\n> > Inside Quote\n>"
+        "data": "Outside Quote\n\n> Inside Quote\n"
     },
     {
         "type": "blockquote",
@@ -198,7 +198,7 @@
             "blocktype": "blockquote",
             "cite": "www.google.com"
         },
-        "data": ">\n> ## Blockquote heading { blocktype=\"heading\" }\n>\n> A Paragraph is the default element. How about some **inline markdown**?\n>\n> - list item 1\n> - list item 2\n> - list item 3\n>"
+        "data": "## Blockquote heading { blocktype=\"heading\" }\n\nA Paragraph is the default element. How about some **inline markdown**?\n\n- list item 1\n- list item 2\n- list item 3"
     },
     {
         "type": "blockquote",
@@ -206,7 +206,7 @@
             "blocktype": "blockquote",
             "cite": "www.google.com"
         },
-        "data": ">\n> > ## Blockquote heading { blocktype=\"heading\" }\n> > A Paragraph is the default element. How about some **inline markdown**?\n>\n> > A second nested block in a blockquote with some **inline markdown**?\n> >\n> > - list item 1\n> > - list item 2\n> > - list item 3\n>"
+        "data": "\n> ## Blockquote heading { blocktype=\"heading\" }\n>\n> A Paragraph is the default element. How about some **inline markdown**?\n>\n> A second nested block in a blockquote with some **inline markdown**?\n>\n> - list item 1\n> - list item 2\n> - list item 3\n"
     },
     {
         "type": "heading",
@@ -223,28 +223,48 @@
         "props": {
             "blocktype": "o list"
         },
-        "data": "1. Item 1\n2. Item 2\n3. Item 3\n4. Item 4"
+        "data": [
+            "Item 1\n",
+            "Item 2\n",
+            "Item 3\n",
+            "Item 4"
+        ]
     },
     {
         "type": "olist",
         "props": {
             "blocktype": "o list"
         },
-        "data": "1. Item 1\n2. Item 2\n3. Item 3\n    1. Indented Item 1\n    2. Indented Item 2\n4. Item 4"
+        "data": [
+            "Item 1\n",
+            "Item 2\n",
+            "Item 3\n    1. Indented Item 1\n    2. Indented Item 2\n",
+            "Item 4"
+        ]
     },
     {
         "type": "olist",
         "props": {
             "blocktype": "o list"
         },
-        "data": "1. Multiline Item 1, line 1.\n   Multiline Item 1, line 2.\n   \n   Multiline Item 1, line 3 after double line break.\n2. Item 2\n3. Item 3\n4. Item 4"
+        "data": [
+            "Multiline Item 1, line 1.\n   Multiline Item 1, line 2.\n   \n   Multiline Item 1, line 3 after double line break.\n",
+            "Item 2\n",
+            "Item 3\n",
+            "Item 4"
+        ]
     },
     {
         "type": "olist",
         "props": {
             "blocktype": "o list"
         },
-        "data": "1. Item 1\n2. Item 2\n3. Item 3\n    1. Multiline Item 3, Subitem 1, line 1.\n       Multiline Item 3, Subitem 1, line 2.\n       \n       Multiline Item 3, Subitem 1, line 3.\n    2. Indented Item 2\n4. Item 4"
+        "data": [
+            "Item 1\n",
+            "Item 2\n",
+            "Item 3\n    1. Multiline Item 3, Subitem 1, line 1.\n       Multiline Item 3, Subitem 1, line 2.\n       \n       Multiline Item 3, Subitem 1, line 3.\n    2. Indented Item 2\n",
+            "Item 4"
+        ]
     },
     {
         "type": "heading",
@@ -261,28 +281,48 @@
         "props": {
             "blocktype": "u list"
         },
-        "data": "- Item 1\n- Item 2\n- Item 3\n- Item 4"
+        "data": [
+            "Item 1\n",
+            "Item 2\n",
+            "Item 3\n",
+            "Item 4"
+        ]
     },
     {
         "type": "ulist",
         "props": {
             "blocktype": "u list"
         },
-        "data": "- Item 1\n- Item 2\n- Item 3\n    - Indented Item 1\n    - Indented Item 2\n- Item 4"
+        "data": [
+            "Item 1\n",
+            "Item 2\n",
+            "Item 3\n    - Indented Item 1\n    - Indented Item 2\n",
+            "Item 4"
+        ]
     },
     {
         "type": "ulist",
         "props": {
             "blocktype": "u list"
         },
-        "data": "- Multiline Item 1, line 1.\n  Multiline Item 1, line 2\n   \n  Multiline Item 1, line 3 after double line break\n- Item 2\n- Item 3\n- Item 4"
+        "data": [
+            "Multiline Item 1, line 1.\n  Multiline Item 1, line 2\n   \n  Multiline Item 1, line 3 after double line break\n",
+            "Item 2\n",
+            "Item 3\n",
+            "Item 4"
+        ]
     },
     {
         "type": "ulist",
         "props": {
             "blocktype": "u list"
         },
-        "data": "- Item 1\n- Item 2\n- Item 3\n    - Multiline Item 3, Subitem 1, line 1.\n      Multiline Item 3, Subitem 1, line 2.\n       \n      Multiline Item 3, Subitem 1, line 3.\n    - Indented Item 2\n- Item 4"
+        "data": [
+            "Item 1\n",
+            "Item 2\n",
+            "Item 3\n    - Multiline Item 3, Subitem 1, line 1.\n      Multiline Item 3, Subitem 1, line 2.\n       \n      Multiline Item 3, Subitem 1, line 3.\n    - Indented Item 2\n",
+            "Item 4"
+        ]
     },
     {
         "type": "heading",
@@ -302,7 +342,7 @@
         "data": {
             "type": "note",
             "title": "Note Title",
-            "content": "    this is an admonition."
+            "content": "this is an admonition."
         }
     },
     {
@@ -313,7 +353,7 @@
         "data": {
             "type": "tip",
             "title": "Tip Title",
-            "content": "    for tips and tricks.\n    \n    multiline admontion."
+            "content": "for tips and tricks.\n\nmultiline admontion."
         }
     },
     {
@@ -324,7 +364,7 @@
         "data": {
             "type": "tip",
             "title": "Tip Title",
-            "content": "    for tips and tricks.\n    \n    multiline admontion.\n    \n    ```python\n    for i in range(5):\n        print(i)\n    ```"
+            "content": "for tips and tricks.\n\nmultiline admontion.\n\n```python\nfor i in range(5):\nprint(i)\n```"
         }
     },
     {
@@ -349,7 +389,12 @@
         "props": {
             "blocktype": "dl list"
         },
-        "data": "First Term\n: This is the definition of the first term."
+        "data": {
+            "term": "First Term",
+            "definition": [
+                "This is the definition of the first term."
+            ]
+        }
     },
     {
         "type": "dlist",
@@ -358,7 +403,10 @@
         },
         "data": {
             "term": "Second Term",
-            "definition": ": This is one definition of the second term.\n"
+            "definition": [
+                "This is the first definition of the second term.",
+                "This is the second definition of the second term."
+            ]
         }
     },
     {
@@ -368,7 +416,10 @@
         },
         "data": {
             "term": "Third Term",
-            "definition": ": This is one definition of the third term.\n"
+            "definition": [
+                "This is the first definition of the third term.",
+                "This is the second definition of the third term."
+            ]
         }
     },
     {
@@ -388,7 +439,7 @@
         },
         "data": {
             "index": "1",
-            "content": "    Footnote 1."
+            "content": "Footnote 1."
         }
     },
     {
@@ -398,7 +449,7 @@
         },
         "data": {
             "index": "2",
-            "content": "    Footnote 2 and some inline `code`.\n    If we indent the paragraph we cant put as much content here as we would like.\n    \n    This is a multiline footnote. It also does not matter where we put the footnote definition!"
+            "content": "Footnote 2 and some inline `code`.\nIf we indent the paragraph we cant put as much content here as we would like.\n\nThis is a multiline footnote. It also does not matter where we put the footnote definition!"
         }
     },
     {
@@ -408,7 +459,7 @@
         },
         "data": {
             "index": "3",
-            "content": "    Footnote 3 and some inline `code`.\n    If we indent the paragraph we cant put as much content here as we would like.\n    \n    This is a multiline footnote. It also does not matter where we put the footnote definition!"
+            "content": "Footnote 3 and some inline `code`.\nIf we indent the paragraph we cant put as much content here as we would like.\n\nThis is a multiline footnote. It also does not matter where we put the footnote definition!"
         }
     },
     {
