@@ -1,6 +1,6 @@
 import re
 
-from django_markdown_converter.helpers.processors import process_props
+from django_markdown_converter.patterns.classes.base import CaptureProcessPattern, FindAllPattern, OneShotPattern, HeaderBodyPattern
 
 
 """
@@ -18,7 +18,16 @@ findall
 - the given pattern selects multiple rows for this pattern, as they are normally lists
 - the items then need to be 
 
-[type, pattern, flags, process type, has Nested, has Inline Markup],
+
+"""
+
+"""
+(?:^\[\^(?P<index>.+?)\]:\n)
+
+when we grab a paragraph, make sure to merge the lines so that there are non newline characters 
+inside of a pblock
+
+[type, pattern, flags, process type, has Nested, has Inline Markup, props],
 
 0 | type
 1 | pattern
@@ -33,93 +42,6 @@ headerbody
 oneshot
 findall
 
-"""
-
-
-class Patties:
-    
-    def __init__(self, pattern_object:list=[], *args, **kwargs) -> None:
-        self.blocktype = pattern_object[0]
-        self.pattern = re.compile(pattern_object[1], pattern_object[2])
-        self.process = pattern_object[3]
-        self.hasNested = pattern_object[4]
-        self.hasInline = pattern_object[5]
-        self.props = pattern_object[6]
-
-    def convert(self, content, props, *args, **kwargs) -> dict:
-        """ """
-        block = {
-            "type": self.blocktype,
-            "props": process_props(props),
-            "data": content
-        }
-        
-        ## findall
-        if self.process == "findall":
-            m = self.pattern.findall(content)
-            if m:
-                if self.blocktype == "blockquote":
-                    m = [_.lstrip(" ") for _ in m]
-                    block["data"] = "".join(m)
-                else:
-                    block["data"] = m
-        ## headerbody
-        elif self.process == "headerbody":
-            m = self.pattern.match(content)
-            if m:
-                if self.blocktype == "dlist":
-                    block["data"] = m.groupdict()
-                    definition = m.group("definition").split("\n")
-                    definition = [_.lstrip(": ") for _ in definition]
-                    block["data"]["definition"] = definition
-                elif self.blocktype == "footnote" or self.blocktype == "admonition":
-                    data = m.group("data").split("\n")
-                    data = [_.lstrip(" ") for _ in data]
-                    block["data"] = "\n".join(data)
-                    
-                    for p in self.props:
-                        if p == "data":
-                            continue
-                        block["props"].update({p: m.group(p)})
-                        
-                elif self.blocktype == "table":
-                    block["data"] = {}
-                    for p in self.props:
-                        if p == "data":
-                            continue
-                        block["data"].update({p: m.group(p)})
-                else:
-                    block["data"] = m.groupdict()
-        ## oneshots
-        elif self.process == "oneshot":
-            m = self.pattern.match(content)
-            if m:
-                if "data" in self.props:
-                    block["data"] = m.group("data")
-                else:
-                    block["data"] = m.groupdict()
-                for p in self.props:
-                    if p == "data":
-                        continue
-                    block["props"].update({p: m.group(p)})
-        ## captureprocess
-        elif self.process == "captureprocess":
-            m = self.pattern.match(content)
-            if m:
-                block["data"] = m.group("data")
-                for p in self.props:
-                    if p == "data":
-                        continue
-                    block["props"].update({p: m.group(p)})
-            
-        return block
-
-
-"""
-(?:^\[\^(?P<index>.+?)\]:\n)
-
-when we grab a paragraph, make sure to merge the lines so that there are non newline characters 
-inside of a pblock
 """
 PROC_PATTERNS = [
     ["meta", r'^(?:---\s*)(?:\n)(?P<data>.*?)(?:---\s*)(?:\n|$)', re.MULTILINE | re.DOTALL, "captureprocess", False, False, ["data"]],
@@ -143,9 +65,187 @@ PROC_PATTERNS = [
 ]
 
 
+PROC_PATTERNS = [
+    {
+        "type": "meta",
+        "check": r'^---.*?^---$',
+        "pattern": r'^(?:---\s*)(?:\n)(?P<data>.*?)(?:---\s*)(?:\n|$)',
+        "flags": re.MULTILINE | re.DOTALL,
+        "process": "captureprocess",
+        "hasNested": False,
+        "hasInlineMarkup": False,
+        "props": ["data"],
+    },
+    {
+        "type": "code",
+        "check": r'^```.*?^```$',
+        "pattern": r'(?:^```(?P<language>\S+)?\s*\n)(?P<data>(?:^.*?\n)+)(?:^```.*?(\n|$))',
+        "flags": re.MULTILINE | re.DOTALL,
+        "process": "captureprocess",
+        "hasNested": False,
+        "hasInlineMarkup": False,
+        "props": ["language", "data"],
+    },
+    {
+        "type": "dlist",
+        "check": r'^.+?$\n(?:\: .*$)',
+        "pattern": r'(?P<term>.+?)\n(?P<definition>(?:\:\s+.*?(?:\n|$))+)',
+        "flags": re.MULTILINE | re.DOTALL,
+        "process": "headerbody",
+        "hasNested": False,
+        "hasInlineMarkup": True,
+        "props": ["definition", "term"],
+    },
+    {
+        "type": "footnote",
+        "check": r'^\[\^\d+\]\:\n.*$',
+        "pattern": r'^\[\^(?P<index>.+?)\]:\s*\n(?P<data>(?: {4,}.*(?:\n|$))+)',
+        "flags": re.MULTILINE | re.DOTALL,
+        "process": "headerbody",
+        "hasNested": True,
+        "hasInlineMarkup": True,
+        "props": ["index", "data"],
+    },
+    {
+        "type": "admonition",
+        "check": r'(?:^!!!.*$)',
+        "pattern": r'(?:^!!!\s+(?P<type>\S+)?\s*(?:["\'](?P<title>[^"\']+?)["\'])?\s*\n)(?P<data>(?:^ {4,}.*?(?:\n|$))+)',
+        "flags": re.MULTILINE | re.DOTALL,
+        "process": "headerbody",
+        "hasNested": True,
+        "hasInlineMarkup": True,
+        "props": ["type", "title", "data"],
+    },
+    {
+        "type": "table",
+        "check": r'(?:^\|.*?\|\s*?$\n?)+',
+        "pattern": r'(?P<header>^\|.*?\|\n)(?P<break>^\|.*?\|\n)(?P<body>(?:^\|.*?\|\n){1,})',
+        "flags": re.MULTILINE | re.DOTALL,
+        "process": "headerbody",
+        "hasNested": False,
+        "hasInlineMarkup": True,
+        "props": ["header", "body"],
+    },
+    {
+        "type": "hr",
+        "check": r'^(?:[\*\-]{3,}$)',
+        "pattern": r'^(?P<data>[\*\-]{3,})\s*(?:\n|$)',
+        "flags": re.MULTILINE | re.DOTALL,
+        "process": "oneshot",
+        "hasNested": False,
+        "hasInlineMarkup": False,
+        "props": ["data"],
+    },
+    {
+        "type": "heading",
+        "check": r'^\#+\s+.*?$',
+        "pattern": r'^(?P<level>\#{1,})\s+(?P<data>.*?)(?:$|\n)',
+        "flags": re.MULTILINE | re.DOTALL,
+        "process": "oneshot",
+        "hasNested": False,
+        "hasInlineMarkup": True,
+        "props": ["level", "data"],
+    },
+    {
+        "type": "image",
+        "check": r'^!\[.*?\]\(.*?\)',
+        "pattern": r'^\!\[(?P<alt>.*?)?\]\((?P<data>\S*)\s*(?:\"(?P<title>.*?)\")?\)',
+        "flags": re.MULTILINE | re.DOTALL,
+        "process": "oneshot",
+        "hasNested": False,
+        "hasInlineMarkup": False,
+        "props": ["alt", "data", "title"],
+    },
+    {
+        "type": "svg",
+        "check": r'^<svg\s[^>]*>(?:.*?)</svg>',
+        "pattern": r'^<svg\s(?P<attrs>[^>]*)>(?P<data>.*?)</svg>',
+        "flags": re.MULTILINE | re.DOTALL,
+        "process": "oneshot",
+        "hasNested": False,
+        "hasInlineMarkup": False,
+        "props": ["attrs", "data"],
+    },
+    {
+        "type": "ulist",
+        "check": r'(?:^ *- +.*$)+',
+        "pattern": r'(?<=^- ).*?(?:\n|$)(?: {2}.*(?:\n|$))*',
+        "flags": re.MULTILINE,
+        "process": "findall",
+        "hasNested": True,
+        "hasInlineMarkup": True,
+        "props": [],
+    },
+    {
+        "type": "olist",
+        "check": r'(?:^ *\d+\. +.*$)+',
+        "pattern": r'(?:(?<=^\d\. )|(?<=^\d\d\. )).*?(?:\n|$)(?: {2}.*(?:\n|$))*',
+        "flags": re.MULTILINE,
+        "process": "findall",
+        "hasNested": True,
+        "hasInlineMarkup": True,
+        "props": [],
+    },
+    {
+        "type": "blockquote",
+        "check": r'(?:^>.*$)+',
+        "pattern": r'(?<=^>).*(?:\n|$)',
+        "flags": re.MULTILINE,
+        "process": "findall",
+        "hasNested": True,
+        "hasInlineMarkup": True,
+        "props": [],
+    },
+    {
+        "type": "paragraph",
+        "check": r'.*',
+        "pattern": r'(?P<data>.*?)(?:\n|\n\n|$)',
+        "flags": re.MULTILINE | re.DOTALL,
+        "process": "oneshot",
+        "hasNested": False,
+        "hasInlineMarkup": True,
+        "props": ["data"],
+    },
+]
+
+
+def BuildPatternList(patterns:list=[])-> list:
+    pattern_list = []
+    
+    for p in patterns:
+        inst = None
+        if p["process"] == "captureprocess":
+            inst = CaptureProcessPattern(p)
+        elif p["process"] == "headerbody":
+            inst = HeaderBodyPattern(p)
+        elif p["process"] == "oneshot":
+            inst = OneShotPattern(p)
+        elif p["process"] == "findall":
+            inst = FindAllPattern(p)
+        if inst:
+            pattern_list.append(inst)
+    return pattern_list
+
+
 def BuildPatternDict(patterns:list=[])-> dict:
-    pattern_list = [(p[0], Patties(p)) for p in patterns]
+    pattern_list = []
+    
+    for p in patterns:
+        inst = None
+        if p["process"] == "captureprocess":
+            inst = CaptureProcessPattern(p)
+        elif p["process"] == "headerbody":
+            inst = HeaderBodyPattern(p)
+        elif p["process"] == "oneshot":
+            inst = OneShotPattern(p)
+        elif p["process"] == "findall":
+            inst = FindAllPattern(p)
+        if inst:
+            pattern_list.append((p["type"], inst))
     return dict(pattern_list)
 
 
+
+
+PATTERN_LIST = BuildPatternList(PROC_PATTERNS)
 PATTERN_DICT = BuildPatternDict(PROC_PATTERNS)

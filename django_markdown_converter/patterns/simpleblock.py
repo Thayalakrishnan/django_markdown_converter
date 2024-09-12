@@ -3,48 +3,46 @@ import re
 """
 """
 
-#META_PATTERN = (r'^---.*?^---$', re.MULTILINE | re.DOTALL)
 #TABLE_PATTERN = (r'(?:^\|.*?\|$(?:\n|$))+(?:\{.*?\})?', re.MULTILINE)
 #HR_PATTERN = (r'^(?:[\*\-]{3,}$)', re.MULTILINE)
 #CODE_PATTERN = (r'(?:^```.*?$\n)(?:.*?$\n)+?(?:^```)', re.MULTILINE)
 
-
+META_PATTERN = r'^---.*?^---$'
 CODE_PATTERN = r'^```.*?^```$'
-HEADING_PATTERN = r'^\#+\s+.*?$'
-HR_PATTERN = r'^(?:[\*\-]{3,}$)'
-TABLE_PATTERN = r'(?:^\|.*?\|\s*?$\n?)+'
-ADMONITION_PATTERN = r'(?:^!!!.*$)'
-BLOCKQUOTE_PATTERN = r'(?:^>.*$)+'
 DEFINITIONLIST_PATTERN = r'^.+?$\n(?:\: .*$)'
 FOOTNOTE_PATTERN = r'^\[\^\d+\]\:\n.*$'
+ADMONITION_PATTERN = r'(?:^!!!.*$)'
+TABLE_PATTERN = r'(?:^\|.*?\|\s*?$\n?)+'
+HR_PATTERN = r'^(?:[\*\-]{3,}$)'
+HEADING_PATTERN = r'^\#+\s+.*?$'
 IMAGE_PATTERN = r'^!\[.*?\]\(.*?\)'
-PARAGRAPH_PATTERN = r'.*'
 SVG_PATTERN = r'^<svg\s[^>]*>(?:.*?)</svg>'
-HTML_PATTERN = r'^<(?P<el>\S+)\s[^>]*>(?:.*?)</(?P=el)>' # to match generic HTML, ensure that it doesnt target codeblock html lol
-ORDERED_LIST_PATTERN = r'(?:^ *\d+\. +.*$)+'
+PARAGRAPH_PATTERN = r'.*'
 UNORDERED_LIST_PATTERN = r'(?:^ *- +.*$)+'
+ORDERED_LIST_PATTERN = r'(?:^ *\d+\. +.*$)+'
+BLOCKQUOTE_PATTERN = r'(?:^>.*$)+'
+
+HTML_PATTERN = r'^<(?P<el>\S+)\s[^>]*>(?:.*?)</(?P=el)>'
 
 """
-#["label", pattern, ["props"]],
+#["label", pattern],
 """
-BLOCK_PATTERNS = [
-    #["meta", META_PATTERN, ["content"]],
-    ["dlist", DEFINITIONLIST_PATTERN, ["term", "definition", "props"]],
-    ["footnote", FOOTNOTE_PATTERN, ["index", "content", "props"]],
-    ["admonition", ADMONITION_PATTERN, ["props"]],
-    ["code", CODE_PATTERN, ["props"]],
-    ["table", TABLE_PATTERN, ["header", "body", "break", "props"]],
-    ["blockquote", BLOCKQUOTE_PATTERN, ["props"]],
-    ["hr", HR_PATTERN, ["props"]],
-    ["heading", HEADING_PATTERN, ["props"]],
-    ["image", IMAGE_PATTERN, ["props"]],
-    ["svg", SVG_PATTERN, ["props"]],
-    ["ulist", UNORDERED_LIST_PATTERN, ["props"]],
-    ["olist", ORDERED_LIST_PATTERN, ["props"]],
-    ["paragraph", PARAGRAPH_PATTERN, ["props", "content"]], # paragraph pattern must go last
+BLOCK_PATTERNS_RAW = [
+    #["meta", META_PATTERN],
+    ["dlist", DEFINITIONLIST_PATTERN],
+    ["footnote", FOOTNOTE_PATTERN],
+    ["admonition", ADMONITION_PATTERN],
+    ["code", CODE_PATTERN],
+    ["table", TABLE_PATTERN],
+    ["blockquote", BLOCKQUOTE_PATTERN],
+    ["hr", HR_PATTERN],
+    ["heading", HEADING_PATTERN],
+    ["image", IMAGE_PATTERN],
+    ["svg", SVG_PATTERN],
+    ["ulist", UNORDERED_LIST_PATTERN],
+    ["olist", ORDERED_LIST_PATTERN],
+    ["paragraph", PARAGRAPH_PATTERN],
 ]
 
-# compile PATTERNS
-for p in BLOCK_PATTERNS:
-    pattern = p[1]
-    p[1] = re.compile(pattern, re.MULTILINE | re.DOTALL)
+
+BLOCK_PATTERNS = [(p[0], re.compile(p[1], re.MULTILINE | re.DOTALL)) for p in BLOCK_PATTERNS_RAW]

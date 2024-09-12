@@ -17,29 +17,11 @@ raw_chunk = ReadSourceFromFile(path_to_file)
 
 print("processed -------------------------")
 
-
 raw_chunk = process_input_content(raw_chunk)
 raw_chunk, meta = extract_meta_block(raw_chunk)
 
-#print(meta)
-
-for index, label, content, props in block_parser(raw_chunk):
-    print(f"{index} -------- {label}")
-    root.append(f"{index} -------- {label}")
-    root.append(content)
-    
-    current_block = PATTERN_DICT[label].convert(content, props)
-    json_root_nu.append(current_block)
-    
-    json_root.append({
-        "blocktype": label,
-        "props": process_props(props),
-        "data": content
-    })
-    
-
-
-#print(json_root)
+for block in block_parser(raw_chunk):
+    json_root_nu.append(block)
 
 #write_to_file = "notes/examples/post_output"
 write_to_json_file = "notes/examples/post_output.json"

@@ -1,9 +1,11 @@
 from django_markdown_converter.patterns.block import BLOCK_PATTERN
 from django_markdown_converter.patterns.simpleblock import BLOCK_PATTERNS
 from django_markdown_converter.helpers.processors import excise_props
+from django_markdown_converter.patterns.procpats import PATTERN_LIST
 
 
-def block_iterator(content:str=""):
+
+def block_generator(content:str=""):
     """
     generator function that loops over the content 
     and yields blocks according to the block pattern
@@ -20,26 +22,25 @@ def block_detector(block:str="", index:int=0):
     """
     receives a 'block' and determinest the type
     of block content using the block patterns list. 
-    """
     # determine the type of block each chunk is
     props = ""
     # extract any props that are in this block
     block, props = excise_props(block)
-    for label, pattern, proplabels in BLOCK_PATTERNS:
+    for label, pattern in BLOCK_PATTERNS:
         submatch = pattern.match(block)
         if submatch:
-            #content = submatch.group("content")
             content = submatch.group(0)
-            # check the content for attributes
             #print(f"{index} | {repr(props)} |")
-            if props:
-                #print(f"---------------------------------------------\n")
-                #print(f"{index} | {repr(props)} |")
-                pass
-            else:
-                print("\nNO ATTRS DETECTED\n")
-                print(block)
             return index, label, content, props
+    """
+ 
+    # determine the type of block each chunk is
+    props = ""
+    # extract any props that are in this block
+    block, props = excise_props(block)
+    for pattern in PATTERN_LIST:
+        if pattern.check(block):
+            return pattern.convert(block, props)
 
 def block_parser(content:str=""):
     """
@@ -48,7 +49,7 @@ def block_parser(content:str=""):
     index, the type of block, the content extracted 
     and any props
     """
-    blocks = block_iterator(content)
+    blocks = block_generator(content)
     for block, index in blocks:
         yield block_detector(block, index)
     
