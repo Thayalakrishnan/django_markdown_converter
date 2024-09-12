@@ -1,8 +1,6 @@
 from django_markdown_converter.patterns.block import BLOCK_PATTERN
-from django_markdown_converter.patterns.simpleblock import BLOCK_PATTERNS
 from django_markdown_converter.helpers.processors import excise_props
 from django_markdown_converter.patterns.procpats import PATTERN_LIST
-
 
 
 def block_generator(content:str=""):
@@ -13,27 +11,14 @@ def block_generator(content:str=""):
     chunks = BLOCK_PATTERN.finditer(content)
     for index, chunk in enumerate(chunks):
         block = chunk.group("block")
-        #print(repr(block))
-        #block =  remove_trailing_whitespace(block)
         yield block, index
 
 
-def block_detector(block:str="", index:int=0):
+def block_detector(block:str="", index:int=0) -> dict:
     """
     receives a 'block' and determinest the type
     of block content using the block patterns list. 
-    # determine the type of block each chunk is
-    props = ""
-    # extract any props that are in this block
-    block, props = excise_props(block)
-    for label, pattern in BLOCK_PATTERNS:
-        submatch = pattern.match(block)
-        if submatch:
-            content = submatch.group(0)
-            #print(f"{index} | {repr(props)} |")
-            return index, label, content, props
     """
- 
     # determine the type of block each chunk is
     props = ""
     # extract any props that are in this block

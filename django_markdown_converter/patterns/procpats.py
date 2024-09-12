@@ -2,9 +2,7 @@ import re
 
 from django_markdown_converter.patterns.classes.base import CaptureProcessPattern, FindAllPattern, OneShotPattern, HeaderBodyPattern
 
-
 """
-
 captureprocess: 
 - block is capture, funciton is called to process the captured content, which is the data
 headerbody: 
@@ -18,10 +16,6 @@ findall
 - the given pattern selects multiple rows for this pattern, as they are normally lists
 - the items then need to be 
 
-
-"""
-
-"""
 (?:^\[\^(?P<index>.+?)\]:\n)
 
 when we grab a paragraph, make sure to merge the lines so that there are non newline characters 
@@ -41,29 +35,7 @@ captureprocess
 headerbody
 oneshot
 findall
-
 """
-PROC_PATTERNS = [
-    ["meta", r'^(?:---\s*)(?:\n)(?P<data>.*?)(?:---\s*)(?:\n|$)', re.MULTILINE | re.DOTALL, "captureprocess", False, False, ["data"]],
-    ["code", r'(?:^```(?P<language>\S+)?\s*\n)(?P<data>(?:^.*?\n)+)(?:^```.*?(\n|$))', re.MULTILINE | re.DOTALL, "captureprocess", False, False, ["language", "data"]],
-    
-    ["dlist", r'(?P<term>.+?)\n(?P<definition>(?:\:\s+.*?(?:\n|$))+)', re.MULTILINE | re.DOTALL, "headerbody", False, True, ["definition", "term"]], # 
-    ["footnote", r'^\[\^(?P<index>.+?)\]:\s*\n(?P<data>(?: {4,}.*(?:\n|$))+)', re.MULTILINE | re.DOTALL, "headerbody", True, True, ["index", "data"]], # capture, header, dedent
-    ["admonition", r'(?:^!!!\s+(?P<type>\S+)?\s*(?:["\'](?P<title>[^"\']+?)["\'])?\s*\n)(?P<data>(?:^ {4,}.*?(?:\n|$))+)', re.MULTILINE | re.DOTALL, "headerbody", True, True, ["type", "title", "data"]], # capture, header, dedent
-    ["table", r'(?P<header>^\|.*?\|\n)(?P<break>^\|.*?\|\n)(?P<body>(?:^\|.*?\|\n){1,})', re.MULTILINE | re.DOTALL, "headerbody", False, True, ["header", "body"]],
-    
-    ["hr", r'^(?P<data>[\*\-]{3,})\s*(?:\n|$)', re.MULTILINE | re.DOTALL, "oneshot", False, False, ["data"]],
-    ["heading", r'^(?P<level>\#{1,})\s+(?P<data>.*?)(?:$|\n)', re.MULTILINE | re.DOTALL, "oneshot", False, True, ["level", "data"]],
-    ["image", r'^\!\[(?P<alt>.*?)?\]\((?P<data>\S*)\s*(?:\"(?P<title>.*?)\")?\)', re.MULTILINE | re.DOTALL, "oneshot", False, False, ["alt", "data", "title"]],
-    ["svg", r'^<svg\s(?P<attrs>[^>]*)>(?P<data>.*?)</svg>', re.MULTILINE | re.DOTALL, "oneshot", False, False, ["attrs", "data"]],
-    
-    ["paragraph", r'(?P<data>.*?)(?:\n|\n\n|$)', re.MULTILINE | re.DOTALL, "oneshot", False, True, ["data"]],
-    
-    ["ulist", r'(?<=^- ).*?(?:\n|$)(?: {2}.*(?:\n|$))*', re.MULTILINE, "findall", True, True, []],
-    ["olist", r'(?:(?<=^\d\. )|(?<=^\d\d\. )).*?(?:\n|$)(?: {2}.*(?:\n|$))*', re.MULTILINE, "findall", True, True, []],
-    ["blockquote", r'(?<=^>).*(?:\n|$)', re.MULTILINE, "findall", True, True, []],
-]
-
 
 PROC_PATTERNS = [
     {
@@ -226,26 +198,4 @@ def BuildPatternList(patterns:list=[])-> list:
             pattern_list.append(inst)
     return pattern_list
 
-
-def BuildPatternDict(patterns:list=[])-> dict:
-    pattern_list = []
-    
-    for p in patterns:
-        inst = None
-        if p["process"] == "captureprocess":
-            inst = CaptureProcessPattern(p)
-        elif p["process"] == "headerbody":
-            inst = HeaderBodyPattern(p)
-        elif p["process"] == "oneshot":
-            inst = OneShotPattern(p)
-        elif p["process"] == "findall":
-            inst = FindAllPattern(p)
-        if inst:
-            pattern_list.append((p["type"], inst))
-    return dict(pattern_list)
-
-
-
-
 PATTERN_LIST = BuildPatternList(PROC_PATTERNS)
-PATTERN_DICT = BuildPatternDict(PROC_PATTERNS)

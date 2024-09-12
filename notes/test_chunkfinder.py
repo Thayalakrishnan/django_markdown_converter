@@ -1,7 +1,6 @@
 from django_markdown_converter.helpers.helpers import ReadSourceFromFile, WriteToMDFile, WriteJSONToFile
-from django_markdown_converter.helpers.processors import process_input_content, extract_meta_block, process_props, process_meta_block
+from django_markdown_converter.helpers.processors import process_input_content, extract_meta_block
 from django_markdown_converter.helpers.parsers import block_parser
-from django_markdown_converter.patterns.procpats import PATTERN_DICT
 
 """
 loop over the content and spit out chunks
