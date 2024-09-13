@@ -152,45 +152,96 @@ mylines = [
 ]
 
 
+mylines = [
+    [0, 'Item 1', []],
+    [2, 'Item 1.1', []],
+    [4, 'Item 1.1.1', []],
+    [6, 'Item 1.1.1.1', []],
+    [8, 'Item 1.1.1.1.1', []],
+    [6, 'Item 1.1.1.2', []],
+    [4, 'Item 1.1.2', []],
+    [6, 'Item 1.1.2.2', []],
+    [4, 'Item 1.1.3', []],
+]
+
+mylines = [
+    [0, 'Item 1', []],
+    [2, 'Item 1.1', []],
+    [4, 'Item 1.1.1', []],
+    [6, 'Item 1.1.1.1', []],
+    [8, 'Item 1.1.1.1.1', []],
+]
+
+mylines = [
+    [0, 'Item 1', []],
+    [0, 'Item 2', []],
+    [0, 'Item 3', []],
+    [0, 'Item 4', []],
+    [0, 'Item 5', []],
+]
+
+# %%
+mylines = [
+    [0, 'Item 1', []],
+    [0, 'Item 2', []],
+    [2, 'Item 2.1', []],
+    [4, 'Item 2.1.1', []],
+    [0, 'Item 3', []],
+    [0, 'Item 4', []],
+    [2, 'Item 4.1', []],
+    [4, 'Item 4.1.1', []],
+    [0, 'Item 5', []],
+]
+
 def GroupLines(items:list=[]):
     stack = []
     root = [0, '', []]
     
-    current_block = root
-    current_block_arr = root[2]
+    cur_parent = root
+    cur_parent_arr = root[2]
     
-    current_level = 0
+    cur_lvl = 0
     stack.append(root)
     
-    for item in items:
-        #print(f"current_level: {current_level} item: {item[1]}")
-        if item[0] < current_level: 
-            while item[0] < current_level:
-                #print(f"current: {current_level} target: {item[0]}")
-                #print(stack)
-                current_block = stack.pop()
-                current_level = current_block[0]
-                current_block_arr = current_block[2]
+    index = 0
+    max_index = len(items)
+    
+    while index < max_index:
+        item = items[index]
+        #print(f"cur_lvl: {cur_lvl} item: {item[1]}")
+        if item[0] < cur_lvl:
+            #while item[0] < cur_lvl:
+            #    #print(f"current: {cur_lvl} target: {item[0]}")
+            #    #print(stack)
+            #    cur_parent = stack.pop()
+            #    cur_lvl = cur_parent[0]
+            #    cur_parent_arr = cur_parent[2]
                 
-            current_block = stack.pop()
-            current_level = current_block[0]
-            current_block_arr = current_block[2]
-            current_block_arr.append(item)
-        elif item[0] > current_level:
+            cur_parent = stack.pop()
+            cur_lvl = cur_parent[0]
+            cur_parent_arr = cur_parent[2]
+            #cur_parent_arr.append(item)
+        elif item[0] > cur_lvl:
+            """
+            if the current items level is bigger than the 
+            the current level, it is nested under the current item
+            """
             # update level
-            current_level = item[0]
+            cur_lvl = item[0]
             
             # push current level to stack
-            stack.append(current_block)
+            stack.append(cur_parent)
             
             # reference new level, which is the previous level
-            current_block = current_block_arr[-1]
-            current_block_arr = current_block[2]
+            cur_parent = cur_parent_arr[-1]
+            cur_parent_arr = cur_parent[2]
             
             # add current item as child of new level
-            current_block_arr.append(item)
+            #cur_parent_arr.append(item)
+            #index+=1
         else:
-            current_block_arr.append(item)
+            cur_parent_arr.append(item)
+            index+=1
     return root[2]
 
 print(GroupLines(mylines))
