@@ -245,4 +245,61 @@ def GroupLines(items:list=[]):
     return root[2]
 
 print(GroupLines(mylines))
+
+# %%
+mylines = [
+    {"level": 0, "content": "Item 1", "children": []},
+    {"level": 0, "content": "Item 2", "children": []},
+    {"level": 0, "content": "Item 3", "children": []},
+    {"level": 0, "content": "Item 4", "children": []},
+    {"level": 0, "content": "Item 5", "children": []},
+]
+# %%
+mylines = [
+    {"level": 0, "content": "Item 1", "children": []},
+    {"level": 0, "content": "Item 2", "children": []},
+    {"level": 2, "content": "Item 2.1", "children": []},
+    {"level": 4, "content": "Item 2.1.1", "children": []},
+    {"level": 4, "content": "Item 2.1.2", "children": []},
+    {"level": 2, "content": "Item 2.2", "children": []},
+    {"level": 4, "content": "Item 2.2.1", "children": []},
+    {"level": 4, "content": "Item 2.2.2", "children": []},
+    {"level": 2, "content": "Item 2.3", "children": []},
+    {"level": 0, "content": "Item 3", "children": []},
+]
+
+def GroupLines(items:list=[]):
+    """
+    """
+    root = {"level": 0, "content": "root", "children": []}
+    cur_parent = root
+    cur_lvl = root["level"]
+    
+    stack = []
+    stack_level = []
+    
+    index = 0
+    max_index = len(items)
+    
+    while index < max_index:
+        item = items[index]
+        
+        if item["level"] < cur_lvl:
+            cur_parent = stack.pop()
+            cur_lvl = stack_level.pop()
+        elif item["level"] > cur_lvl:
+            """
+            if the current items level is bigger than the 
+            the current level, it is nested under the current item
+            """
+            stack.append(cur_parent)
+            stack_level.append(cur_lvl)
+            cur_lvl = item["level"]
+            cur_parent = cur_parent["children"][-1]
+        else:
+            cur_parent["children"].append(item)
+            index+=1
+    return root["children"]
+
+print(GroupLines(mylines))
 # %%
