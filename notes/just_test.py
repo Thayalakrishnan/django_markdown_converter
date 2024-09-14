@@ -185,7 +185,30 @@ md = """- Item 1: line 1.
     
     Item 3.1: line 3.
   - Item 3.2: line 1.
-- Item 4: line 1."""
+- Item 4: line 1.
+
+
+dink
+"""
+
+
+md = """
+- Item 1.
+- Item 2.
+    - Item 2.1.
+    - Item 2.2.
+    - Item 2.3.
+        - Item 2.3.1
+        - Item 2.3.2
+        - Item 2.3.3
+    - Item 2.4
+    - Item 2.5
+        - Item 2.5.1
+        - Item 2.5.2
+        - Item 2.5.3
+    - Item 2.6
+- Item 3.
+"""
 
 # %%
 import re
@@ -206,8 +229,6 @@ def ConvertListIntoItems(source:str=""):
     lineitempattern = re.compile(r'(?P<level>^\s*?)(?P<marker>(?:- )|(?:\d{1,3}\. ))(?P<content>(?:.*?(?=^\s*?- ))|(?:.*?$\n?))', re.MULTILINE | re.DOTALL)
     lineitempattern = re.compile(r'(?P<level>^\s*?)(?P<marker>(?:- )|(?:\d+\. ))(?P<content>(?:.*?(?=^\s*?((- )|(\d+\. ))))|(?:.*?$\n?))', re.MULTILINE | re.DOTALL)
     return lineitempattern.finditer(source)
-
-
 
 
 def ConvertListIntoItemGenerator(source:str=""):
@@ -234,43 +255,50 @@ def AddItemToList(parent, child):
 def ConvertList(source):
     """
     """
-    items = ConvertListIntoItemGenerator(source)
+    items = ConvertListIntoItems(source)
     
     root = {
-        "level": 0, 
-        "content": "root", 
-        "children": []
+        "level": -2, 
+        "type": "root", 
+        "props": {}, 
+        "children": None
     }
-    cur_parent = root
-    cur_lvl = root["level"]
+    cur_parent = {"children": [root]}
+    
+    cur_lvl = -2
     
     stack = []
     stack_level = []
     
-    
-    for item in items:
-        print(item)
+    for next_item in items:
+        item = FormatItem(next_item.groupdict())
         
         while True:
         
             if item["level"] < cur_lvl:
-                cur_parent = stack.pop()
-                cur_lvl = stack_level.pop()
+                cur_parent, cur_lvl = stack.pop()
+                #cur_lvl = stack_level.pop()
             elif item["level"] > cur_lvl:
                 """
                 if the current items level is bigger than the 
                 the current level, it is nested under the current item
                 """
-                stack.append(cur_parent)
-                stack_level.append(cur_lvl)
+                stack.append((cur_parent, cur_lvl))
+                #stack_level.append(cur_lvl)
+                
                 cur_lvl = item["level"]
                 cur_parent = cur_parent["children"][-1]
-                cur_parent["type"] = item["marker"]
-                cur_parent["children"] = []
+                #cur_parent = previous_item
+                
+                # if there are no current children, add a list
+                if not cur_parent["children"]:
+                    cur_parent["type"] = item["marker"]
+                    cur_parent["children"] = []
             else:
                 AddItemToList(cur_parent["children"], item)
                 break
-    return root["children"]
+    del root["level"]
+    return root
 
 
 #method1 = ConvertListIntoItemsOneStep(md)
@@ -278,58 +306,5 @@ method2 = ConvertList(md)
 
 print(method2)
 print("Done!")
-
-# %%
-
-def LookAheadGenerator(items):
-    current_item = next(items)
-    try:
-        for next_item in items:
-            yield current_item
-            current_item = next_item
-    except StopIteration:
-        pass
-    yield current_item
-    
-    
-mylist = [
-    "item 1",
-    "item 2",
-    "item 3",
-    "item 4",
-    "item 5",
-    "item 6",
-]
-
-mygen = (_ for _ in mylist)
-
-#agen = LookAheadGenerator(mygen)
-
-#for a in agen:
-#    print(a)
-
-for a in mygen:
-    print(a)
-
-# %%
-
-
-import re
-
-raw_pattern = r"yeet"
-lineitempattern = re.compile(raw_pattern, re.MULTILINE | re.DOTALL)
-
-md = """
-my first yeet 
-went a little like yeet 
-and yeet
-"""
-
-mgen = lineitempattern.finditer(md)
-
-for _ in mgen:
-    print(_)
-
-
 
 # %%
