@@ -191,9 +191,10 @@ md = """- Item 1: line 1.
 import re
 
 def FormatItem(item:dict=()):
+    item["type"] = "item"
     item["level"] = len(item["level"])
-    item["type"] = "ulist" if item["type"] == "- " else "olist"
-    item["children"] = []
+    item["marker"] = "ulist" if item["marker"] == "- " else "olist"
+    item["children"] = None
     content = item["content"].strip().split("\n")
     content = [_.lstrip() for _ in content]
     item["content"] = "\n".join(content)
@@ -203,52 +204,72 @@ def FormatItem(item:dict=()):
 def ConvertListIntoItems(source:str=""):
     lineitempattern = re.compile(r'(?P<level>^\s*?)(?P<marker>- )(?P<content>(?:.*?(?=^\s*?- ))|(?:.*?$\n?))', re.MULTILINE | re.DOTALL)
     lineitempattern = re.compile(r'(?P<level>^\s*?)(?P<marker>(?:- )|(?:\d{1,3}\. ))(?P<content>(?:.*?(?=^\s*?- ))|(?:.*?$\n?))', re.MULTILINE | re.DOTALL)
-    lineitempattern = re.compile(r'(?P<level>^\s*?)(?P<type>(?:- )|(?:\d+\. ))(?P<content>(?:.*?(?=^\s*?((- )|(\d+\. ))))|(?:.*?$\n?))', re.MULTILINE | re.DOTALL)
+    lineitempattern = re.compile(r'(?P<level>^\s*?)(?P<marker>(?:- )|(?:\d+\. ))(?P<content>(?:.*?(?=^\s*?((- )|(\d+\. ))))|(?:.*?$\n?))', re.MULTILINE | re.DOTALL)
     return lineitempattern.finditer(source)
+
+
+
 
 def ConvertListIntoItemGenerator(source:str=""):
     items = ConvertListIntoItems(source)
     current_item = FormatItem(next(items).groupdict())
+    next_item = None
     try:
-        for next_item in items:
-            yield current_item, True
-            current_item = FormatItem(next_item.groupdict())
+        for item in items:
+            next_item = FormatItem(item.groupdict())
+            yield current_item
+            current_item = next_item
     except StopIteration:
+        current_item = next_item
         pass
-    yield current_item, False
+    current_item = next_item
+    yield current_item
 
+
+def AddItemToList(parent, child):
+    del child["marker"]
+    del child["level"]
+    parent.append(child)
 
 def ConvertList(source):
     """
     """
     items = ConvertListIntoItemGenerator(source)
     
-    root = {"level": 0, "content": "root", "children": []}
+    root = {
+        "level": 0, 
+        "content": "root", 
+        "children": []
+    }
     cur_parent = root
     cur_lvl = root["level"]
     
     stack = []
     stack_level = []
     
-    item, valid = next(items)
     
-    while valid:
-       
-        if item["level"] < cur_lvl:
-            cur_parent = stack.pop()
-            cur_lvl = stack_level.pop()
-        elif item["level"] > cur_lvl:
-            """
-            if the current items level is bigger than the 
-            the current level, it is nested under the current item
-            """
-            stack.append(cur_parent)
-            stack_level.append(cur_lvl)
-            cur_lvl = item["level"]
-            cur_parent = cur_parent["children"][-1]
-        else:
-            cur_parent["children"].append(item)
-            item, valid = next(items)
+    for item in items:
+        print(item)
+        
+        while True:
+        
+            if item["level"] < cur_lvl:
+                cur_parent = stack.pop()
+                cur_lvl = stack_level.pop()
+            elif item["level"] > cur_lvl:
+                """
+                if the current items level is bigger than the 
+                the current level, it is nested under the current item
+                """
+                stack.append(cur_parent)
+                stack_level.append(cur_lvl)
+                cur_lvl = item["level"]
+                cur_parent = cur_parent["children"][-1]
+                cur_parent["type"] = item["marker"]
+                cur_parent["children"] = []
+            else:
+                AddItemToList(cur_parent["children"], item)
+                break
     return root["children"]
 
 
@@ -257,5 +278,58 @@ method2 = ConvertList(md)
 
 print(method2)
 print("Done!")
+
+# %%
+
+def LookAheadGenerator(items):
+    current_item = next(items)
+    try:
+        for next_item in items:
+            yield current_item
+            current_item = next_item
+    except StopIteration:
+        pass
+    yield current_item
+    
+    
+mylist = [
+    "item 1",
+    "item 2",
+    "item 3",
+    "item 4",
+    "item 5",
+    "item 6",
+]
+
+mygen = (_ for _ in mylist)
+
+#agen = LookAheadGenerator(mygen)
+
+#for a in agen:
+#    print(a)
+
+for a in mygen:
+    print(a)
+
+# %%
+
+
+import re
+
+raw_pattern = r"yeet"
+lineitempattern = re.compile(raw_pattern, re.MULTILINE | re.DOTALL)
+
+md = """
+my first yeet 
+went a little like yeet 
+and yeet
+"""
+
+mgen = lineitempattern.finditer(md)
+
+for _ in mgen:
+    print(_)
+
+
 
 # %%
