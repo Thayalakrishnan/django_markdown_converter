@@ -1,9 +1,9 @@
 import re
 
-from django_markdown_converter.patterns.classes.base import CaptureProcessPattern, FindAllPattern, OneShotPattern, HeaderBodyPattern
+from django_markdown_converter.patterns.classes.base import FencedPattern, FindAllPattern, OneShotPattern, HeaderBodyPattern
 
 """
-captureprocess: 
+fenced: 
 - block is capture, funciton is called to process the captured content, which is the data
 headerbody: 
 - block heas a header and a body which both contribute to the final block
@@ -31,7 +31,7 @@ inside of a pblock
 5 | has Inline Markup
 6 | props
 
-captureprocess
+fenced
 headerbody
 oneshot
 findall
@@ -43,7 +43,7 @@ PROC_PATTERNS = [
         "check": r'^---.*?^---$',
         "pattern": r'^(?:---\s*)(?:\n)(?P<data>.*?)(?:---\s*)(?:\n|$)',
         "flags": re.MULTILINE | re.DOTALL,
-        "process": "captureprocess",
+        "process": "fenced",
         "hasNested": False,
         "hasInlineMarkup": False,
         "props": ["data"],
@@ -53,7 +53,7 @@ PROC_PATTERNS = [
         "check": r'^```.*?^```$',
         "pattern": r'(?:^```(?P<language>\S+)?\s*\n)(?P<data>(?:^.*?\n)+)(?:^```.*?(\n|$))',
         "flags": re.MULTILINE | re.DOTALL,
-        "process": "captureprocess",
+        "process": "fenced",
         "hasNested": False,
         "hasInlineMarkup": False,
         "props": ["language", "data"],
@@ -186,8 +186,8 @@ def BuildPatternList(patterns:list=[])-> list:
     
     for p in patterns:
         inst = None
-        if p["process"] == "captureprocess":
-            inst = CaptureProcessPattern(p)
+        if p["process"] == "fenced":
+            inst = FencedPattern(p)
         elif p["process"] == "headerbody":
             inst = HeaderBodyPattern(p)
         elif p["process"] == "oneshot":

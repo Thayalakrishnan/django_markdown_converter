@@ -27,6 +27,9 @@ class BasePattern:
 
         
 class FindAllPattern(BasePattern):
+    """
+    for 
+    """
     
     def convert(self, content, props, *args, **kwargs) -> dict:
         block = super().convert(content, props, *args, **kwargs)
@@ -94,11 +97,13 @@ class OneShotPattern(BasePattern):
         return block
 
 
-class CaptureProcessPattern(BasePattern):
-    
+class FencedPattern(BasePattern):
+    """
+    for meta, code 
+    """
     def convert(self, content, props, *args, **kwargs) -> dict:
         block = super().convert(content, props, *args, **kwargs)
-        if self.process == "captureprocess":
+        if self.process == "fenced":
             m = self.pattern.match(content)
             if m:
                 block["data"] = m.group("data")

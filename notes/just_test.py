@@ -83,6 +83,10 @@ md = """
 - Item 3.
 """
 
+md = """
+- Item 1.
+"""
+
 # %%
 import re
 
@@ -154,7 +158,6 @@ def ConvertList(source):
     return root, bank
 
 
-#method1 = ConvertListIntoItemsOneStep(md)
 method2, b = ConvertList(md)
 
 print(method2)

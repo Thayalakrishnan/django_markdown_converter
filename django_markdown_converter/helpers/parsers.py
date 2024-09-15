@@ -1,4 +1,4 @@
-from django_markdown_converter.patterns.block import BLOCK_PATTERN
+from django_markdown_converter.patterns.generic import BLOCK_PATTERN
 from django_markdown_converter.helpers.processors import excise_props
 from django_markdown_converter.patterns.procpats import PATTERN_LIST
 
