@@ -13,9 +13,5 @@ class FootnotePattern(BasePattern):
             data = m.group("data").split("\n")
             data = [_.lstrip(" ") for _ in data]
             block["data"] = "\n".join(data)
-            
-            for p in self.props:
-                if p == "data":
-                    continue
-                block["props"].update({p: m.group(p)})
+            self.update_props(block, m)
         return block

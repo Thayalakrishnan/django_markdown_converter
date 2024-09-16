@@ -16,6 +16,14 @@ class BasePattern:
     def check(self, block) -> bool:
         return self.check_pattern.match(block)
     
+    def update_props(self, block, match):
+        for p in self.props:
+            if p == "data":
+                continue
+            if match.group(p):
+                block["props"].update({p: match.group(p)})
+
+    
     def get_props(self, props:str="") -> dict:
         if props:
             return process_props(props)
@@ -28,23 +36,6 @@ class BasePattern:
             "props": self.get_props(props),
             "data": content
         }
-        return block
-
-
-class OneShotPattern(BasePattern):
-    
-    def convert(self, content, props, *args, **kwargs) -> dict:
-        block = super().convert(content, props, *args, **kwargs)
-        m = self.pattern.match(content)
-        if m:
-            if "data" in self.props:
-                block["data"] = m.group("data")
-            else:
-                block["data"] = m.groupdict()
-            for p in self.props:
-                if p == "data":
-                    continue
-                block["props"].update({p: m.group(p)})
         return block
 
 

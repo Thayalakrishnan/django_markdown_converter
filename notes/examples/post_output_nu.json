@@ -62,8 +62,7 @@
     {
         "type": "code",
         "props": {
-            "blocktype": "code",
-            "language": null
+            "blocktype": "code"
         },
         "data": "from nba_api.stats.endpoints import playerawards as pa\n"
     },

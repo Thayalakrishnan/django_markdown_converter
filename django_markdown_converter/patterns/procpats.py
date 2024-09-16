@@ -1,6 +1,5 @@
 import re
 
-from django_markdown_converter.patterns.classes.base import OneShotPattern
 from django_markdown_converter.patterns.blocks.table import TablePattern
 from django_markdown_converter.patterns.blocks.admonition import AdmonitionPattern
 from django_markdown_converter.patterns.blocks.footnote import FootnotePattern
@@ -9,6 +8,14 @@ from django_markdown_converter.patterns.blocks.code import CodePattern
 from django_markdown_converter.patterns.blocks.meta import MetaPattern
 from django_markdown_converter.patterns.blocks.blockquote import BlockquotePattern
 from django_markdown_converter.patterns.blocks.list import ListPattern
+from django_markdown_converter.patterns.blocks.heading import HeadingPattern
+from django_markdown_converter.patterns.blocks.image import ImagePattern
+from django_markdown_converter.patterns.blocks.svg import SVGPattern
+from django_markdown_converter.patterns.blocks.paragraph import ParagraphPattern
+from django_markdown_converter.patterns.blocks.hr import HRPattern
+
+
+
 
 """
 fenced: 
@@ -118,7 +125,7 @@ PROC_PATTERNS = [
     },
     {
         "type": "hr",
-        "class": OneShotPattern,
+        "class": HRPattern,
         "check": r'^(?:[\*\-]{3,}$)',
         "pattern": r'^(?P<data>[\*\-]{3,})\s*(?:\n|$)',
         "flags": re.MULTILINE | re.DOTALL,
@@ -129,7 +136,7 @@ PROC_PATTERNS = [
     },
     {
         "type": "heading",
-        "class": OneShotPattern,
+        "class": HeadingPattern,
         "check": r'^\#+\s+.*?$',
         "pattern": r'^(?P<level>\#{1,})\s+(?P<data>.*?)(?:$|\n)',
         "flags": re.MULTILINE | re.DOTALL,
@@ -140,7 +147,7 @@ PROC_PATTERNS = [
     },
     {
         "type": "image",
-        "class": OneShotPattern,
+        "class": ImagePattern,
         "check": r'^!\[.*?\]\(.*?\)',
         "pattern": r'^\!\[(?P<alt>.*?)?\]\((?P<data>\S*)\s*(?:\"(?P<title>.*?)\")?\)',
         "flags": re.MULTILINE | re.DOTALL,
@@ -151,7 +158,7 @@ PROC_PATTERNS = [
     },
     {
         "type": "svg",
-        "class": OneShotPattern,
+        "class": SVGPattern,
         "check": r'^<svg\s[^>]*>(?:.*?)</svg>',
         "pattern": r'^<svg\s(?P<attrs>[^>]*)>(?P<data>.*?)</svg>',
         "flags": re.MULTILINE | re.DOTALL,
@@ -195,7 +202,7 @@ PROC_PATTERNS = [
     },
     {
         "type": "paragraph",
-        "class": OneShotPattern,
+        "class": ParagraphPattern,
         "check": r'.*',
         "pattern": r'(?P<data>.*?)(?:\n|\n\n|$)',
         "flags": re.MULTILINE | re.DOTALL,
