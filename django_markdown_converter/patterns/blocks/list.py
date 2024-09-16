@@ -1,5 +1,6 @@
-#%%
 import re
+from django_markdown_converter.patterns.classes.base import BasePattern
+
 
 md = """- Item 1: line 1.
 - Item 2: line 1.
@@ -87,8 +88,15 @@ md = """
 - Item 1.
 """
 
-# %%
-import re
+class ListPattern(BasePattern):
+    """
+    olist, ulist
+    """
+    def convert(self, data, props, *args, **kwargs) -> dict:
+        block = super().convert(data, props, *args, **kwargs)
+        block["data"] = ConvertList(data)
+        return block
+
 
 def FormatContent(fresh:str="") -> str:
     fresh = fresh.strip().split("\n")
@@ -100,12 +108,12 @@ def FormatItem(yeet:dict=()):
     yeet["level"] = len(yeet["level"])
     yeet["marker"] = "ulist" if yeet["marker"] == "- " else "olist"
     yeet["children"] = None
-    yeet["content"] = FormatContent(yeet["content"])
+    yeet["data"] = FormatContent(yeet["data"])
     return yeet
 
 
 def ConvertListIntoItems(source:str=""):
-    lineitempattern = re.compile(r'(?P<level>^\s*?)(?P<marker>(?:- )|(?:\d+\. ))(?P<content>(?:.*?(?=^\s*?((- )|(\d+\. ))))|(?:.*?$\n?))', re.MULTILINE | re.DOTALL)
+    lineitempattern = re.compile(r'(?P<level>^\s*?)(?P<marker>(?:- )|(?:\d+\. ))(?P<data>(?:.*?(?=^\s*?((- )|(\d+\. ))))|(?:.*?$\n?))', re.MULTILINE | re.DOTALL)
     return lineitempattern.finditer(source)
 
 def AddItemToList(parent, child):
@@ -155,15 +163,17 @@ def ConvertList(source):
                 AddItemToList(cur_parent["children"], item)
                 break
     del root["level"]
-    return root, bank
+    for _ in bank:
+        if not _["children"]:
+            del _["children"]
+    return root["children"]
 
 
-method2, b = ConvertList(md)
+#method2, b = ConvertList(md)
 
-print(method2)
+#print(method2)
 
-for _ in b:
-    print(_)
-print("Done!")
+#for _ in b:
+    #print(_)
+#print("Done!")
 
-# %%

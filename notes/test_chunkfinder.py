@@ -34,3 +34,5 @@ md = "\n".join(root)
 #yeet = process_props(' id="small-table" caption="small table of values" ')
 #WriteJSONToFile(write_to_json_file, json_root)
 WriteJSONToFile(write_to_json_file_nu, json_root_nu)
+
+print("done!")

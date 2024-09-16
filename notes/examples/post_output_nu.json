@@ -215,10 +215,22 @@
             "blocktype": "o list"
         },
         "data": [
-            "Item 1\n",
-            "Item 2\n",
-            "Item 3\n",
-            "Item 4\n"
+            {
+                "data": "Item 1",
+                "type": "item"
+            },
+            {
+                "data": "Item 2",
+                "type": "item"
+            },
+            {
+                "data": "Item 3",
+                "type": "item"
+            },
+            {
+                "data": "Item 4",
+                "type": "item"
+            }
         ]
     },
     {
@@ -227,10 +239,32 @@
             "blocktype": "o list"
         },
         "data": [
-            "Item 1\n",
-            "Item 2\n",
-            "Item 3\n    1. Indented Item 1\n    2. Indented Item 2\n",
-            "Item 4\n"
+            {
+                "data": "Item 1",
+                "type": "item"
+            },
+            {
+                "data": "Item 2",
+                "type": "item"
+            },
+            {
+                "data": "Item 3",
+                "type": "olist",
+                "children": [
+                    {
+                        "data": "Indented Item 1",
+                        "type": "item"
+                    },
+                    {
+                        "data": "Indented Item 2",
+                        "type": "item"
+                    }
+                ]
+            },
+            {
+                "data": "Item 4",
+                "type": "item"
+            }
         ]
     },
     {
@@ -239,10 +273,22 @@
             "blocktype": "o list"
         },
         "data": [
-            "Multiline Item 1, line 1.\n   Multiline Item 1, line 2.\n   \n   Multiline Item 1, line 3 after double line break.\n",
-            "Item 2\n",
-            "Item 3\n",
-            "Item 4\n"
+            {
+                "data": "Multiline Item 1, line 1.\nMultiline Item 1, line 2.\n\nMultiline Item 1, line 3 after double line break.",
+                "type": "item"
+            },
+            {
+                "data": "Item 2",
+                "type": "item"
+            },
+            {
+                "data": "Item 3",
+                "type": "item"
+            },
+            {
+                "data": "Item 4",
+                "type": "item"
+            }
         ]
     },
     {
@@ -251,10 +297,32 @@
             "blocktype": "o list"
         },
         "data": [
-            "Item 1\n",
-            "Item 2\n",
-            "Item 3\n    1. Multiline Item 3, Subitem 1, line 1.\n       Multiline Item 3, Subitem 1, line 2.\n       \n       Multiline Item 3, Subitem 1, line 3.\n    2. Indented Item 2\n",
-            "Item 4\n"
+            {
+                "data": "Item 1",
+                "type": "item"
+            },
+            {
+                "data": "Item 2",
+                "type": "item"
+            },
+            {
+                "data": "Item 3",
+                "type": "olist",
+                "children": [
+                    {
+                        "data": "Multiline Item 3, Subitem 1, line 1.\nMultiline Item 3, Subitem 1, line 2.\n\nMultiline Item 3, Subitem 1, line 3.",
+                        "type": "item"
+                    },
+                    {
+                        "data": "Indented Item 2",
+                        "type": "item"
+                    }
+                ]
+            },
+            {
+                "data": "Item 4",
+                "type": "item"
+            }
         ]
     },
     {
@@ -271,10 +339,22 @@
             "blocktype": "u list"
         },
         "data": [
-            "Item 1\n",
-            "Item 2\n",
-            "Item 3\n",
-            "Item 4\n"
+            {
+                "data": "Item 1",
+                "type": "item"
+            },
+            {
+                "data": "Item 2",
+                "type": "item"
+            },
+            {
+                "data": "Item 3",
+                "type": "item"
+            },
+            {
+                "data": "Item 4",
+                "type": "item"
+            }
         ]
     },
     {
@@ -283,10 +363,32 @@
             "blocktype": "u list"
         },
         "data": [
-            "Item 1\n",
-            "Item 2\n",
-            "Item 3\n    - Indented Item 1\n    - Indented Item 2\n",
-            "Item 4\n"
+            {
+                "data": "Item 1",
+                "type": "item"
+            },
+            {
+                "data": "Item 2",
+                "type": "item"
+            },
+            {
+                "data": "Item 3",
+                "type": "ulist",
+                "children": [
+                    {
+                        "data": "Indented Item 1",
+                        "type": "item"
+                    },
+                    {
+                        "data": "Indented Item 2",
+                        "type": "item"
+                    }
+                ]
+            },
+            {
+                "data": "Item 4",
+                "type": "item"
+            }
         ]
     },
     {
@@ -295,10 +397,22 @@
             "blocktype": "u list"
         },
         "data": [
-            "Multiline Item 1, line 1.\n  Multiline Item 1, line 2\n   \n  Multiline Item 1, line 3 after double line break\n",
-            "Item 2\n",
-            "Item 3\n",
-            "Item 4\n"
+            {
+                "data": "Multiline Item 1, line 1.\nMultiline Item 1, line 2\n\nMultiline Item 1, line 3 after double line break",
+                "type": "item"
+            },
+            {
+                "data": "Item 2",
+                "type": "item"
+            },
+            {
+                "data": "Item 3",
+                "type": "item"
+            },
+            {
+                "data": "Item 4",
+                "type": "item"
+            }
         ]
     },
     {
@@ -307,10 +421,32 @@
             "blocktype": "u list"
         },
         "data": [
-            "Item 1\n",
-            "Item 2\n",
-            "Item 3\n    - Multiline Item 3, Subitem 1, line 1.\n      Multiline Item 3, Subitem 1, line 2.\n       \n      Multiline Item 3, Subitem 1, line 3.\n    - Indented Item 2\n",
-            "Item 4\n"
+            {
+                "data": "Item 1",
+                "type": "item"
+            },
+            {
+                "data": "Item 2",
+                "type": "item"
+            },
+            {
+                "data": "Item 3",
+                "type": "ulist",
+                "children": [
+                    {
+                        "data": "Multiline Item 3, Subitem 1, line 1.\nMultiline Item 3, Subitem 1, line 2.\n\nMultiline Item 3, Subitem 1, line 3.",
+                        "type": "item"
+                    },
+                    {
+                        "data": "Indented Item 2",
+                        "type": "item"
+                    }
+                ]
+            },
+            {
+                "data": "Item 4",
+                "type": "item"
+            }
         ]
     },
     {

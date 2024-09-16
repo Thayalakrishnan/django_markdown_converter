@@ -1,7 +1,14 @@
 import re
 
-from django_markdown_converter.patterns.classes.base import FencedPattern, FindAllPattern, OneShotPattern, HeaderBodyPattern
+from django_markdown_converter.patterns.classes.base import OneShotPattern
 from django_markdown_converter.patterns.blocks.table import TablePattern
+from django_markdown_converter.patterns.blocks.admonition import AdmonitionPattern
+from django_markdown_converter.patterns.blocks.footnote import FootnotePattern
+from django_markdown_converter.patterns.blocks.dlist import DListPattern
+from django_markdown_converter.patterns.blocks.code import CodePattern
+from django_markdown_converter.patterns.blocks.meta import MetaPattern
+from django_markdown_converter.patterns.blocks.blockquote import BlockquotePattern
+from django_markdown_converter.patterns.blocks.list import ListPattern
 
 """
 fenced: 
@@ -44,6 +51,7 @@ findall
 PROC_PATTERNS = [
     {
         "type": "meta",
+        "class": MetaPattern,
         "check": r'^---.*?^---$',
         "pattern": r'^(?:---\s*)(?:\n)(?P<data>.*?)(?:---\s*)(?:\n|$)',
         "flags": re.MULTILINE | re.DOTALL,
@@ -54,6 +62,7 @@ PROC_PATTERNS = [
     },
     {
         "type": "code",
+        "class": CodePattern,
         "check": r'^```.*?^```$',
         "pattern": r'(?:^```(?P<language>\S+)?\s*\n)(?P<data>(?:^.*?\n)+)(?:^```.*?(\n|$))',
         "flags": re.MULTILINE | re.DOTALL,
@@ -64,6 +73,7 @@ PROC_PATTERNS = [
     },
     {
         "type": "dlist",
+        "class": DListPattern,
         "check": r'^.+?$\n(?:\: .*$)',
         #"pattern": r'(?P<term>.+?)\n(?P<definition>(?:\:\s+.*?(?:\n|$))+)',
         "pattern": r'(?P<term>^.*?\n)(?P<definition>(?:(?=^\: ).*?(?:\n|$))+)',
@@ -75,6 +85,7 @@ PROC_PATTERNS = [
     },
     {
         "type": "footnote",
+        "class": FootnotePattern,
         "check": r'^\[\^\d+\]\:\n.*$',
         "pattern": r'^\[\^(?P<index>.+?)\]:\s*\n(?P<data>(?: {4,}.*(?:\n|$))+)',
         "flags": re.MULTILINE | re.DOTALL,
@@ -85,6 +96,7 @@ PROC_PATTERNS = [
     },
     {
         "type": "admonition",
+        "class": AdmonitionPattern,
         "check": r'(?:^!!!.*$)',
         "pattern": r'(?:^!!!\s+(?P<type>\S+)?\s*(?:["\'](?P<title>[^"\']+?)["\'])?\s*\n)(?P<data>(?:^ {4,}.*?(?:\n|$))+)',
         "flags": re.MULTILINE | re.DOTALL,
@@ -95,6 +107,7 @@ PROC_PATTERNS = [
     },
     {
         "type": "table",
+        "class": TablePattern,
         "check": r'(?:^\|.*?\|\s*?$\n?)+',
         "pattern": r'(?P<header>^\|.*?\|\n)(?P<break>^\|.*?\|\n)(?P<body>(?:^\|.*?\|\n){1,})',
         "flags": re.MULTILINE | re.DOTALL,
@@ -105,6 +118,7 @@ PROC_PATTERNS = [
     },
     {
         "type": "hr",
+        "class": OneShotPattern,
         "check": r'^(?:[\*\-]{3,}$)',
         "pattern": r'^(?P<data>[\*\-]{3,})\s*(?:\n|$)',
         "flags": re.MULTILINE | re.DOTALL,
@@ -115,6 +129,7 @@ PROC_PATTERNS = [
     },
     {
         "type": "heading",
+        "class": OneShotPattern,
         "check": r'^\#+\s+.*?$',
         "pattern": r'^(?P<level>\#{1,})\s+(?P<data>.*?)(?:$|\n)',
         "flags": re.MULTILINE | re.DOTALL,
@@ -125,6 +140,7 @@ PROC_PATTERNS = [
     },
     {
         "type": "image",
+        "class": OneShotPattern,
         "check": r'^!\[.*?\]\(.*?\)',
         "pattern": r'^\!\[(?P<alt>.*?)?\]\((?P<data>\S*)\s*(?:\"(?P<title>.*?)\")?\)',
         "flags": re.MULTILINE | re.DOTALL,
@@ -135,6 +151,7 @@ PROC_PATTERNS = [
     },
     {
         "type": "svg",
+        "class": OneShotPattern,
         "check": r'^<svg\s[^>]*>(?:.*?)</svg>',
         "pattern": r'^<svg\s(?P<attrs>[^>]*)>(?P<data>.*?)</svg>',
         "flags": re.MULTILINE | re.DOTALL,
@@ -145,26 +162,29 @@ PROC_PATTERNS = [
     },
     {
         "type": "ulist",
+        "class": ListPattern,
         "check": r'(?:^ *- +.*$)+',
-        "pattern": r'(?<=^- ).*?(?:\n|$)(?: {2}.*(?:\n|$))*',
+        "pattern": r'(?P<level>^\s*?)(?P<marker>(?:- )|(?:\d+\. ))(?P<content>(?:.*?(?=^\s*?((- )|(\d+\. ))))|(?:.*?$\n?))',
         "flags": re.MULTILINE,
         "process": "findall",
         "hasNested": True,
         "hasInlineMarkup": True,
-        "props": [],
+        "props": ["level", "marker", "content"],
     },
     {
         "type": "olist",
+        "class": ListPattern,
         "check": r'(?:^ *\d+\. +.*$)+',
-        "pattern": r'(?:(?<=^\d\. )|(?<=^\d\d\. )).*?(?:\n|$)(?: {2}.*(?:\n|$))*',
+        "pattern": r'(?P<level>^\s*?)(?P<marker>(?:- )|(?:\d+\. ))(?P<content>(?:.*?(?=^\s*?((- )|(\d+\. ))))|(?:.*?$\n?))',
         "flags": re.MULTILINE,
         "process": "findall",
         "hasNested": True,
         "hasInlineMarkup": True,
-        "props": [],
+        "props": ["level", "marker", "content"],
     },
     {
         "type": "blockquote",
+        "class": BlockquotePattern,
         "check": r'(?:^>.*$)+',
         "pattern": r'(?<=^>).*(?:\n|$)',
         "flags": re.MULTILINE,
@@ -175,6 +195,7 @@ PROC_PATTERNS = [
     },
     {
         "type": "paragraph",
+        "class": OneShotPattern,
         "check": r'.*',
         "pattern": r'(?P<data>.*?)(?:\n|\n\n|$)',
         "flags": re.MULTILINE | re.DOTALL,
@@ -190,17 +211,7 @@ def BuildPatternList(patterns:list=[])-> list:
     pattern_list = []
     
     for p in patterns:
-        inst = None
-        if p["process"] == "fenced":
-            inst = FencedPattern(p)
-        elif p["process"] == "headerbody":
-            inst = HeaderBodyPattern(p)
-        elif p["process"] == "oneshot":
-            inst = OneShotPattern(p)
-        elif p["process"] == "findall":
-            inst = FindAllPattern(p)
-        elif p["process"] == "table":
-            inst = TablePattern(p)
+        inst = p["class"](p)
         if inst:
             pattern_list.append(inst)
     return pattern_list

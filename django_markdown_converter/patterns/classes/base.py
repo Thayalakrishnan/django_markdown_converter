@@ -31,48 +31,6 @@ class BasePattern:
         return block
 
 
-class FindAllPattern(BasePattern):
-    """
-    olist, ulist, blockquote
-    """
-    def convert(self, content, props, *args, **kwargs) -> dict:
-        block = super().convert(content, props, *args, **kwargs)
-        m = self.pattern.findall(content)
-        if m:
-            if self.blocktype == "blockquote":
-                m = [_.lstrip(" ") for _ in m]
-                block["data"] = "".join(m)
-            else:
-                block["data"] = m
-        return block
-
-
-class HeaderBodyPattern(BasePattern):
-    
-    def convert(self, content, props, *args, **kwargs) -> dict:
-        block = super().convert(content, props, *args, **kwargs)
-        m = self.pattern.match(content)
-        if m:
-            if self.blocktype == "dlist":
-                block["data"] = m.groupdict()
-                definition = m.group("definition").split("\n")
-                definition = [_.lstrip(": ") for _ in definition]
-                block["data"]["definition"] = definition
-            elif self.blocktype == "footnote" or self.blocktype == "admonition":
-                data = m.group("data").split("\n")
-                data = [_.lstrip(" ") for _ in data]
-                block["data"] = "\n".join(data)
-                
-                for p in self.props:
-                    if p == "data":
-                        continue
-                    block["props"].update({p: m.group(p)})
-            else:
-                block["data"] = m.groupdict()
-        return block
-    
-
-
 class OneShotPattern(BasePattern):
     
     def convert(self, content, props, *args, **kwargs) -> dict:
@@ -89,24 +47,6 @@ class OneShotPattern(BasePattern):
                 block["props"].update({p: m.group(p)})
         return block
 
-
-class FencedPattern(BasePattern):
-    """
-    for meta, code 
-    """
-    def convert(self, content, props, *args, **kwargs) -> dict:
-        block = super().convert(content, props, *args, **kwargs)
-        m = self.pattern.match(content)
-        if m:
-            block["data"] = m.group("data")
-            for p in self.props:
-                if p == "data":
-                    continue
-                block["props"].update({p: m.group(p)})
-            
-        return block
-    
-    
 
 def metavalues(data):
     return
