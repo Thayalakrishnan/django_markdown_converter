@@ -122,7 +122,7 @@
         },
         "data": {
             "header": "| Column 1 Title | Column 2 Title |\n",
-            "body": "| Row 1 Column 1| Row 1 Column 2 |\n"
+            "body": "| Row 1 Column 1| Row 1 Column 2 |\n| Row 2 Column 1| Row 2 Column 2 |\n"
         }
     },
     {
@@ -134,7 +134,7 @@
         },
         "data": {
             "header": "| Column 1 Title | Column 2 Title |\n",
-            "body": "| Row 1 Column 1| Row 1 Column 2 |\n"
+            "body": "| Row 1 Column 1| Row 1 Column 2 |\n| Row 2 Column 1| Row 2 Column 2 |\n"
         }
     },
     {
@@ -151,7 +151,7 @@
             "blocktype": "blockquote",
             "cite": "www.google.com"
         },
-        "data": "blockquote\nblockquote"
+        "data": "blockquote\nblockquote\n"
     },
     {
         "type": "blockquote",
@@ -159,7 +159,7 @@
             "blocktype": "blockquote",
             "cite": "www.google.com"
         },
-        "data": "Outside Quote\n\n> Inside Quote\n"
+        "data": "Outside Quote\n\n> Inside Quote\n\n"
     },
     {
         "type": "blockquote",
@@ -167,7 +167,7 @@
             "blocktype": "blockquote",
             "cite": "www.google.com"
         },
-        "data": "## Blockquote heading { blocktype=\"heading\" }\n\nA Paragraph is the default element. How about some **inline markdown**?\n\n- list item 1\n- list item 2\n- list item 3"
+        "data": "## Blockquote heading\n{ blocktype=\"heading\" }\n\nA Paragraph is the default element. How about some **inline markdown**?\n\n- list item 1\n- list item 2\n- list item 3\n"
     },
     {
         "type": "blockquote",
@@ -175,7 +175,7 @@
             "blocktype": "blockquote",
             "cite": "www.google.com"
         },
-        "data": "\n> ## Blockquote heading { blocktype=\"heading\" }\n>\n> A Paragraph is the default element. How about some **inline markdown**?\n>\n> A second nested block in a blockquote with some **inline markdown**?\n>\n> - list item 1\n> - list item 2\n> - list item 3\n"
+        "data": "\n> ## Blockquote heading\n> { blocktype=\"heading\" }\n>\n> A Paragraph is the default element. How about some **inline markdown**?\n>\n> A second nested block in a blockquote with some **inline markdown**?\n>\n> - list item 1\n> - list item 2\n> - list item 3\n\n"
     },
     {
         "type": "heading",
@@ -194,7 +194,7 @@
             "Item 1\n",
             "Item 2\n",
             "Item 3\n",
-            "Item 4"
+            "Item 4\n"
         ]
     },
     {
@@ -206,7 +206,7 @@
             "Item 1\n",
             "Item 2\n",
             "Item 3\n    1. Indented Item 1\n    2. Indented Item 2\n",
-            "Item 4"
+            "Item 4\n"
         ]
     },
     {
@@ -218,7 +218,7 @@
             "Multiline Item 1, line 1.\n   Multiline Item 1, line 2.\n   \n   Multiline Item 1, line 3 after double line break.\n",
             "Item 2\n",
             "Item 3\n",
-            "Item 4"
+            "Item 4\n"
         ]
     },
     {
@@ -230,7 +230,7 @@
             "Item 1\n",
             "Item 2\n",
             "Item 3\n    1. Multiline Item 3, Subitem 1, line 1.\n       Multiline Item 3, Subitem 1, line 2.\n       \n       Multiline Item 3, Subitem 1, line 3.\n    2. Indented Item 2\n",
-            "Item 4"
+            "Item 4\n"
         ]
     },
     {
@@ -250,7 +250,7 @@
             "Item 1\n",
             "Item 2\n",
             "Item 3\n",
-            "Item 4"
+            "Item 4\n"
         ]
     },
     {
@@ -262,7 +262,7 @@
             "Item 1\n",
             "Item 2\n",
             "Item 3\n    - Indented Item 1\n    - Indented Item 2\n",
-            "Item 4"
+            "Item 4\n"
         ]
     },
     {
@@ -274,7 +274,7 @@
             "Multiline Item 1, line 1.\n  Multiline Item 1, line 2\n   \n  Multiline Item 1, line 3 after double line break\n",
             "Item 2\n",
             "Item 3\n",
-            "Item 4"
+            "Item 4\n"
         ]
     },
     {
@@ -286,7 +286,7 @@
             "Item 1\n",
             "Item 2\n",
             "Item 3\n    - Multiline Item 3, Subitem 1, line 1.\n      Multiline Item 3, Subitem 1, line 2.\n       \n      Multiline Item 3, Subitem 1, line 3.\n    - Indented Item 2\n",
-            "Item 4"
+            "Item 4\n"
         ]
     },
     {
@@ -304,7 +304,7 @@
             "type": "note",
             "title": "Note Title"
         },
-        "data": "this is an admonition."
+        "data": "this is an admonition.\n"
     },
     {
         "type": "admonition",
@@ -313,7 +313,7 @@
             "type": "tip",
             "title": "Tip Title"
         },
-        "data": "for tips and tricks.\n\nmultiline admontion."
+        "data": "for tips and tricks.\n\nmultiline admontion.\n"
     },
     {
         "type": "admonition",
@@ -322,14 +322,14 @@
             "type": "tip",
             "title": "Tip Title"
         },
-        "data": "for tips and tricks.\n\nmultiline admontion.\n\n```python\nfor i in range(5):\nprint(i)\n```"
+        "data": "for tips and tricks.\n\nmultiline admontion.\n\n```python\nfor i in range(5):\nprint(i)\n```\n"
     },
     {
         "type": "admonition",
         "props": {
             "blocktype": "admonition"
         },
-        "data": "!!! top question\n    further ideas, further links etc."
+        "data": "!!! top question\n    further ideas, further links etc.\n"
     },
     {
         "type": "heading",
@@ -347,7 +347,8 @@
         "data": {
             "term": "First Term",
             "definition": [
-                "This is the definition of the first term."
+                "This is the definition of the first term.",
+                ""
             ]
         }
     },
@@ -360,7 +361,8 @@
             "term": "Second Term",
             "definition": [
                 "This is the first definition of the second term.",
-                "This is the second definition of the second term."
+                "This is the second definition of the second term.",
+                ""
             ]
         }
     },
@@ -373,7 +375,8 @@
             "term": "Third Term",
             "definition": [
                 "This is the first definition of the third term.",
-                "This is the second definition of the third term."
+                "This is the second definition of the third term.",
+                ""
             ]
         }
     },
@@ -391,7 +394,7 @@
             "blocktype": "footnote",
             "index": "1"
         },
-        "data": "Footnote 1."
+        "data": "Footnote 1.\n"
     },
     {
         "type": "footnote",
@@ -399,7 +402,7 @@
             "blocktype": "footnote",
             "index": "2"
         },
-        "data": "Footnote 2 and some inline `code`.\nIf we indent the paragraph we cant put as much content here as we would like.\n\nThis is a multiline footnote. It also does not matter where we put the footnote definition!"
+        "data": "Footnote 2 and some inline `code`.\nIf we indent the paragraph we cant put as much content here as we would like.\n\nThis is a multiline footnote. It also does not matter where we put the footnote definition!\n"
     },
     {
         "type": "footnote",
@@ -407,7 +410,7 @@
             "blocktype": "footnote",
             "index": "3"
         },
-        "data": "Footnote 3 and some inline `code`.\nIf we indent the paragraph we cant put as much content here as we would like.\n\nThis is a multiline footnote. It also does not matter where we put the footnote definition!"
+        "data": "Footnote 3 and some inline `code`.\nIf we indent the paragraph we cant put as much content here as we would like.\n\nThis is a multiline footnote. It also does not matter where we put the footnote definition!\n"
     },
     {
         "type": "heading",

@@ -5,7 +5,8 @@ tags: markdown, python, parser
 ---
 { blocktype="meta" }
 
-## Pargraphs { blocktype="heading" }
+## Pargraphs
+{ blocktype="heading" }
 
 Pargraph 4 **eos** aperiam dolorem numquam quisquam [^1]. Cupiditate ==reprehenderit== beatae ab inventore libero. Accusantium explicabo optio debitis magni sint earum excepturi. Dicta aliquid cupiditate. Consequuntur temporibus `code` voluptates _similique_. Aut maiores hic laudantium distinctio[^2]. Aliquid magni expedita voluptatem illo laudantium illo. Quidem occaecati voluptas odit^5^ ex aspernatur eius ~~consectetur~~ blanditiis. Aperiam ullam iure soluta animi voluptatem pariatur nesciunt voluptatibus. Fuga iste in.
 { blocktype="paragraph" }
@@ -13,13 +14,15 @@ Pargraph 4 **eos** aperiam dolorem numquam quisquam [^1]. Cupiditate ==reprehend
 To include a link, we place the link text in brackets and immediately follow it with the link text in parentheses like [this link](https://lawen.thayalakrishnan.com) to the homepage! We can emphasise **[the link](https://lawen.thayalakrishnan.com)** by enclosing the markdown in double asterisks. The same applies to single asterisk to italise [the link](https://lawen.thayalakrishnan.com). Use angle brackets, to render the link raw <https://lawen.thayalakrishnan.com>. This is an email address <example@email.com> in the middle of a paragraph!
 { blocktype="paragraph" }
 
-## Image { blocktype="heading" }
+## Image
+{ blocktype="heading" }
 
 ![ This is an example of a basic image in markdown with a caption ](https://thayalakrishnan-lawen-prod-media.s3.ap-southeast-2.amazonaws.com/media/images/covers/image2.jpg "Title for a basic image with a caption")
 { blocktype="image" subtype="still" height="1080" width="1920" caption="This is an example of a caption being included with a basic image." }
 
 
-## Code Block { blocktype="heading" }
+## Code Block
+{ blocktype="heading" }
 
 ```python
 from nba_api.stats.endpoints import playerawards as pa
@@ -68,7 +71,8 @@ def CreateCounter(dataset, position):
 ```
 { blocktype="code" }
 
-## Line break { blocktype="heading" }
+## Line break
+{ blocktype="heading" }
 
 ---
 { blocktype="hr" }
@@ -76,7 +80,8 @@ def CreateCounter(dataset, position):
 ***
 { blocktype="hr" }
 
-## Table { blocktype="heading" }
+## Table
+{ blocktype="heading" }
 
 | Column 1 Title | Column 2 Title |
 | ----------- | ----------- |
@@ -91,7 +96,8 @@ def CreateCounter(dataset, position):
 | Row 2 Column 1| Row 2 Column 2 |
 { blocktype="table" id="small-table" caption="small table of values" }
 
-## Blockquote { blocktype="heading" }
+## Blockquote
+{ blocktype="heading" }
 
 > blockquote
 > blockquote
@@ -103,7 +109,8 @@ def CreateCounter(dataset, position):
 >
 { blocktype="blockquote" cite="www.google.com" }
 
-> ## Blockquote heading { blocktype="heading" }
+> ## Blockquote heading
+> { blocktype="heading" }
 >
 > A Paragraph is the default element. How about some **inline markdown**?
 >
@@ -114,7 +121,8 @@ def CreateCounter(dataset, position):
 
 
 >
-> > ## Blockquote heading { blocktype="heading" }
+> > ## Blockquote heading
+> > { blocktype="heading" }
 > >
 > > A Paragraph is the default element. How about some **inline markdown**?
 > >
@@ -126,7 +134,8 @@ def CreateCounter(dataset, position):
 >
 { blocktype="blockquote" cite="www.google.com" }
 
-## Ordered List { blocktype="heading" }
+## Ordered List
+{ blocktype="heading" }
 
 1. Item 1
 2. Item 2
@@ -162,7 +171,8 @@ def CreateCounter(dataset, position):
 4. Item 4
 { blocktype="o list" }
 
-## Unordered List { blocktype="heading" }
+## Unordered List
+{ blocktype="heading" }
 
 - Item 1
 - Item 2
@@ -198,7 +208,8 @@ def CreateCounter(dataset, position):
 - Item 4
 { blocktype="u list" }
 
-## Admonition { blocktype="heading" }
+## Admonition
+{ blocktype="heading" }
 
 !!! note "Note Title"
     this is an admonition.
@@ -226,7 +237,8 @@ def CreateCounter(dataset, position):
     further ideas, further links etc.
 { blocktype="admonition" }
 
-## Definition Lists { blocktype="heading" }
+## Definition Lists
+{ blocktype="heading" }
 
 First Term
 : This is the definition of the first term.
@@ -242,7 +254,8 @@ Third Term
 : This is the second definition of the third term.
 { blocktype="dl list" }
 
-## Footnotes { blocktype="heading" }
+## Footnotes
+{ blocktype="heading" }
 
 [^1]:
     Footnote 1.
@@ -262,4 +275,5 @@ Third Term
     This is a multiline footnote. It also does not matter where we put the footnote definition!
 { blocktype="footnote" }
 
-## Done { blocktype="heading" }
+## Done
+{ blocktype="heading" }

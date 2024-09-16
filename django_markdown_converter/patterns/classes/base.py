@@ -16,11 +16,16 @@ class BasePattern:
     def check(self, block) -> bool:
         return self.check_pattern.match(block)
     
+    def get_props(self, props:str="") -> dict:
+        if props:
+            return process_props(props)
+        return {}
+    
     def convert(self, content, props, *args, **kwargs) -> dict:
         """ """
         block = {
             "type": self.blocktype,
-            "props": process_props(props),
+            "props": self.get_props(props),
             "data": content
         }
         return block
@@ -33,15 +38,13 @@ class FindAllPattern(BasePattern):
     
     def convert(self, content, props, *args, **kwargs) -> dict:
         block = super().convert(content, props, *args, **kwargs)
-        ## findall
-        if self.process == "findall":
-            m = self.pattern.findall(content)
-            if m:
-                if self.blocktype == "blockquote":
-                    m = [_.lstrip(" ") for _ in m]
-                    block["data"] = "".join(m)
-                else:
-                    block["data"] = m
+        m = self.pattern.findall(content)
+        if m:
+            if self.blocktype == "blockquote":
+                m = [_.lstrip(" ") for _ in m]
+                block["data"] = "".join(m)
+            else:
+                block["data"] = m
         return block
 
 
@@ -49,32 +52,31 @@ class HeaderBodyPattern(BasePattern):
     
     def convert(self, content, props, *args, **kwargs) -> dict:
         block = super().convert(content, props, *args, **kwargs)
-        if self.process == "headerbody":
-            m = self.pattern.match(content)
-            if m:
-                if self.blocktype == "dlist":
-                    block["data"] = m.groupdict()
-                    definition = m.group("definition").split("\n")
-                    definition = [_.lstrip(": ") for _ in definition]
-                    block["data"]["definition"] = definition
-                elif self.blocktype == "footnote" or self.blocktype == "admonition":
-                    data = m.group("data").split("\n")
-                    data = [_.lstrip(" ") for _ in data]
-                    block["data"] = "\n".join(data)
+        m = self.pattern.match(content)
+        if m:
+            if self.blocktype == "dlist":
+                block["data"] = m.groupdict()
+                definition = m.group("definition").split("\n")
+                definition = [_.lstrip(": ") for _ in definition]
+                block["data"]["definition"] = definition
+            elif self.blocktype == "footnote" or self.blocktype == "admonition":
+                data = m.group("data").split("\n")
+                data = [_.lstrip(" ") for _ in data]
+                block["data"] = "\n".join(data)
+                
+                for p in self.props:
+                    if p == "data":
+                        continue
+                    block["props"].update({p: m.group(p)})
                     
-                    for p in self.props:
-                        if p == "data":
-                            continue
-                        block["props"].update({p: m.group(p)})
-                        
-                elif self.blocktype == "table":
-                    block["data"] = {}
-                    for p in self.props:
-                        if p == "data":
-                            continue
-                        block["data"].update({p: m.group(p)})
-                else:
-                    block["data"] = m.groupdict()
+            elif self.blocktype == "table":
+                block["data"] = {}
+                for p in self.props:
+                    if p == "data":
+                        continue
+                    block["data"].update({p: m.group(p)})
+            else:
+                block["data"] = m.groupdict()
         return block
     
 
@@ -83,17 +85,16 @@ class OneShotPattern(BasePattern):
     
     def convert(self, content, props, *args, **kwargs) -> dict:
         block = super().convert(content, props, *args, **kwargs)
-        if self.process == "oneshot":
-            m = self.pattern.match(content)
-            if m:
-                if "data" in self.props:
-                    block["data"] = m.group("data")
-                else:
-                    block["data"] = m.groupdict()
-                for p in self.props:
-                    if p == "data":
-                        continue
-                    block["props"].update({p: m.group(p)})
+        m = self.pattern.match(content)
+        if m:
+            if "data" in self.props:
+                block["data"] = m.group("data")
+            else:
+                block["data"] = m.groupdict()
+            for p in self.props:
+                if p == "data":
+                    continue
+                block["props"].update({p: m.group(p)})
         return block
 
 
@@ -103,14 +104,13 @@ class FencedPattern(BasePattern):
     """
     def convert(self, content, props, *args, **kwargs) -> dict:
         block = super().convert(content, props, *args, **kwargs)
-        if self.process == "fenced":
-            m = self.pattern.match(content)
-            if m:
-                block["data"] = m.group("data")
-                for p in self.props:
-                    if p == "data":
-                        continue
-                    block["props"].update({p: m.group(p)})
+        m = self.pattern.match(content)
+        if m:
+            block["data"] = m.group("data")
+            for p in self.props:
+                if p == "data":
+                    continue
+                block["props"].update({p: m.group(p)})
             
         return block
     

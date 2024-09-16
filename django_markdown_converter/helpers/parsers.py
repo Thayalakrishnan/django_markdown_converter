@@ -11,18 +11,20 @@ def block_generator(content:str=""):
     chunks = BLOCK_PATTERN.finditer(content)
     for index, chunk in enumerate(chunks):
         block = chunk.group("block")
-        yield block, index
+        props = chunk.group("props")
+        if block:
+            yield block, props, index
 
 
-def block_detector(block:str="", index:int=0) -> dict:
+def block_detector(block:str="", props:str="", index:int=0) -> dict:
     """
     receives a 'block' and determinest the type
     of block content using the block patterns list. 
     """
     # determine the type of block each chunk is
-    props = ""
+    #props = ""
     # extract any props that are in this block
-    block, props = excise_props(block)
+    #block, props = excise_props(block)
     for pattern in PATTERN_LIST:
         if pattern.check(block):
             return pattern.convert(block, props)
@@ -35,6 +37,6 @@ def block_parser(content:str=""):
     and any props
     """
     blocks = block_generator(content)
-    for block, index in blocks:
-        yield block_detector(block, index)
+    for block, props, index in blocks:
+        yield block_detector(block, props, index)
     
