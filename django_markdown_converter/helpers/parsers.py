@@ -1,5 +1,5 @@
 from django_markdown_converter.patterns.generic import BLOCK_PATTERN
-from django_markdown_converter.helpers.processors import excise_props
+from django_markdown_converter.helpers.processors import excise_props, process_input_content
 from django_markdown_converter.patterns.procpats import PATTERN_LIST, PATTERN_LOOKUP
 
 
@@ -37,19 +37,33 @@ def block_parser(content:str=""):
         yield block_detector(block, props, index)
     
     
-def nested_blocks_parser(blocklist:list=[]):
+def nested_blocks_parser():
     """
     """
-    for block in blocklist:
-        if PATTERN_LOOKUP[block["type"]].hasNested:
-            print(f"{block['type']} has nested")
-            #print(block['data'])
-            
-            #if isinstance(block["data"], list):
-            #    continue
-            #else:
-            #    newdata = list(block_parser(block["data"]))
-            #    if len(newdata):
-            #        block["data"] = newdata
-            #    #print(newdata)
+    print(f"###################")
+    print(f"parse nested blocks")
+    print(f"###################")
+    
+    for pattern in PATTERN_LIST:
+        if pattern.hasNested:
+            for _ in pattern.bank:
+                if isinstance(_["data"], list):
+                    continue   
+                newdata = list(block_parser(process_input_content(_["data"])))
+                if len(newdata):
+                    _["data"] = newdata
+    
+    #for block in blocklist:
+    #    if PATTERN_LOOKUP[block["type"]].hasNested:
+    #        #print(block['data'])
+    #        if isinstance(block["data"], list):
+    #            continue
+    #        else:
+    #            sublist = []
+    #            print(f"{block['type']} has nested")
+    #            print(block["data"])
+    #            newdata = list(block_parser(process_input_content(block["data"])))
+    #            if len(newdata):
+    #                block["data"] = newdata
+    #            #print(newdata)
         

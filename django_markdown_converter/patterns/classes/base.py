@@ -18,6 +18,7 @@ class BasePattern:
     
         self.match = False
         self.block = None
+        self.bank = []
 
     def check(self, block) -> bool:
         return self.check_pattern.match(block)
@@ -52,6 +53,9 @@ class BasePattern:
             "data": self.get_data()
         }
         self.update_props()
+        
+        if self.hasNested:
+            self.bank.append(self.block)
         return self.block
 
 

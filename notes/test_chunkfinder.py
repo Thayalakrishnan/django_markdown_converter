@@ -22,7 +22,8 @@ raw_chunk, meta = extract_meta_block(raw_chunk)
 for block in block_parser(raw_chunk):
     json_root_nu.append(block)
 
-nested_blocks_parser(json_root_nu)
+nested_blocks_parser()
+#nested_blocks_parser()
 
 #write_to_file = "notes/examples/post_output"
 write_to_json_file = "notes/examples/post_output.json"

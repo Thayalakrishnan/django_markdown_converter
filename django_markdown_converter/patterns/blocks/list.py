@@ -9,7 +9,7 @@ class ListPattern(BasePattern):
         self.match = ConvertListIntoItems(content)
     
     def get_data(self) -> dict:
-        return ConvertList(self.match)
+        return ConvertList(self.match, self.bank)
     
     def update_props(self):
         pass
@@ -39,11 +39,10 @@ def AddItemToList(parent, child):
     parent.append(child)
 
 
-def ConvertList(items):
+def ConvertList(items, bank):
     """
     """
     stack = []
-    bank = []
     
     root = {
         "level": -2, 
@@ -80,6 +79,6 @@ def ConvertList(items):
                 break
     del root["level"]
     for _ in bank:
-        if not _["children"]:
+        if "children" in _ and not _["children"]:
             del _["children"]
     return root["children"]

@@ -207,6 +207,33 @@ def CreateCounter(dataset, position):
 - Item 4
 { blocktype="u list" }
 
+- Item 1: line 1.
+  Item 1: line 2.
+- Item 2: line 1.
+  Item 2: line 2.
+  
+  Item 2: line 3.
+  - Item 2.1: line 1.
+  - Item 2.2: line 1.
+  - Item 2.3: line 1.
+    1. Item 2.3.1: line 1.
+    2. Item 2.3.2: line 1.
+    3. Item 2.3.3: line 1.
+  - Item 2.4: line 1.
+- Item 3: line 1.
+  - Item 3.1: line 1.
+    Item 3.1: line 2.
+    
+    ```python
+    for p in range(3):
+        print(p)
+    ```
+    
+    Item 3.1: line 3.
+  - Item 3.2: line 1.
+- Item 4: line 1.
+{ blocktype="u list" }
+
 ## Admonition
 { blocktype="heading" }
 
