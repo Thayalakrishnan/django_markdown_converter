@@ -1,6 +1,6 @@
 from django_markdown_converter.patterns.generic import BLOCK_PATTERN
 from django_markdown_converter.helpers.processors import excise_props
-from django_markdown_converter.patterns.procpats import PATTERN_LIST
+from django_markdown_converter.patterns.procpats import PATTERN_LIST, PATTERN_LOOKUP
 
 
 def block_generator(content:str=""):
@@ -36,3 +36,20 @@ def block_parser(content:str=""):
     for block, props, index in blocks:
         yield block_detector(block, props, index)
     
+    
+def nested_blocks_parser(blocklist:list=[]):
+    """
+    """
+    for block in blocklist:
+        if PATTERN_LOOKUP[block["type"]].hasNested:
+            print(f"{block['type']} has nested")
+            #print(block['data'])
+            
+            #if isinstance(block["data"], list):
+            #    continue
+            #else:
+            #    newdata = list(block_parser(block["data"]))
+            #    if len(newdata):
+            #        block["data"] = newdata
+            #    #print(newdata)
+        

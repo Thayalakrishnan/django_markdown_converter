@@ -14,45 +14,19 @@ from django_markdown_converter.patterns.blocks.svg import SVGPattern
 from django_markdown_converter.patterns.blocks.paragraph import ParagraphPattern
 from django_markdown_converter.patterns.blocks.hr import HRPattern
 
-
-
-
 """
-fenced: 
-- block is capture, funciton is called to process the captured content, which is the data
-headerbody: 
-- block heas a header and a body which both contribute to the final block
-- header and body both need to be processed
-- some of the header bodies have a header and simply a body that needs to be dedented/indented
-    - capture, header, dedent
-oneshot
-- everything is done using the initial pattern
-findall
-- the given pattern selects multiple rows for this pattern, as they are normally lists
-- the items then need to be 
-
-(?:^\[\^(?P<index>.+?)\]:\n)
-
 when we grab a paragraph, make sure to merge the lines so that there are non newline characters 
 inside of a pblock
 
-[type, pattern, flags, process type, has Nested, has Inline Markup, props],
-
 0 | type
-1 | pattern
-2 | flags
-3 | process type
-4 | has Nested
-5 | has Inline Markup
-6 | props: values extracted from the pattern that are merged with the other props
-
-fenced
-headerbody
-oneshot
-findall
-
-
-^([^\n:]+?)(?:\n: (.*?))(?:\n: (.*?))*     # Capture subsequent lines that start with ': ' (if any)
+1 | class
+2 | check
+3 | pattern
+4 | flags
+5 | has Nested
+6 | has Inline Markup
+7 | props: values extracted from the pattern that are merged with the other props
+8 | data: 
 """
 
 PROC_PATTERNS = [
@@ -62,7 +36,6 @@ PROC_PATTERNS = [
         "check": r'^---.*?^---$',
         "pattern": r'^(?:---\s*)(?:\n)(?P<data>.*?)(?:---\s*)(?:\n|$)',
         "flags": re.MULTILINE | re.DOTALL,
-        "process": "fenced",
         "hasNested": False,
         "hasInlineMarkup": False,
         "props": [],
@@ -74,7 +47,6 @@ PROC_PATTERNS = [
         "check": r'^```.*?^```$',
         "pattern": r'(?:^```(?P<language>\S+)?\s*\n)(?P<data>(?:^.*?\n)+)(?:^```.*?(\n|$))',
         "flags": re.MULTILINE | re.DOTALL,
-        "process": "fenced",
         "hasNested": False,
         "hasInlineMarkup": False,
         "props": ["language"],
@@ -87,7 +59,6 @@ PROC_PATTERNS = [
         #"pattern": r'(?P<term>.+?)\n(?P<definition>(?:\:\s+.*?(?:\n|$))+)',
         "pattern": r'(?P<term>^.*?\n)(?P<definition>(?:(?=^\: ).*?(?:\n|$))+)',
         "flags": re.MULTILINE, # might need to add dotall back
-        "process": "headerbody",
         "hasNested": False,
         "hasInlineMarkup": True,
         "props": [],
@@ -99,7 +70,6 @@ PROC_PATTERNS = [
         "check": r'^\[\^\d+\]\:\n.*$',
         "pattern": r'^\[\^(?P<index>.+?)\]:\s*\n(?P<data>(?: {4,}.*(?:\n|$))+)',
         "flags": re.MULTILINE | re.DOTALL,
-        "process": "headerbody",
         "hasNested": True,
         "hasInlineMarkup": True,
         "props": ["index"],
@@ -111,7 +81,6 @@ PROC_PATTERNS = [
         "check": r'(?:^!!!.*$)',
         "pattern": r'(?:^!!!\s+(?P<type>\S+)?\s*(?:["\'](?P<title>[^"\']+?)["\'])?\s*\n)(?P<data>(?:^ {4,}.*?(?:\n|$))+)',
         "flags": re.MULTILINE | re.DOTALL,
-        "process": "headerbody",
         "hasNested": True,
         "hasInlineMarkup": True,
         "props": ["type", "title"],
@@ -123,7 +92,6 @@ PROC_PATTERNS = [
         "check": r'(?:^\|.*?\|\s*?$\n?)+',
         "pattern": r'(?P<header>^\|.*?\|\n)(?P<break>^\|.*?\|\n)(?P<body>(?:^\|.*?\|\n){1,})',
         "flags": re.MULTILINE | re.DOTALL,
-        "process": "table",
         "hasNested": False,
         "hasInlineMarkup": True,
         "props": [],
@@ -135,7 +103,6 @@ PROC_PATTERNS = [
         "check": r'^(?:[\*\-]{3,}$)',
         "pattern": r'^(?P<data>[\*\-]{3,})\s*(?:\n|$)',
         "flags": re.MULTILINE | re.DOTALL,
-        "process": "oneshot",
         "hasNested": False,
         "hasInlineMarkup": False,
         "props": [],
@@ -147,7 +114,6 @@ PROC_PATTERNS = [
         "check": r'^\#+\s+.*?$',
         "pattern": r'^(?P<level>\#{1,})\s+(?P<data>.*?)(?:$|\n)',
         "flags": re.MULTILINE | re.DOTALL,
-        "process": "oneshot",
         "hasNested": False,
         "hasInlineMarkup": True,
         "props": ["level", "data"],
@@ -159,7 +125,6 @@ PROC_PATTERNS = [
         "check": r'^!\[.*?\]\(.*?\)',
         "pattern": r'^\!\[(?P<alt>.*?)?\]\((?P<data>\S*)\s*(?:\"(?P<title>.*?)\")?\)',
         "flags": re.MULTILINE | re.DOTALL,
-        "process": "oneshot",
         "hasNested": False,
         "hasInlineMarkup": False,
         "props": ["alt", "title"],
@@ -171,7 +136,6 @@ PROC_PATTERNS = [
         "check": r'^<svg\s[^>]*>(?:.*?)</svg>',
         "pattern": r'^<svg\s(?P<attrs>[^>]*)>(?P<data>.*?)</svg>',
         "flags": re.MULTILINE | re.DOTALL,
-        "process": "oneshot",
         "hasNested": False,
         "hasInlineMarkup": False,
         "props": ["attrs"],
@@ -183,7 +147,6 @@ PROC_PATTERNS = [
         "check": r'(?:^ *- +.*$)+',
         "pattern": r'(?P<level>^\s*?)(?P<marker>(?:- )|(?:\d+\. ))(?P<content>(?:.*?(?=^\s*?((- )|(\d+\. ))))|(?:.*?$\n?))',
         "flags": re.MULTILINE,
-        "process": "findall",
         "hasNested": True,
         "hasInlineMarkup": True,
         "props": ["level", "marker", "content"],
@@ -195,7 +158,6 @@ PROC_PATTERNS = [
         "check": r'(?:^ *\d+\. +.*$)+',
         "pattern": r'(?P<level>^\s*?)(?P<marker>(?:- )|(?:\d+\. ))(?P<content>(?:.*?(?=^\s*?((- )|(\d+\. ))))|(?:.*?$\n?))',
         "flags": re.MULTILINE,
-        "process": "findall",
         "hasNested": True,
         "hasInlineMarkup": True,
         "props": ["level", "marker", "content"],
@@ -207,7 +169,6 @@ PROC_PATTERNS = [
         "check": r'(?:^>.*$)+',
         "pattern": r'(?<=^>).*(?:\n|$)',
         "flags": re.MULTILINE,
-        "process": "findall",
         "hasNested": True,
         "hasInlineMarkup": True,
         "props": [],
@@ -219,7 +180,6 @@ PROC_PATTERNS = [
         "check": r'.*',
         "pattern": r'(?P<data>.*?)(?:\n|\n\n|$)',
         "flags": re.MULTILINE | re.DOTALL,
-        "process": "oneshot",
         "hasNested": False,
         "hasInlineMarkup": True,
         "props": [],
@@ -228,13 +188,15 @@ PROC_PATTERNS = [
 ]
 
 
-def BuildPatternList(patterns:list=[])-> list:
+def BuildPatternList(patterns:list=[])-> tuple:
     pattern_list = []
+    pattern_dict = {}
     
     for p in patterns:
         inst = p["class"](p)
         if inst:
             pattern_list.append(inst)
-    return pattern_list
+            pattern_dict[p["type"]] = inst
+    return pattern_list, pattern_dict
 
-PATTERN_LIST = BuildPatternList(PROC_PATTERNS)
+PATTERN_LIST, PATTERN_LOOKUP = BuildPatternList(PROC_PATTERNS)

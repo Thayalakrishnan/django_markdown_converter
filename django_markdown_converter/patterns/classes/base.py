@@ -6,9 +6,10 @@ class BasePattern:
     
     def __init__(self, pattern_object:dict={}, *args, **kwargs) -> None:
         self.blocktype = pattern_object["type"]
+        
         self.check_pattern = re.compile(pattern_object["check"], re.MULTILINE | re.DOTALL)
         self.pattern = re.compile(pattern_object["pattern"], pattern_object["flags"])
-        self.process = pattern_object["process"]
+        
         self.hasNested = pattern_object["hasNested"]
         self.hasInline = pattern_object["hasInlineMarkup"]
         
