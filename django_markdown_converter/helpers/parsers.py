@@ -21,10 +21,6 @@ def block_detector(block:str="", props:str="", index:int=0) -> dict:
     receives a 'block' and determinest the type
     of block content using the block patterns list. 
     """
-    # determine the type of block each chunk is
-    #props = ""
-    # extract any props that are in this block
-    #block, props = excise_props(block)
     for pattern in PATTERN_LIST:
         if pattern.check(block):
             return pattern.convert(block, props)

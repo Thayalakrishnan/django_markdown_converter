@@ -30,12 +30,11 @@ class BasePattern:
         }
         return block
 
-        
+
 class FindAllPattern(BasePattern):
     """
-    for 
+    olist, ulist, blockquote
     """
-    
     def convert(self, content, props, *args, **kwargs) -> dict:
         block = super().convert(content, props, *args, **kwargs)
         m = self.pattern.findall(content)
@@ -68,13 +67,6 @@ class HeaderBodyPattern(BasePattern):
                     if p == "data":
                         continue
                     block["props"].update({p: m.group(p)})
-                    
-            elif self.blocktype == "table":
-                block["data"] = {}
-                for p in self.props:
-                    if p == "data":
-                        continue
-                    block["data"].update({p: m.group(p)})
             else:
                 block["data"] = m.groupdict()
         return block
@@ -115,3 +107,20 @@ class FencedPattern(BasePattern):
         return block
     
     
+
+def metavalues(data):
+    return
+
+def dedent(data):
+    data = data.split("\n")
+    data = [_.lstrip(" ") for _ in data]
+    return "\n".join(data)
+
+
+def count(data):
+    return len(data)
+
+def deprefix(data, prefix):
+    data = data.split("\n")
+    data = [_.lstrip(prefix) for _ in data]
+    return data

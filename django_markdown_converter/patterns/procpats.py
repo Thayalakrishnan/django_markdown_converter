@@ -1,6 +1,7 @@
 import re
 
 from django_markdown_converter.patterns.classes.base import FencedPattern, FindAllPattern, OneShotPattern, HeaderBodyPattern
+from django_markdown_converter.patterns.blocks.table import TablePattern
 
 """
 fenced: 
@@ -29,12 +30,15 @@ inside of a pblock
 3 | process type
 4 | has Nested
 5 | has Inline Markup
-6 | props
+6 | props: values extracted from the pattern that are merged with the other props
 
 fenced
 headerbody
 oneshot
 findall
+
+
+^([^\n:]+?)(?:\n: (.*?))(?:\n: (.*?))*     # Capture subsequent lines that start with ': ' (if any)
 """
 
 PROC_PATTERNS = [
@@ -61,8 +65,9 @@ PROC_PATTERNS = [
     {
         "type": "dlist",
         "check": r'^.+?$\n(?:\: .*$)',
-        "pattern": r'(?P<term>.+?)\n(?P<definition>(?:\:\s+.*?(?:\n|$))+)',
-        "flags": re.MULTILINE | re.DOTALL,
+        #"pattern": r'(?P<term>.+?)\n(?P<definition>(?:\:\s+.*?(?:\n|$))+)',
+        "pattern": r'(?P<term>^.*?\n)(?P<definition>(?:(?=^\: ).*?(?:\n|$))+)',
+        "flags": re.MULTILINE, # might need to add dotall back
         "process": "headerbody",
         "hasNested": False,
         "hasInlineMarkup": True,
@@ -93,7 +98,7 @@ PROC_PATTERNS = [
         "check": r'(?:^\|.*?\|\s*?$\n?)+',
         "pattern": r'(?P<header>^\|.*?\|\n)(?P<break>^\|.*?\|\n)(?P<body>(?:^\|.*?\|\n){1,})',
         "flags": re.MULTILINE | re.DOTALL,
-        "process": "headerbody",
+        "process": "table",
         "hasNested": False,
         "hasInlineMarkup": True,
         "props": ["header", "body"],
@@ -194,6 +199,8 @@ def BuildPatternList(patterns:list=[])-> list:
             inst = OneShotPattern(p)
         elif p["process"] == "findall":
             inst = FindAllPattern(p)
+        elif p["process"] == "table":
+            inst = TablePattern(p)
         if inst:
             pattern_list.append(inst)
     return pattern_list

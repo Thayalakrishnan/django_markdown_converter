@@ -121,8 +121,20 @@
             "caption": "small table of values"
         },
         "data": {
-            "header": "| Column 1 Title | Column 2 Title |\n",
-            "body": "| Row 1 Column 1| Row 1 Column 2 |\n| Row 2 Column 1| Row 2 Column 2 |\n"
+            "header": [
+                "Column 1 Title",
+                "Column 2 Title"
+            ],
+            "body": [
+                [
+                    "Row 1 Column 1",
+                    "Row 1 Column 2"
+                ],
+                [
+                    "Row 2 Column 1",
+                    "Row 2 Column 2"
+                ]
+            ]
         }
     },
     {
@@ -133,8 +145,20 @@
             "caption": "small table of values"
         },
         "data": {
-            "header": "| Column 1 Title | Column 2 Title |\n",
-            "body": "| Row 1 Column 1| Row 1 Column 2 |\n| Row 2 Column 1| Row 2 Column 2 |\n"
+            "header": [
+                "Column 1 Title",
+                "Column 2 Title"
+            ],
+            "body": [
+                [
+                    "Row 1 Column 1",
+                    "Row 1 Column 2"
+                ],
+                [
+                    "Row 2 Column 1",
+                    "Row 2 Column 2"
+                ]
+            ]
         }
     },
     {
@@ -345,7 +369,7 @@
             "blocktype": "dl list"
         },
         "data": {
-            "term": "First Term",
+            "term": "First Term\n",
             "definition": [
                 "This is the definition of the first term.",
                 ""
@@ -358,7 +382,7 @@
             "blocktype": "dl list"
         },
         "data": {
-            "term": "Second Term",
+            "term": "Second Term\n",
             "definition": [
                 "This is the first definition of the second term.",
                 "This is the second definition of the second term.",
@@ -372,7 +396,7 @@
             "blocktype": "dl list"
         },
         "data": {
-            "term": "Third Term",
+            "term": "Third Term\n",
             "definition": [
                 "This is the first definition of the third term.",
                 "This is the second definition of the third term.",
