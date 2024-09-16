@@ -65,7 +65,8 @@ PROC_PATTERNS = [
         "process": "fenced",
         "hasNested": False,
         "hasInlineMarkup": False,
-        "props": ["data"],
+        "props": [],
+        "data": ["data"],
     },
     {
         "type": "code",
@@ -76,7 +77,8 @@ PROC_PATTERNS = [
         "process": "fenced",
         "hasNested": False,
         "hasInlineMarkup": False,
-        "props": ["language", "data"],
+        "props": ["language"],
+        "data": ["data"],
     },
     {
         "type": "dlist",
@@ -88,7 +90,8 @@ PROC_PATTERNS = [
         "process": "headerbody",
         "hasNested": False,
         "hasInlineMarkup": True,
-        "props": ["definition", "term"],
+        "props": [],
+        "data": ["definition", "term"],
     },
     {
         "type": "footnote",
@@ -99,7 +102,8 @@ PROC_PATTERNS = [
         "process": "headerbody",
         "hasNested": True,
         "hasInlineMarkup": True,
-        "props": ["index", "data"],
+        "props": ["index"],
+        "data": ["data"],
     },
     {
         "type": "admonition",
@@ -110,7 +114,8 @@ PROC_PATTERNS = [
         "process": "headerbody",
         "hasNested": True,
         "hasInlineMarkup": True,
-        "props": ["type", "title", "data"],
+        "props": ["type", "title"],
+        "data": ["data"],
     },
     {
         "type": "table",
@@ -121,7 +126,8 @@ PROC_PATTERNS = [
         "process": "table",
         "hasNested": False,
         "hasInlineMarkup": True,
-        "props": ["header", "body"],
+        "props": [],
+        "data": ["header", "body"],
     },
     {
         "type": "hr",
@@ -132,7 +138,8 @@ PROC_PATTERNS = [
         "process": "oneshot",
         "hasNested": False,
         "hasInlineMarkup": False,
-        "props": ["data"],
+        "props": [],
+        "data": ["data"],
     },
     {
         "type": "heading",
@@ -144,6 +151,7 @@ PROC_PATTERNS = [
         "hasNested": False,
         "hasInlineMarkup": True,
         "props": ["level", "data"],
+        "data": ["data"],
     },
     {
         "type": "image",
@@ -154,7 +162,8 @@ PROC_PATTERNS = [
         "process": "oneshot",
         "hasNested": False,
         "hasInlineMarkup": False,
-        "props": ["alt", "data", "title"],
+        "props": ["alt", "title"],
+        "data": ["data"],
     },
     {
         "type": "svg",
@@ -165,7 +174,8 @@ PROC_PATTERNS = [
         "process": "oneshot",
         "hasNested": False,
         "hasInlineMarkup": False,
-        "props": ["attrs", "data"],
+        "props": ["attrs"],
+        "data": ["data"],
     },
     {
         "type": "ulist",
@@ -177,6 +187,7 @@ PROC_PATTERNS = [
         "hasNested": True,
         "hasInlineMarkup": True,
         "props": ["level", "marker", "content"],
+        "data": [],
     },
     {
         "type": "olist",
@@ -188,6 +199,7 @@ PROC_PATTERNS = [
         "hasNested": True,
         "hasInlineMarkup": True,
         "props": ["level", "marker", "content"],
+        "data": [],
     },
     {
         "type": "blockquote",
@@ -199,6 +211,7 @@ PROC_PATTERNS = [
         "hasNested": True,
         "hasInlineMarkup": True,
         "props": [],
+        "data": [],
     },
     {
         "type": "paragraph",
@@ -209,7 +222,8 @@ PROC_PATTERNS = [
         "process": "oneshot",
         "hasNested": False,
         "hasInlineMarkup": True,
-        "props": ["data"],
+        "props": [],
+        "data": ["data"],
     },
 ]
 

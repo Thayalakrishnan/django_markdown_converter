@@ -5,9 +5,4 @@ class MetaPattern(BasePattern):
     """
     meta
     """
-    def convert(self, content, props, *args, **kwargs) -> dict:
-        block = super().convert(content, props, *args, **kwargs)
-        m = self.pattern.match(content)
-        if m:
-            block["data"] = m.group("data")
-        return block
+    pass

@@ -1,101 +1,18 @@
 import re
 from django_markdown_converter.patterns.classes.base import BasePattern
 
-
-md = """- Item 1: line 1.
-- Item 2: line 1.
-- Item 3: line 1.
-- Item 4: line 1."""
-
-md = """- Item 1: line 1.
-- Item 2: line 1.
-- Item 3: line 1.
-  - Item 3.1: line 1.
-  - Item 3.2: line 1.
-- Item 4: line 1."""
-
-
-md = """- Item 1: line 1.
-  Item 1: line 2.
-- Item 2: line 1.
-  Item 2: line 2.
-
-  Item 2: line 3.
-- Item 3: line 1.
-  - Item 3.1: line 1.
-    Item 3.1: line 2.
-
-    ```python
-    for p in range(3):
-        print(p)
-    ```
-
-    Item 3.1: line 3.
-  - Item 3.2: line 1.
-- Item 4: line 1.
-"""
-
-md = """- Item 1: line 1.
-  Item 1: line 2.
-- Item 2: line 1.
-  Item 2: line 2.
-  
-  Item 2: line 3.
-  - Item 2.1: line 1.
-  - Item 2.2: line 1.
-  - Item 2.3: line 1.
-    1. Item 2.3.1: line 1.
-    2. Item 2.3.2: line 1.
-    3. Item 2.3.3: line 1.
-  - Item 2.4: line 1.
-- Item 3: line 1.
-  - Item 3.1: line 1.
-    Item 3.1: line 2.
-    
-    ```python
-    for p in range(3):
-        print(p)
-    ```
-    
-    Item 3.1: line 3.
-  - Item 3.2: line 1.
-- Item 4: line 1.
-
-
-dink
-"""
-
-
-md = """
-- Item 1.
-- Item 2.
-    - Item 2.1.
-    - Item 2.2.
-    - Item 2.3.
-        - Item 2.3.1
-        - Item 2.3.2
-        - Item 2.3.3
-    - Item 2.4
-    - Item 2.5
-        - Item 2.5.1
-        - Item 2.5.2
-        - Item 2.5.3
-    - Item 2.6
-- Item 3.
-"""
-
-md = """
-- Item 1.
-"""
-
 class ListPattern(BasePattern):
     """
     olist, ulist
     """
-    def convert(self, data, props, *args, **kwargs) -> dict:
-        block = super().convert(data, props, *args, **kwargs)
-        block["data"] = ConvertList(data)
-        return block
+    def get_match(self, content):
+        self.match = ConvertListIntoItems(content)
+    
+    def get_data(self) -> dict:
+        return ConvertList(self.match)
+    
+    def update_props(self):
+        pass
 
 
 def FormatContent(fresh:str="") -> str:
@@ -122,10 +39,9 @@ def AddItemToList(parent, child):
     parent.append(child)
 
 
-def ConvertList(source):
+def ConvertList(items):
     """
     """
-    items = ConvertListIntoItems(source)
     stack = []
     bank = []
     
@@ -167,13 +83,3 @@ def ConvertList(source):
         if not _["children"]:
             del _["children"]
     return root["children"]
-
-
-#method2, b = ConvertList(md)
-
-#print(method2)
-
-#for _ in b:
-    #print(_)
-#print("Done!")
-

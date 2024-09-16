@@ -22,7 +22,6 @@ To include a link, we place the link text in brackets and immediately follow it 
 
 
 ## Code Block
-{ blocktype="heading" }
 
 ```python
 from nba_api.stats.endpoints import playerawards as pa
@@ -233,7 +232,7 @@ def CreateCounter(dataset, position):
 { blocktype="admonition" }
 
 
-!!! top question
+!!! top "question"
     further ideas, further links etc.
 { blocktype="admonition" }
 

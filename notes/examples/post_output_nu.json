@@ -3,7 +3,7 @@
         "type": "heading",
         "props": {
             "blocktype": "heading",
-            "level": "##"
+            "level": 2
         },
         "data": "Pargraphs"
     },
@@ -25,7 +25,7 @@
         "type": "heading",
         "props": {
             "blocktype": "heading",
-            "level": "##"
+            "level": 2
         },
         "data": "Image"
     },
@@ -45,8 +45,7 @@
     {
         "type": "heading",
         "props": {
-            "blocktype": "heading",
-            "level": "##"
+            "level": 2
         },
         "data": "Code Block"
     },
@@ -86,7 +85,7 @@
         "type": "heading",
         "props": {
             "blocktype": "heading",
-            "level": "##"
+            "level": 2
         },
         "data": "Line break"
     },
@@ -108,7 +107,7 @@
         "type": "heading",
         "props": {
             "blocktype": "heading",
-            "level": "##"
+            "level": 2
         },
         "data": "Table"
     },
@@ -164,7 +163,7 @@
         "type": "heading",
         "props": {
             "blocktype": "heading",
-            "level": "##"
+            "level": 2
         },
         "data": "Blockquote"
     },
@@ -204,7 +203,7 @@
         "type": "heading",
         "props": {
             "blocktype": "heading",
-            "level": "##"
+            "level": 2
         },
         "data": "Ordered List"
     },
@@ -328,7 +327,7 @@
         "type": "heading",
         "props": {
             "blocktype": "heading",
-            "level": "##"
+            "level": 2
         },
         "data": "Unordered List"
     },
@@ -452,7 +451,7 @@
         "type": "heading",
         "props": {
             "blocktype": "heading",
-            "level": "##"
+            "level": 2
         },
         "data": "Admonition"
     },
@@ -486,15 +485,17 @@
     {
         "type": "admonition",
         "props": {
-            "blocktype": "admonition"
+            "blocktype": "admonition",
+            "type": "top",
+            "title": "question"
         },
-        "data": "!!! top question\n    further ideas, further links etc.\n"
+        "data": "further ideas, further links etc.\n"
     },
     {
         "type": "heading",
         "props": {
             "blocktype": "heading",
-            "level": "##"
+            "level": 2
         },
         "data": "Definition Lists"
     },
@@ -504,10 +505,9 @@
             "blocktype": "dl list"
         },
         "data": {
-            "term": "First Term\n",
+            "term": "First Term",
             "definition": [
-                "This is the definition of the first term.",
-                ""
+                "This is the definition of the first term."
             ]
         }
     },
@@ -517,11 +517,10 @@
             "blocktype": "dl list"
         },
         "data": {
-            "term": "Second Term\n",
+            "term": "Second Term",
             "definition": [
                 "This is the first definition of the second term.",
-                "This is the second definition of the second term.",
-                ""
+                "This is the second definition of the second term."
             ]
         }
     },
@@ -531,11 +530,10 @@
             "blocktype": "dl list"
         },
         "data": {
-            "term": "Third Term\n",
+            "term": "Third Term",
             "definition": [
                 "This is the first definition of the third term.",
-                "This is the second definition of the third term.",
-                ""
+                "This is the second definition of the third term."
             ]
         }
     },
@@ -543,7 +541,7 @@
         "type": "heading",
         "props": {
             "blocktype": "heading",
-            "level": "##"
+            "level": 2
         },
         "data": "Footnotes"
     },
@@ -575,7 +573,7 @@
         "type": "heading",
         "props": {
             "blocktype": "heading",
-            "level": "##"
+            "level": 2
         },
         "data": "Done"
     }

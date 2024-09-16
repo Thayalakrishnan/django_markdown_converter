@@ -7,16 +7,11 @@ class TablePattern(BasePattern):
     - header
     - body
     """
-    def convert(self, content, props, *args, **kwargs) -> dict:
-        block = super().convert(content, props, *args, **kwargs)
-        m = self.pattern.match(content)
-        if m:
-            block["data"] = {
-                "header": get_row(m.group("header")),
-                "body": get_rows(m.group("body")),
-            }
-        return block
-    
+    def get_data(self) -> dict:
+        return {
+            "header": get_row(self.match.group("header")),
+            "body": get_rows(self.match.group("body")),
+        }
     
     
 def get_row(line:str="") -> list:

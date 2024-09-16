@@ -5,10 +5,9 @@ class BlockquotePattern(BasePattern):
     """
     blockquote
     """
-    def convert(self, content, props, *args, **kwargs) -> dict:
-        block = super().convert(content, props, *args, **kwargs)
-        m = self.pattern.findall(content)
-        if m:
-            m = [_.lstrip(" ") for _ in m]
-            block["data"] = "".join(m)
-        return block
+    def get_match(self, content):
+        self.match = self.pattern.findall(content)
+        
+    def get_data(self) -> dict:
+        lines = [_.lstrip(" ") for _ in self.match]
+        return "".join(lines)
