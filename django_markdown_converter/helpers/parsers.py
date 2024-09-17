@@ -37,9 +37,10 @@ def block_parser(content:str=""):
         yield block_detector(block, props, index)
     
     
-def nested_blocks_parser():
+def nested_blocks_parser() -> bool:
     """
     """
+    content_was_processed = False
     print(f"###################")
     print(f"parse nested blocks")
     print(f"###################")
@@ -52,7 +53,10 @@ def nested_blocks_parser():
                 newdata = list(block_parser(process_input_content(_["data"])))
                 if len(newdata):
                     _["data"] = newdata
-    
+                    content_was_processed = True
+    return content_was_processed
+
+
     #for block in blocklist:
     #    if PATTERN_LOOKUP[block["type"]].hasNested:
     #        #print(block['data'])

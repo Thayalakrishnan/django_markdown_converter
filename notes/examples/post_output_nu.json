@@ -12,14 +12,157 @@
         "props": {
             "blocktype": "paragraph"
         },
-        "data": "Pargraph 4 **eos** aperiam dolorem numquam quisquam [^1]. Cupiditate ==reprehenderit== beatae ab inventore libero. Accusantium explicabo optio debitis magni sint earum excepturi. Dicta aliquid cupiditate. Consequuntur temporibus `code` voluptates _similique_. Aut maiores hic laudantium distinctio[^2]. Aliquid magni expedita voluptatem illo laudantium illo. Quidem occaecati voluptas odit^5^ ex aspernatur eius ~~consectetur~~ blanditiis. Aperiam ullam iure soluta animi voluptatem pariatur nesciunt voluptatibus. Fuga iste in."
+        "data": [
+            {
+                "tag": "text",
+                "data": "Pargraph 4 "
+            },
+            {
+                "tag": "strong",
+                "data": "eos"
+            },
+            {
+                "tag": "text",
+                "data": " aperiam dolorem numquam quisquam "
+            },
+            {
+                "tag": "IFootnote",
+                "props": {
+                    "index": "1"
+                },
+                "data": "1"
+            },
+            {
+                "tag": "text",
+                "data": ". Cupiditate "
+            },
+            {
+                "tag": "mark",
+                "data": "reprehenderit"
+            },
+            {
+                "tag": "text",
+                "data": " beatae ab inventore libero. Accusantium explicabo optio debitis magni sint earum excepturi. Dicta aliquid cupiditate. Consequuntur temporibus "
+            },
+            {
+                "tag": "ICode",
+                "data": "code"
+            },
+            {
+                "tag": "text",
+                "data": " voluptates "
+            },
+            {
+                "tag": "em",
+                "data": "similique"
+            },
+            {
+                "tag": "text",
+                "data": ". Aut maiores hic laudantium distinctio"
+            },
+            {
+                "tag": "IFootnote",
+                "props": {
+                    "index": "2"
+                },
+                "data": "2"
+            },
+            {
+                "tag": "text",
+                "data": ". Aliquid magni expedita voluptatem illo laudantium illo. Quidem occaecati voluptas odit"
+            },
+            {
+                "tag": "sup",
+                "data": "5"
+            },
+            {
+                "tag": "text",
+                "data": " ex aspernatur eius "
+            },
+            {
+                "tag": "del",
+                "data": "consectetur"
+            },
+            {
+                "tag": "text",
+                "data": " blanditiis. Aperiam ullam iure soluta animi voluptatem pariatur nesciunt voluptatibus. Fuga iste in."
+            }
+        ]
     },
     {
         "type": "paragraph",
         "props": {
             "blocktype": "paragraph"
         },
-        "data": "To include a link, we place the link text in brackets and immediately follow it with the link text in parentheses like [this link](https://lawen.thayalakrishnan.com) to the homepage! We can emphasise **[the link](https://lawen.thayalakrishnan.com)** by enclosing the markdown in double asterisks. The same applies to single asterisk to italise [the link](https://lawen.thayalakrishnan.com). Use angle brackets, to render the link raw <https://lawen.thayalakrishnan.com>. This is an email address <example@email.com> in the middle of a paragraph!"
+        "data": [
+            {
+                "tag": "text",
+                "data": "To include a link, we place the link text in brackets and immediately follow it with the link text in parentheses like "
+            },
+            {
+                "tag": "ILink",
+                "props": {
+                    "to": "https://lawen.thayalakrishnan.com",
+                    "title": "this link"
+                },
+                "data": "this link](https://lawen.thayalakrishnan.com"
+            },
+            {
+                "tag": "text",
+                "data": " to the homepage! We can emphasise "
+            },
+            {
+                "tag": "strong",
+                "data": [
+                    {
+                        "tag": "ILink",
+                        "props": {
+                            "to": "https://lawen.thayalakrishnan.com",
+                            "title": "the link"
+                        },
+                        "data": "the link](https://lawen.thayalakrishnan.com"
+                    }
+                ]
+            },
+            {
+                "tag": "text",
+                "data": " by enclosing the markdown in double asterisks. The same applies to single asterisk to italise "
+            },
+            {
+                "tag": "ILink",
+                "props": {
+                    "to": "https://lawen.thayalakrishnan.com",
+                    "title": "the link"
+                },
+                "data": "the link](https://lawen.thayalakrishnan.com"
+            },
+            {
+                "tag": "text",
+                "data": ". Use angle brackets, to render the link raw "
+            },
+            {
+                "tag": "rawlink",
+                "props": {
+                    "link": "://lawen.thayalakrishnan.com"
+                },
+                "data": "://lawen.thayalakrishnan.com"
+            },
+            {
+                "tag": "text",
+                "data": ". This is an email address "
+            },
+            {
+                "tag": "email",
+                "props": {
+                    "email": "example@email.com"
+                },
+                "data": "example@email.com"
+            },
+            {
+                "tag": "text",
+                "data": " in the middle of a paragraph!"
+            }
+        ]
     },
     {
         "type": "heading",
@@ -224,23 +367,54 @@
             {
                 "type": "paragraph",
                 "props": {},
-                "data": "A Paragraph is the default element. How about some **inline markdown**?"
+                "data": [
+                    {
+                        "tag": "text",
+                        "data": "A Paragraph is the default element. How about some "
+                    },
+                    {
+                        "tag": "strong",
+                        "data": "inline markdown"
+                    },
+                    {
+                        "tag": "text",
+                        "data": "?"
+                    }
+                ]
             },
             {
                 "type": "ulist",
                 "props": {},
                 "data": [
                     {
-                        "data": "list item 1",
-                        "type": "item"
+                        "type": "item",
+                        "data": [
+                            {
+                                "type": "paragraph",
+                                "props": {},
+                                "data": "list item 1"
+                            }
+                        ]
                     },
                     {
-                        "data": "list item 2",
-                        "type": "item"
+                        "type": "item",
+                        "data": [
+                            {
+                                "type": "paragraph",
+                                "props": {},
+                                "data": "list item 2"
+                            }
+                        ]
                     },
                     {
-                        "data": "list item 3",
-                        "type": "item"
+                        "type": "item",
+                        "data": [
+                            {
+                                "type": "paragraph",
+                                "props": {},
+                                "data": "list item 3"
+                            }
+                        ]
                     }
                 ]
             }
@@ -268,28 +442,72 @@
                     {
                         "type": "paragraph",
                         "props": {},
-                        "data": "A Paragraph is the default element. How about some **inline markdown**?"
+                        "data": [
+                            {
+                                "tag": "text",
+                                "data": "A Paragraph is the default element. How about some "
+                            },
+                            {
+                                "tag": "strong",
+                                "data": "inline markdown"
+                            },
+                            {
+                                "tag": "text",
+                                "data": "?"
+                            }
+                        ]
                     },
                     {
                         "type": "paragraph",
                         "props": {},
-                        "data": "A second nested block in a blockquote with some **inline markdown**?"
+                        "data": [
+                            {
+                                "tag": "text",
+                                "data": "A second nested block in a blockquote with some "
+                            },
+                            {
+                                "tag": "strong",
+                                "data": "inline markdown"
+                            },
+                            {
+                                "tag": "text",
+                                "data": "?"
+                            }
+                        ]
                     },
                     {
                         "type": "ulist",
                         "props": {},
                         "data": [
                             {
-                                "data": "list item 1",
-                                "type": "item"
+                                "type": "item",
+                                "data": [
+                                    {
+                                        "type": "paragraph",
+                                        "props": {},
+                                        "data": "list item 1"
+                                    }
+                                ]
                             },
                             {
-                                "data": "list item 2",
-                                "type": "item"
+                                "type": "item",
+                                "data": [
+                                    {
+                                        "type": "paragraph",
+                                        "props": {},
+                                        "data": "list item 2"
+                                    }
+                                ]
                             },
                             {
-                                "data": "list item 3",
-                                "type": "item"
+                                "type": "item",
+                                "data": [
+                                    {
+                                        "type": "paragraph",
+                                        "props": {},
+                                        "data": "list item 3"
+                                    }
+                                ]
                             }
                         ]
                     }
@@ -312,44 +530,44 @@
         },
         "data": [
             {
+                "type": "item",
                 "data": [
                     {
                         "type": "paragraph",
                         "props": {},
                         "data": "Item 1"
                     }
-                ],
-                "type": "item"
+                ]
             },
             {
+                "type": "item",
                 "data": [
                     {
                         "type": "paragraph",
                         "props": {},
                         "data": "Item 2"
                     }
-                ],
-                "type": "item"
+                ]
             },
             {
+                "type": "item",
                 "data": [
                     {
                         "type": "paragraph",
                         "props": {},
                         "data": "Item 3"
                     }
-                ],
-                "type": "item"
+                ]
             },
             {
+                "type": "item",
                 "data": [
                     {
                         "type": "paragraph",
                         "props": {},
                         "data": "Item 4"
                     }
-                ],
-                "type": "item"
+                ]
             }
         ]
     },
@@ -360,66 +578,66 @@
         },
         "data": [
             {
+                "type": "item",
                 "data": [
                     {
                         "type": "paragraph",
                         "props": {},
                         "data": "Item 1"
                     }
-                ],
-                "type": "item"
+                ]
             },
             {
+                "type": "item",
                 "data": [
                     {
                         "type": "paragraph",
                         "props": {},
                         "data": "Item 2"
                     }
-                ],
-                "type": "item"
+                ]
             },
             {
-                "data": [
-                    {
-                        "type": "paragraph",
-                        "props": {},
-                        "data": "Item 3"
-                    }
-                ],
                 "type": "olist",
                 "children": [
                     {
+                        "type": "item",
                         "data": [
                             {
                                 "type": "paragraph",
                                 "props": {},
                                 "data": "Indented Item 1"
                             }
-                        ],
-                        "type": "item"
+                        ]
                     },
                     {
+                        "type": "item",
                         "data": [
                             {
                                 "type": "paragraph",
                                 "props": {},
                                 "data": "Indented Item 2"
                             }
-                        ],
-                        "type": "item"
+                        ]
+                    }
+                ],
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 3"
                     }
                 ]
             },
             {
+                "type": "item",
                 "data": [
                     {
                         "type": "paragraph",
                         "props": {},
                         "data": "Item 4"
                     }
-                ],
-                "type": "item"
+                ]
             }
         ]
     },
@@ -430,6 +648,7 @@
         },
         "data": [
             {
+                "type": "item",
                 "data": [
                     {
                         "type": "paragraph",
@@ -441,38 +660,37 @@
                         "props": {},
                         "data": "Multiline Item 1, line 3 after double line break."
                     }
-                ],
-                "type": "item"
+                ]
             },
             {
+                "type": "item",
                 "data": [
                     {
                         "type": "paragraph",
                         "props": {},
                         "data": "Item 2"
                     }
-                ],
-                "type": "item"
+                ]
             },
             {
+                "type": "item",
                 "data": [
                     {
                         "type": "paragraph",
                         "props": {},
                         "data": "Item 3"
                     }
-                ],
-                "type": "item"
+                ]
             },
             {
+                "type": "item",
                 "data": [
                     {
                         "type": "paragraph",
                         "props": {},
                         "data": "Item 4"
                     }
-                ],
-                "type": "item"
+                ]
             }
         ]
     },
@@ -483,36 +701,30 @@
         },
         "data": [
             {
+                "type": "item",
                 "data": [
                     {
                         "type": "paragraph",
                         "props": {},
                         "data": "Item 1"
                     }
-                ],
-                "type": "item"
+                ]
             },
             {
+                "type": "item",
                 "data": [
                     {
                         "type": "paragraph",
                         "props": {},
                         "data": "Item 2"
                     }
-                ],
-                "type": "item"
+                ]
             },
             {
-                "data": [
-                    {
-                        "type": "paragraph",
-                        "props": {},
-                        "data": "Item 3"
-                    }
-                ],
                 "type": "olist",
                 "children": [
                     {
+                        "type": "item",
                         "data": [
                             {
                                 "type": "paragraph",
@@ -524,30 +736,36 @@
                                 "props": {},
                                 "data": "Multiline Item 3, Subitem 1, line 3."
                             }
-                        ],
-                        "type": "item"
+                        ]
                     },
                     {
+                        "type": "item",
                         "data": [
                             {
                                 "type": "paragraph",
                                 "props": {},
                                 "data": "Indented Item 2"
                             }
-                        ],
-                        "type": "item"
+                        ]
+                    }
+                ],
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 3"
                     }
                 ]
             },
             {
+                "type": "item",
                 "data": [
                     {
                         "type": "paragraph",
                         "props": {},
                         "data": "Item 4"
                     }
-                ],
-                "type": "item"
+                ]
             }
         ]
     },
@@ -566,44 +784,44 @@
         },
         "data": [
             {
+                "type": "item",
                 "data": [
                     {
                         "type": "paragraph",
                         "props": {},
                         "data": "Item 1"
                     }
-                ],
-                "type": "item"
+                ]
             },
             {
+                "type": "item",
                 "data": [
                     {
                         "type": "paragraph",
                         "props": {},
                         "data": "Item 2"
                     }
-                ],
-                "type": "item"
+                ]
             },
             {
+                "type": "item",
                 "data": [
                     {
                         "type": "paragraph",
                         "props": {},
                         "data": "Item 3"
                     }
-                ],
-                "type": "item"
+                ]
             },
             {
+                "type": "item",
                 "data": [
                     {
                         "type": "paragraph",
                         "props": {},
                         "data": "Item 4"
                     }
-                ],
-                "type": "item"
+                ]
             }
         ]
     },
@@ -614,66 +832,66 @@
         },
         "data": [
             {
+                "type": "item",
                 "data": [
                     {
                         "type": "paragraph",
                         "props": {},
                         "data": "Item 1"
                     }
-                ],
-                "type": "item"
+                ]
             },
             {
+                "type": "item",
                 "data": [
                     {
                         "type": "paragraph",
                         "props": {},
                         "data": "Item 2"
                     }
-                ],
-                "type": "item"
+                ]
             },
             {
-                "data": [
-                    {
-                        "type": "paragraph",
-                        "props": {},
-                        "data": "Item 3"
-                    }
-                ],
                 "type": "ulist",
                 "children": [
                     {
+                        "type": "item",
                         "data": [
                             {
                                 "type": "paragraph",
                                 "props": {},
                                 "data": "Indented Item 1"
                             }
-                        ],
-                        "type": "item"
+                        ]
                     },
                     {
+                        "type": "item",
                         "data": [
                             {
                                 "type": "paragraph",
                                 "props": {},
                                 "data": "Indented Item 2"
                             }
-                        ],
-                        "type": "item"
+                        ]
+                    }
+                ],
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 3"
                     }
                 ]
             },
             {
+                "type": "item",
                 "data": [
                     {
                         "type": "paragraph",
                         "props": {},
                         "data": "Item 4"
                     }
-                ],
-                "type": "item"
+                ]
             }
         ]
     },
@@ -684,6 +902,7 @@
         },
         "data": [
             {
+                "type": "item",
                 "data": [
                     {
                         "type": "paragraph",
@@ -695,38 +914,37 @@
                         "props": {},
                         "data": "Multiline Item 1, line 3 after double line break"
                     }
-                ],
-                "type": "item"
+                ]
             },
             {
+                "type": "item",
                 "data": [
                     {
                         "type": "paragraph",
                         "props": {},
                         "data": "Item 2"
                     }
-                ],
-                "type": "item"
+                ]
             },
             {
+                "type": "item",
                 "data": [
                     {
                         "type": "paragraph",
                         "props": {},
                         "data": "Item 3"
                     }
-                ],
-                "type": "item"
+                ]
             },
             {
+                "type": "item",
                 "data": [
                     {
                         "type": "paragraph",
                         "props": {},
                         "data": "Item 4"
                     }
-                ],
-                "type": "item"
+                ]
             }
         ]
     },
@@ -737,36 +955,30 @@
         },
         "data": [
             {
+                "type": "item",
                 "data": [
                     {
                         "type": "paragraph",
                         "props": {},
                         "data": "Item 1"
                     }
-                ],
-                "type": "item"
+                ]
             },
             {
+                "type": "item",
                 "data": [
                     {
                         "type": "paragraph",
                         "props": {},
                         "data": "Item 2"
                     }
-                ],
-                "type": "item"
+                ]
             },
             {
-                "data": [
-                    {
-                        "type": "paragraph",
-                        "props": {},
-                        "data": "Item 3"
-                    }
-                ],
                 "type": "ulist",
                 "children": [
                     {
+                        "type": "item",
                         "data": [
                             {
                                 "type": "paragraph",
@@ -778,30 +990,36 @@
                                 "props": {},
                                 "data": "Multiline Item 3, Subitem 1, line 3."
                             }
-                        ],
-                        "type": "item"
+                        ]
                     },
                     {
+                        "type": "item",
                         "data": [
                             {
                                 "type": "paragraph",
                                 "props": {},
                                 "data": "Indented Item 2"
                             }
-                        ],
-                        "type": "item"
+                        ]
+                    }
+                ],
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 3"
                     }
                 ]
             },
             {
+                "type": "item",
                 "data": [
                     {
                         "type": "paragraph",
                         "props": {},
                         "data": "Item 4"
                     }
-                ],
-                "type": "item"
+                ]
             }
         ]
     },
@@ -812,16 +1030,91 @@
         },
         "data": [
             {
+                "type": "item",
                 "data": [
                     {
                         "type": "paragraph",
                         "props": {},
                         "data": "Item 1: line 1."
                     }
-                ],
-                "type": "item"
+                ]
             },
             {
+                "type": "ulist",
+                "children": [
+                    {
+                        "type": "item",
+                        "data": [
+                            {
+                                "type": "paragraph",
+                                "props": {},
+                                "data": "Item 2.1: line 1."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "item",
+                        "data": [
+                            {
+                                "type": "paragraph",
+                                "props": {},
+                                "data": "Item 2.2: line 1."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "olist",
+                        "children": [
+                            {
+                                "type": "item",
+                                "data": [
+                                    {
+                                        "type": "paragraph",
+                                        "props": {},
+                                        "data": "Item 2.3.1: line 1."
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "item",
+                                "data": [
+                                    {
+                                        "type": "paragraph",
+                                        "props": {},
+                                        "data": "Item 2.3.2: line 1."
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "item",
+                                "data": [
+                                    {
+                                        "type": "paragraph",
+                                        "props": {},
+                                        "data": "Item 2.3.3: line 1."
+                                    }
+                                ]
+                            }
+                        ],
+                        "data": [
+                            {
+                                "type": "paragraph",
+                                "props": {},
+                                "data": "Item 2.3: line 1."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "item",
+                        "data": [
+                            {
+                                "type": "paragraph",
+                                "props": {},
+                                "data": "Item 2.4: line 1."
+                            }
+                        ]
+                    }
+                ],
                 "data": [
                     {
                         "type": "paragraph",
@@ -833,94 +1126,13 @@
                         "props": {},
                         "data": "Item 2: line 3."
                     }
-                ],
-                "type": "ulist",
-                "children": [
-                    {
-                        "data": [
-                            {
-                                "type": "paragraph",
-                                "props": {},
-                                "data": "Item 2.1: line 1."
-                            }
-                        ],
-                        "type": "item"
-                    },
-                    {
-                        "data": [
-                            {
-                                "type": "paragraph",
-                                "props": {},
-                                "data": "Item 2.2: line 1."
-                            }
-                        ],
-                        "type": "item"
-                    },
-                    {
-                        "data": [
-                            {
-                                "type": "paragraph",
-                                "props": {},
-                                "data": "Item 2.3: line 1."
-                            }
-                        ],
-                        "type": "olist",
-                        "children": [
-                            {
-                                "data": [
-                                    {
-                                        "type": "paragraph",
-                                        "props": {},
-                                        "data": "Item 2.3.1: line 1."
-                                    }
-                                ],
-                                "type": "item"
-                            },
-                            {
-                                "data": [
-                                    {
-                                        "type": "paragraph",
-                                        "props": {},
-                                        "data": "Item 2.3.2: line 1."
-                                    }
-                                ],
-                                "type": "item"
-                            },
-                            {
-                                "data": [
-                                    {
-                                        "type": "paragraph",
-                                        "props": {},
-                                        "data": "Item 2.3.3: line 1."
-                                    }
-                                ],
-                                "type": "item"
-                            }
-                        ]
-                    },
-                    {
-                        "data": [
-                            {
-                                "type": "paragraph",
-                                "props": {},
-                                "data": "Item 2.4: line 1."
-                            }
-                        ],
-                        "type": "item"
-                    }
                 ]
             },
             {
-                "data": [
-                    {
-                        "type": "paragraph",
-                        "props": {},
-                        "data": "Item 3: line 1."
-                    }
-                ],
                 "type": "ulist",
                 "children": [
                     {
+                        "type": "item",
                         "data": [
                             {
                                 "type": "paragraph",
@@ -939,30 +1151,36 @@
                                 "props": {},
                                 "data": "Item 3.1: line 3."
                             }
-                        ],
-                        "type": "item"
+                        ]
                     },
                     {
+                        "type": "item",
                         "data": [
                             {
                                 "type": "paragraph",
                                 "props": {},
                                 "data": "Item 3.2: line 1."
                             }
-                        ],
-                        "type": "item"
+                        ]
+                    }
+                ],
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 3: line 1."
                     }
                 ]
             },
             {
+                "type": "item",
                 "data": [
                     {
                         "type": "paragraph",
                         "props": {},
                         "data": "Item 4: line 1."
                     }
-                ],
-                "type": "item"
+                ]
             }
         ]
     },
@@ -1129,7 +1347,20 @@
             {
                 "type": "paragraph",
                 "props": {},
-                "data": "Footnote 2 and some inline `code`."
+                "data": [
+                    {
+                        "tag": "text",
+                        "data": "Footnote 2 and some inline "
+                    },
+                    {
+                        "tag": "ICode",
+                        "data": "code"
+                    },
+                    {
+                        "tag": "text",
+                        "data": "."
+                    }
+                ]
             },
             {
                 "type": "paragraph",
@@ -1148,7 +1379,20 @@
             {
                 "type": "paragraph",
                 "props": {},
-                "data": "Footnote 3 and some inline `code`."
+                "data": [
+                    {
+                        "tag": "text",
+                        "data": "Footnote 3 and some inline "
+                    },
+                    {
+                        "tag": "ICode",
+                        "data": "code"
+                    },
+                    {
+                        "tag": "text",
+                        "data": "."
+                    }
+                ]
             },
             {
                 "type": "paragraph",

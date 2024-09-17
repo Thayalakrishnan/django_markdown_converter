@@ -21,12 +21,18 @@ def FormatContent(fresh:str="") -> str:
     return "\n".join(fresh)
 
 def FormatItem(yeet:dict=()):
-    yeet["type"] = "item"
-    yeet["level"] = len(yeet["level"])
-    yeet["marker"] = "ulist" if yeet["marker"] == "- " else "olist"
-    yeet["children"] = None
-    yeet["data"] = FormatContent(yeet["data"])
-    return yeet
+    #yeet["type"] = "item"
+    #yeet["level"] = len(yeet["level"])
+    #yeet["marker"] = "ulist" if yeet["marker"] == "- " else "olist"
+    #yeet["children"] = None
+    #yeet["data"] = FormatContent(yeet["data"])
+    return {
+        "type": "item",
+        "level": len(yeet["level"]),
+        "marker": "ulist" if yeet["marker"] == "- " else "olist",
+        "children": None,
+        "data": FormatContent(yeet["data"]),
+    }
 
 
 def ConvertListIntoItems(source:str=""):
