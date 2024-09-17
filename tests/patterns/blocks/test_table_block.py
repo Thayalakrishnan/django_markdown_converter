@@ -1,5 +1,6 @@
 import pytest
 from django_markdown_converter.patterns.blocks.table import TablePattern
+from django_markdown_converter.patterns.lookups import TABLE_PATTERN
 
 
 def test_basic_conversion():
@@ -11,7 +12,7 @@ def test_basic_conversion():
         f'{{ id="small-table" caption="small table of values" }}',
         #f'',
     ]
-    output = TablePattern().blockify(md)
+    output = TablePattern().convert(md)
     assert isinstance(output, dict)
     assert "table" == output["type"]
     assert "props" in output

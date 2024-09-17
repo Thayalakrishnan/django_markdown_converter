@@ -59,7 +59,7 @@ def test_base_init():
         "",
     ]
     print(md)
-    output = blockifier.blockify(md)
+    output = blockifier.convert(md)
     assert isinstance(output, dict)
     assert output != {}
     assert block_type == output["type"]
@@ -80,7 +80,7 @@ def test_all_inline_init():
         "",
     ]
     #print(md)
-    output = blockifier.blockify(md)
+    output = blockifier.convert(md)
     print(output)
     assert isinstance(output, dict)
     assert output != {}

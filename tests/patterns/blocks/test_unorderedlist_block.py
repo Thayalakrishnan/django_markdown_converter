@@ -1,5 +1,6 @@
 import pytest
 from django_markdown_converter.patterns.blocks.list import UnOrderedListPattern
+from django_markdown_converter.patterns.lookups import LIST_PATTERN
 
 def test_basic_conversion():
     md = [
@@ -7,7 +8,7 @@ def test_basic_conversion():
         f'- UnOrdered List Item 2',
         f'',
     ]
-    output = UnOrderedListPattern().blockify(md)
+    output = UnOrderedListPattern().convert(md)
     assert isinstance(output, dict)
     assert "list" == output["type"]
     assert "ul" == output["tag"]
@@ -21,7 +22,7 @@ def test_nested_list():
         f'- UnOrdered List Item 3',
         f'',
     ]
-    output = UnOrderedListPattern().blockify(md)
+    output = UnOrderedListPattern().convert(md)
     assert isinstance(output, dict)
     assert "list" == output["type"]
     assert "ul" == output["tag"]
