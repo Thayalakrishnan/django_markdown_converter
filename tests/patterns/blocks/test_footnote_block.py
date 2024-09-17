@@ -1,5 +1,5 @@
 import pytest
-from django_markdown_converter.blocks.footnote import FootnoteBlockifier
+from django_markdown_converter.patterns.blocks.footnote import FootnotePattern
 
 
 def test_basic_conversion():
@@ -9,7 +9,7 @@ def test_basic_conversion():
         "    Footnote definition.",
         "",
     ]
-    blockifier = FootnoteBlockifier()
+    blockifier = FootnotePattern()
     output = blockifier.blockify(md)
     output = blockifier.getFootnotes()
     print(output)

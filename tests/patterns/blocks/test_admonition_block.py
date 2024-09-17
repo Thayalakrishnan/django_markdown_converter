@@ -1,5 +1,6 @@
 import pytest
-from django_markdown_converter.blocks.admonition import AdmonitionBlockifier
+from django_markdown_converter.patterns.blocks.admonition import AdmonitionPattern
+from django_markdown_converter.patterns.lookups import ADMONITION_PATTERN
 
 
 def test_basic_conversion():
@@ -15,7 +16,10 @@ def test_basic_conversion():
         f"    {block_data}",
         #"",
     ]
-    output = AdmonitionBlockifier().blockify(md)
+    md = "\n".join(md)
+    
+    output = AdmonitionPattern(ADMONITION_PATTERN).convert(md)
+    
     assert isinstance(output, dict)
     assert "admonition" == output["type"]
     assert block_prop_type == output["props"]["type"]

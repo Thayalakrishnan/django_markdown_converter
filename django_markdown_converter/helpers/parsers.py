@@ -1,6 +1,6 @@
 from django_markdown_converter.patterns.generic import BLOCK_PATTERN
 from django_markdown_converter.helpers.processors import excise_props, process_input_content
-from django_markdown_converter.patterns.procpats import PATTERN_LIST, PATTERN_LOOKUP
+from django_markdown_converter.patterns.lookups import PATTERN_LIST, PATTERN_LOOKUP
 
 
 def block_generator(content:str=""):

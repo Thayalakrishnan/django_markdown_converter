@@ -1,9 +1,5 @@
 from django_markdown_converter.blockifiers.blockifier import BIG_BLOCKIFIER
 
-from django_markdown_converter.helpers.processors import process_input_content, extract_meta_block
-from django_markdown_converter.helpers.parsers import block_parser, nested_blocks_parser
-
-
 '''
 edge cases
 - with list, ordered, table, blockquote, there are edge cases
@@ -27,30 +23,3 @@ the length of their boundary is 0.
 
 def Blockify(source:str=""):
     return BIG_BLOCKIFIER.run_blockify(source)
-
-
-def Convert(source:str="") -> list:
-    """
-    receive a string, presumably formatted
-    using markdown
-    convert the markdown into our json format
-    and return this object
-    """
-    blocks = []
-    source = process_input_content(source)
-    for block in block_parser(source):
-        blocks.append(block)
-    while nested_blocks_parser():
-        continue
-    return blocks
-
-
-def Revert(source:list=[]) -> str:
-    """
-    receive a list of blocks that represent
-    string in markdown formatting
-    converting the blocks into markdown
-    return the blocks as the markdown string form
-    """
-    return ""
-

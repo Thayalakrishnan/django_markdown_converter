@@ -43,8 +43,10 @@ class BasePattern:
             return self.match.group("data")
         return {}
             
-    def convert(self, content, props, *args, **kwargs) -> dict:
-        """ """
+    def convert(self, content:str="", props:str="", *args, **kwargs) -> dict:
+        """
+        
+        """
         print(f"converting: {self.blocktype}")
         self.get_match(content)
         self.block = {

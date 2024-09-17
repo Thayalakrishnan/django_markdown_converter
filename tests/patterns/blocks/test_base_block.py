@@ -1,6 +1,6 @@
 ## test_base_block
 import pytest
-from django_markdown_converter.blocks.base import BaseBlockifier
+from django_markdown_converter.patterns.blocks.base import BasePattern
 
 
 
@@ -29,7 +29,7 @@ def create_pattern(pattern):
 
 def create_base_blockifier():
     pattern = "@@@"
-    return BaseBlockifier(
+    return BasePattern(
         #pattern=r'^@@@\s*(?:\{(?P<props>.*?)\})?\s*\n(?P<content>.*?)\n\s*@@@\s*(?:\n\s*|$)',
         #pattern=r'^@@@\s*\n(?P<content>.*?)\n\s*@@@\s*(?:\n\s*|$)',
         pattern=create_pattern(pattern),

@@ -1,5 +1,5 @@
 import pytest
-from django_markdown_converter.blocks.meta import MetaBlockifier
+from django_markdown_converter.patterns.blocks.meta import MetaPattern
 
 
 def test_basic_conversion():
@@ -12,7 +12,7 @@ def test_basic_conversion():
         f'---',
         f'',
     ]
-    output = MetaBlockifier().blockify(md)
+    output = MetaPattern().blockify(md)
     assert isinstance(output, dict)
     assert "meta" == output["type"]
     #assert block_data == output["data"]

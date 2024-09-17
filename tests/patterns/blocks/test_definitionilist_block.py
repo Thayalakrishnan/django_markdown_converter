@@ -1,5 +1,5 @@
 import pytest
-from django_markdown_converter.blocks.definitionlist import DefinitionListBlockifier
+from django_markdown_converter.patterns.blocks.definitionlist import DefinitionListPattern
 
 
 def test_basic_conversion():
@@ -11,7 +11,7 @@ def test_basic_conversion():
         f": {block_data_definition}",
         "",
     ]
-    output = DefinitionListBlockifier().blockify(md)
+    output = DefinitionListPattern().blockify(md)
     assert isinstance(output, dict)
     assert "definitions" == output["type"]
     assert block_data_term == output["data"]["term"]

@@ -1,5 +1,5 @@
 import pytest
-from django_markdown_converter.blocks.list import OrderedListBlockifier
+from django_markdown_converter.patterns.blocks.list import OrderedListPattern
 
 
 def test_basic_conversion():
@@ -8,7 +8,7 @@ def test_basic_conversion():
         f'2. Ordered List Item 2',
         f'',
     ]
-    output = OrderedListBlockifier().blockify(md)
+    output = OrderedListPattern().blockify(md)
     assert isinstance(output, dict)
     assert "list" == output["type"]
     assert "ol" == output["tag"]

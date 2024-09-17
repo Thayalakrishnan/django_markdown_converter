@@ -1,5 +1,5 @@
 import pytest
-from django_markdown_converter.blocks.image import ImageBlockifier
+from django_markdown_converter.patterns.blocks.image import ImagePattern
 
 
 def test_basic_conversion():
@@ -10,7 +10,7 @@ def test_basic_conversion():
         f'![ title="{block_prop_title}" ]({block_prop_src})',
         f'',
     ]
-    output = ImageBlockifier().blockify(md)
+    output = ImagePattern().blockify(md)
     assert isinstance(output, dict)
     assert "image" == output["type"]
     assert block_prop_title == output["props"]["title"]

@@ -1,5 +1,5 @@
 import pytest
-from django_markdown_converter.blocks.svg import SVGBlockifier
+from django_markdown_converter.patterns.blocks.svg import SVGPattern
 
 
 def test_basic_conversion():
@@ -9,7 +9,7 @@ def test_basic_conversion():
         f'{block_data}',
         r'</svg>',
     ]
-    output = SVGBlockifier().blockify(md)
+    output = SVGPattern().blockify(md)
     assert isinstance(output, dict)
     assert "svg" == output["type"]
 #    assert block_data == output["data"]

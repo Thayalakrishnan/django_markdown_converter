@@ -1,5 +1,5 @@
 import pytest
-from django_markdown_converter.blocks.code import CodeBlockifier
+from django_markdown_converter.patterns.blocks.code import CodePattern
 
 
 def test_basic_conversion():
@@ -12,7 +12,7 @@ def test_basic_conversion():
         f'   print(i)',
         f'```',
     ]
-    output = CodeBlockifier().blockify(md)
+    output = CodePattern().blockify(md)
     assert isinstance(output, dict)
     assert "code" == output["type"]
     assert block_prop_language == output["props"]["language"]
