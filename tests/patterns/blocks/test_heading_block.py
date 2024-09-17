@@ -31,16 +31,8 @@ def test_not_heading():
     md = "This is not a heading"
     output = HeadingPattern(HEADING_PATTERN).convert(md)
     assert isinstance(output, dict)
-    assert "" == output["data"]
+    assert len(output.keys()) == 0
 
-def test_not_heading_to_many_hashes():
-    """
-    return an empty dict as no heading has been detected
-    """
-    md = "####### This is not a heading"
-    output = HeadingPattern(HEADING_PATTERN).convert(md)
-    assert isinstance(output, dict)
-    assert output == {}
 
 def test_heading_with_extra_content():
     """

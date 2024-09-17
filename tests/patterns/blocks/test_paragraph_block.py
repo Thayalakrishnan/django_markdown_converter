@@ -7,12 +7,15 @@ def test_basic_conversion():
     """
     this will need to change once we move off paragraphs returning lists
     """
+    block_data_sentence_1 = "This is the first sentence in the paragraph. "
+    
     md = [
-        "This is the first paragraph. ", 
-        #"This is the second paragraph. ", 
-        ]
-    output = ParagraphPattern().convert(md)[0]
-    print(output)
-    #assert isinstance(output, list)
-    #assert isinstance(output, bool)
+        f"{block_data_sentence_1}", 
+        ""
+    ]
+    md = "\n".join(md)
+    output = ParagraphPattern(PARAGRAPH_PATTERN).convert(md)
+    
     assert "paragraph" == output["type"]
+    assert isinstance(output["data"], str)
+    assert block_data_sentence_1 == output["data"]

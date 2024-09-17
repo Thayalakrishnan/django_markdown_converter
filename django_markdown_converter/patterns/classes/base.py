@@ -28,7 +28,7 @@ class BasePattern:
             if p == "data":
                 continue
             if self.match.group(p):
-                self.block["props"].update({p: self.match.group(p)})
+                self.block["props"].update({p: self.match.group(p).strip()})
 
     def get_props(self, props:str="") -> dict:
         if props:
@@ -40,7 +40,7 @@ class BasePattern:
         
     def get_data(self) -> dict:
         if "data" in self.data:
-            return self.match.group("data")
+            return self.match.group("data").strip()
         return {}
             
     def convert(self, content:str="", props:str="", *args, **kwargs) -> dict:
@@ -49,6 +49,10 @@ class BasePattern:
         """
         print(f"converting: {self.blocktype}")
         self.get_match(content)
+        
+        if not self.match:
+            return {}
+        
         self.block = {
             "type": self.blocktype,
             "props": self.get_props(props),

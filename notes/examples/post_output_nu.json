@@ -191,7 +191,7 @@
             "height": "1080",
             "width": "1920",
             "caption": "This is an example of a caption being included with a basic image.",
-            "alt": " This is an example of a basic image in markdown with a caption ",
+            "alt": "This is an example of a basic image in markdown with a caption",
             "title": "Title for a basic image with a caption"
         },
         "data": "https://thayalakrishnan-lawen-prod-media.s3.ap-southeast-2.amazonaws.com/media/images/covers/image2.jpg"

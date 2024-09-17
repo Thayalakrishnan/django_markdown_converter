@@ -129,7 +129,7 @@ IMAGE_PATTERN = {
     "type": "image",
     "class": ImagePattern,
     "check": r'^!\[.*?\]\(.*?\)',
-    "pattern": r'^\!\[(?P<alt>.*?)?\]\((?P<data>\S*)\s*(?:\"(?P<title>.*?)\")?\)',
+    "pattern": r'^\!\[\s*(?P<alt>.*?)?\s*\]\((?P<data>\S*)\s*(?:\"(?P<title>.*?)\")?\)',
     "flags": re.MULTILINE | re.DOTALL,
     "hasNested": False,
     "hasInlineMarkup": False,

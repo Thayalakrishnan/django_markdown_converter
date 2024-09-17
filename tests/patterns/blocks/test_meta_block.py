@@ -4,17 +4,25 @@ from django_markdown_converter.patterns.lookups import META_PATTERN
 
 
 def test_basic_conversion():
-    block_type = "heading"
-    block_data = "value"
-    block_level = 2
+    block_key_1 = "title"
+    block_value_1 = "meta block test"
+    block_key_2 = "author"
+    block_value_2 = "lawen t"
+    
     md = [
         f'---',
-        f'key: {block_data}',
+        f'{block_key_1}: {block_value_1}',
+        f'{block_key_2}: {block_value_2}',
         f'---',
         f'',
     ]
-    output = MetaPattern().convert(md)
+    
+    md = "\n".join(md)
+    output = MetaPattern(META_PATTERN).convert(md)
+    
     assert isinstance(output, dict)
     assert "meta" == output["type"]
+    assert block_value_1 == output["data"][block_key_1]
+    assert block_value_2 == output["data"][block_key_2]
     #assert block_data == output["data"]
 

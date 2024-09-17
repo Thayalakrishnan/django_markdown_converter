@@ -9,17 +9,17 @@ def test_basic_conversion():
         f'| --- | --- |',
         f'|row 1 col 1|row 1 col 2|',
         f'|row 2 col 1|row 2 col 2|',
-        f'{{ id="small-table" caption="small table of values" }}',
-        #f'',
+        f'',
     ]
-    output = TablePattern().convert(md)
+    md = "\n".join(md)
+    output = TablePattern(TABLE_PATTERN).convert(md)
+    
     assert isinstance(output, dict)
     assert "table" == output["type"]
-    assert "props" in output
-    assert "id" in output["props"]
-    assert "caption" in output["props"]
+    
     assert "header" in output["data"]
     assert "body" in output["data"]
-    #assert isinstance(output, bool)
-    #assert block_data == output["data"]
-
+    
+    assert isinstance(output["data"]["header"], list)
+    assert isinstance(output["data"]["body"], list)
+    

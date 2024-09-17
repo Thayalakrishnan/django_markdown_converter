@@ -9,8 +9,8 @@ def test_basic_conversion():
         f'***',
         f'',
     ]
-    output = HRPattern().convert(md)
+    md = "\n".join(md)
+    output = HRPattern(HR_PATTERN).convert(md)
     assert isinstance(output, dict)
     assert "hr" == output["type"]
-    #assert block_data == output["data"]
 
