@@ -1,4 +1,5 @@
 from django_markdown_converter.patterns.classes.base import BasePattern
+from django_markdown_converter.patterns.inlines.parser import inline_parser
 
 
 class TablePattern(BasePattern):
@@ -17,7 +18,7 @@ class TablePattern(BasePattern):
 def get_row(line:str="") -> list:
     """strip leading and trailing pipes,"""
     line = line.strip("|\n ")
-    return [_.strip() for _ in line.split("|")]
+    return [inline_parser(_.strip()) for _ in line.split("|")]
     
 def get_rows(chunk:str="")-> list:
     lines = chunk.split("\n")

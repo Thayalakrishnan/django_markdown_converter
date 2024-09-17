@@ -137,6 +137,7 @@ def convert_text(cases:list=[], line:str="", level:list=[]):
         before, middle, after = match.group("before"), match.group("content"), match.group("after")
         if len(before):
             level.append({"tag": "text", "data": before})
+            #level.append(before)
         if len(middle):
             if boundary.props:
                 props = {}
@@ -163,6 +164,7 @@ def convert_text(cases:list=[], line:str="", level:list=[]):
         if len(level):
             if len(line):
                 level.append({"tag": "text", "data": line})
+                #level.append(line)
             else:
                 return line
             return level
@@ -186,6 +188,8 @@ def inline_block_parser(block:dict={}, counter=0) -> dict:
 def inline_parser(lines:str="") -> list:
     pblock = {"data": lines}
     inline_block_parser(pblock)
+    
+    
     return pblock["data"]
 
 

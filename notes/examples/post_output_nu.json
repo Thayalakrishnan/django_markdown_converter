@@ -292,7 +292,12 @@
             ],
             "body": [
                 [
-                    "Row 1 Column 1",
+                    [
+                        {
+                            "tag": "ICode",
+                            "data": "Row 1 Column 1"
+                        }
+                    ],
                     "Row 1 Column 2"
                 ],
                 [

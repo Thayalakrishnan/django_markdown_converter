@@ -3,6 +3,7 @@ from pygments.lexers import get_lexer_by_name
 from pygments.formatters import HtmlFormatter
 from django_markdown_converter.blocks.base import BaseBlockifier
 from django_markdown_converter.blockifiers.blockifier_data import CODE_BLOCK_DATA
+
 class CustomFormatter(HtmlFormatter):
     
     def wrap(self, source, *args):
