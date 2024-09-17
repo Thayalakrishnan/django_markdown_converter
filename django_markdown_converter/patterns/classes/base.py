@@ -59,17 +59,11 @@ class BasePattern:
         return self.block
 
 
-def metavalues(data):
-    return
-
 def dedent(data):
     data = data.split("\n")
     data = [_.lstrip(" ") for _ in data]
     return "\n".join(data)
 
-
-def count(data):
-    return len(data)
 
 def deprefix(data, prefix):
     data = data.split("\n")

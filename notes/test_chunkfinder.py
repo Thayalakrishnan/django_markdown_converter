@@ -17,7 +17,7 @@ raw_chunk = ReadSourceFromFile(path_to_file)
 print("processed -------------------------")
 
 raw_chunk = process_input_content(raw_chunk)
-raw_chunk, meta = extract_meta_block(raw_chunk)
+#raw_chunk, meta = extract_meta_block(raw_chunk)
 
 for block in block_parser(raw_chunk):
     json_root_nu.append(block)

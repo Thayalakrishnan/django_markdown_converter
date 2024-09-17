@@ -25,6 +25,7 @@ def block_detector(block:str="", props:str="", index:int=0) -> dict:
         if pattern.check(block):
             return pattern.convert(block, props)
 
+
 def block_parser(content:str=""):
     """
     from the content, loop over it to create blocks
@@ -41,10 +42,6 @@ def nested_blocks_parser() -> bool:
     """
     """
     content_was_processed = False
-    print(f"###################")
-    print(f"parse nested blocks")
-    print(f"###################")
-    
     for pattern in PATTERN_LIST:
         if pattern.hasNested:
             for _ in pattern.bank:
@@ -55,19 +52,3 @@ def nested_blocks_parser() -> bool:
                     _["data"] = newdata
                     content_was_processed = True
     return content_was_processed
-
-
-    #for block in blocklist:
-    #    if PATTERN_LOOKUP[block["type"]].hasNested:
-    #        #print(block['data'])
-    #        if isinstance(block["data"], list):
-    #            continue
-    #        else:
-    #            sublist = []
-    #            print(f"{block['type']} has nested")
-    #            print(block["data"])
-    #            newdata = list(block_parser(process_input_content(block["data"])))
-    #            if len(newdata):
-    #                block["data"] = newdata
-    #            #print(newdata)
-        
