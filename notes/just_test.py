@@ -34,37 +34,6 @@ md = """- Item 1: line 1.
 - Item 4: line 1.
 """
 
-md = """- Item 1: line 1.
-  Item 1: line 2.
-- Item 2: line 1.
-  Item 2: line 2.
-  
-  Item 2: line 3.
-  - Item 2.1: line 1.
-  - Item 2.2: line 1.
-  - Item 2.3: line 1.
-    1. Item 2.3.1: line 1.
-    2. Item 2.3.2: line 1.
-    3. Item 2.3.3: line 1.
-  - Item 2.4: line 1.
-- Item 3: line 1.
-  - Item 3.1: line 1.
-    Item 3.1: line 2.
-    
-    ```python
-    for p in range(3):
-        print(p)
-    ```
-    
-    Item 3.1: line 3.
-  - Item 3.2: line 1.
-- Item 4: line 1.
-
-
-dink
-"""
-
-
 md = """
 - Item 1.
 - Item 2.
@@ -87,25 +56,69 @@ md = """
 - Item 1.
 """
 
+md = """- Item 1: line 1.
+- Item 3: line 1.
+  - Item 3.1: line 1.
+    Item 3.1: line 2.
+    
+    ```python
+    for p in range(3):
+        print(p)
+    ```
+    
+    Item 3.1: line 3.
+  - Item 3.2: line 1.
+    - Item 3.2.1: line 1.
+    - Item 3.2.2: line 1.
+      Item 3.2.2: line 2.
+      
+      ```python
+      for p in range(3):
+          print(p)
+      ```
+      
+      Item 3.2.2: line 3.
+- Item 4: line 1.
+"""
+
+
 # %%
 import re
+from textwrap import dedent
 
-def FormatContent(fresh:str="") -> str:
+def FormatContent(fresh:str="", amount:int=1) -> str:
     fresh = fresh.strip().split("\n")
-    fresh = [_.lstrip() for _ in fresh]
+    for _ in fresh:
+      print(repr(_))
+    fresh = [_.strip(" ", amount) for _ in fresh]
+    for _ in fresh:
+      print(repr(_))
     return "\n".join(fresh)
 
 def FormatItem(yeet:dict=()):
-    yeet["type"] = "item"
-    yeet["level"] = len(yeet["level"])
-    yeet["marker"] = "ulist" if yeet["marker"] == "- " else "olist"
-    yeet["children"] = None
-    yeet["content"] = FormatContent(yeet["content"])
-    return yeet
+    """
+    TODO: use the level to set the amount of padding to remove 
+    from each line. it should be level + 1 i think, depending on 
+    type of list maybe
+    """
+    
+    level = len(yeet["level"])
+    padding = level + len(yeet["marker"]) 
+    
+    data = yeet["data"]
+    data = re.sub(pattern=f'^ {{{padding}}}', repl='', string=data, flags=re.MULTILINE) 
+    
+    return {
+        "type": "item",
+        "level": level,
+        "marker": "ulist" if yeet["marker"] == "- " else "olist",
+        "children": None,
+        "data": data,
+    }
 
 
 def ConvertListIntoItems(source:str=""):
-    lineitempattern = re.compile(r'(?P<level>^\s*?)(?P<marker>(?:- )|(?:\d+\. ))(?P<content>(?:.*?(?=^\s*?((- )|(\d+\. ))))|(?:.*?$\n?))', re.MULTILINE | re.DOTALL)
+    lineitempattern = re.compile(r'(?P<level>^\s*?)(?P<marker>(?:- )|(?:\d+\. ))(?P<data>(?:.*?(?=^\s*?((- )|(\d+\. ))))|(?:.*?$\n?))', re.MULTILINE | re.DOTALL)
     return lineitempattern.finditer(source)
 
 def AddItemToList(parent, child):

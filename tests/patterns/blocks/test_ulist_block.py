@@ -1,6 +1,6 @@
 import pytest
 from django_markdown_converter.patterns.blocks.list import ListPattern
-from django_markdown_converter.patterns.lookups import LIST_PATTERN
+from django_markdown_converter.patterns.lookups import ULIST_PATTERN
 
 
 """
@@ -43,7 +43,7 @@ def test_basic_conversion():
     ]
     
     md = "\n".join(md)
-    output = ListPattern(LIST_PATTERN).convert(md)
+    output = ListPattern(ULIST_PATTERN).convert(md)
     
     assert isinstance(output, dict)
     assert "olist" == output["type"]

@@ -389,7 +389,7 @@
             ],
             [
                 [
-                    "",
+                    "w",
                     "    "
                 ],
                 [
@@ -479,7 +479,7 @@
             ],
             [
                 [
-                    "",
+                    "w",
                     "    "
                 ],
                 [
@@ -535,7 +535,7 @@
                     ":"
                 ],
                 [
-                    "",
+                    "w",
                     "            "
                 ],
                 [
@@ -545,7 +545,7 @@
             ],
             [
                 [
-                    "",
+                    "w",
                     "        "
                 ],
                 [
@@ -575,7 +575,7 @@
             ],
             [
                 [
-                    "",
+                    "w",
                     "        "
                 ],
                 [
@@ -597,7 +597,7 @@
             ],
             [
                 [
-                    "",
+                    "w",
                     "    "
                 ],
                 [
@@ -661,7 +661,7 @@
                     ":"
                 ],
                 [
-                    "",
+                    "w",
                     "        "
                 ],
                 [
@@ -671,7 +671,7 @@
             ],
             [
                 [
-                    "",
+                    "w",
                     "        "
                 ],
                 [
@@ -701,7 +701,7 @@
             ],
             [
                 [
-                    "",
+                    "w",
                     "    "
                 ],
                 [
@@ -713,7 +713,7 @@
                     ":"
                 ],
                 [
-                    "",
+                    "w",
                     "                           "
                 ],
                 [
@@ -723,7 +723,7 @@
             ],
             [
                 [
-                    "",
+                    "w",
                     "        "
                 ],
                 [
@@ -772,7 +772,7 @@
             ],
             [
                 [
-                    "",
+                    "w",
                     "    "
                 ],
                 [
@@ -834,7 +834,7 @@
             ],
             [
                 [
-                    "",
+                    "w",
                     "    "
                 ],
                 [
@@ -923,7 +923,7 @@
             ],
             [
                 [
-                    "",
+                    "w",
                     "    "
                 ],
                 [
@@ -1001,7 +1001,7 @@
             ],
             [
                 [
-                    "",
+                    "w",
                     "    "
                 ],
                 [
@@ -1071,7 +1071,7 @@
             ],
             [
                 [
-                    "",
+                    "w",
                     "    "
                 ],
                 [
@@ -1149,7 +1149,7 @@
             ],
             [
                 [
-                    "",
+                    "w",
                     "    "
                 ],
                 [
@@ -1171,7 +1171,7 @@
             ],
             [
                 [
-                    "",
+                    "w",
                     "    "
                 ],
                 [
@@ -1400,9 +1400,40 @@
                 ]
             },
             {
-                "type": "paragraph",
+                "type": "ulist",
                 "props": {},
-                "data": "- list item 1"
+                "data": [
+                    {
+                        "type": "item",
+                        "data": [
+                            {
+                                "type": "paragraph",
+                                "props": {},
+                                "data": "list item 1"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "item",
+                        "data": [
+                            {
+                                "type": "paragraph",
+                                "props": {},
+                                "data": "list item 2"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "item",
+                        "data": [
+                            {
+                                "type": "paragraph",
+                                "props": {},
+                                "data": "list item 3"
+                            }
+                        ]
+                    }
+                ]
             }
         ]
     },
@@ -1462,9 +1493,40 @@
                         ]
                     },
                     {
-                        "type": "paragraph",
+                        "type": "ulist",
                         "props": {},
-                        "data": "- list item 1"
+                        "data": [
+                            {
+                                "type": "item",
+                                "data": [
+                                    {
+                                        "type": "paragraph",
+                                        "props": {},
+                                        "data": "list item 1"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "item",
+                                "data": [
+                                    {
+                                        "type": "paragraph",
+                                        "props": {},
+                                        "data": "list item 2"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "item",
+                                "data": [
+                                    {
+                                        "type": "paragraph",
+                                        "props": {},
+                                        "data": "list item 3"
+                                    }
+                                ]
+                            }
+                        ]
                     }
                 ]
             }
@@ -1609,11 +1671,6 @@
                         "type": "paragraph",
                         "props": {},
                         "data": "Multiline Item 1, line 1."
-                    },
-                    {
-                        "type": "paragraph",
-                        "props": {},
-                        "data": "Multiline Item 1, line 3 after double line break."
                     }
                 ]
             },
@@ -1733,39 +1790,466 @@
         "data": "Unordered List"
     },
     {
-        "type": "paragraph",
+        "type": "ulist",
         "props": {
             "blocktype": "u list"
         },
-        "data": "- Item 1"
+        "data": [
+            {
+                "type": "item",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 1"
+                    }
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 2"
+                    }
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 3"
+                    }
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 4"
+                    }
+                ]
+            }
+        ]
     },
     {
-        "type": "paragraph",
+        "type": "ulist",
         "props": {
             "blocktype": "u list"
         },
-        "data": "- Item 1"
+        "data": [
+            {
+                "type": "item",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 1"
+                    }
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 2"
+                    }
+                ]
+            },
+            {
+                "type": "ulist",
+                "children": [
+                    {
+                        "type": "item",
+                        "data": [
+                            {
+                                "type": "paragraph",
+                                "props": {},
+                                "data": "Indented Item 1"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "item",
+                        "data": [
+                            {
+                                "type": "paragraph",
+                                "props": {},
+                                "data": "Indented Item 2"
+                            }
+                        ]
+                    }
+                ],
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 3"
+                    }
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 4"
+                    }
+                ]
+            }
+        ]
     },
     {
-        "type": "paragraph",
+        "type": "ulist",
         "props": {
             "blocktype": "u list"
         },
-        "data": "- Multiline Item 1, line 1."
+        "data": [
+            {
+                "type": "item",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Multiline Item 1, line 1."
+                    }
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 2"
+                    }
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 3"
+                    }
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 4"
+                    }
+                ]
+            }
+        ]
     },
     {
-        "type": "paragraph",
+        "type": "ulist",
         "props": {
             "blocktype": "u list"
         },
-        "data": "- Item 1"
+        "data": [
+            {
+                "type": "item",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 1"
+                    }
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 2"
+                    }
+                ]
+            },
+            {
+                "type": "ulist",
+                "children": [
+                    {
+                        "type": "item",
+                        "data": [
+                            {
+                                "type": "paragraph",
+                                "props": {},
+                                "data": "Multiline Item 3, Subitem 1, line 1."
+                            },
+                            {
+                                "type": "paragraph",
+                                "props": {},
+                                "data": "Multiline Item 3, Subitem 1, line 3."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "item",
+                        "data": [
+                            {
+                                "type": "paragraph",
+                                "props": {},
+                                "data": "Indented Item 2"
+                            }
+                        ]
+                    }
+                ],
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 3"
+                    }
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 4"
+                    }
+                ]
+            }
+        ]
     },
     {
-        "type": "paragraph",
+        "type": "ulist",
         "props": {
             "blocktype": "u list"
         },
-        "data": "- Item 1: line 1."
+        "data": [
+            {
+                "type": "item",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 1: line 1."
+                    }
+                ]
+            },
+            {
+                "type": "ulist",
+                "children": [
+                    {
+                        "type": "item",
+                        "data": [
+                            {
+                                "type": "paragraph",
+                                "props": {},
+                                "data": "Item 2.1: line 1."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "item",
+                        "data": [
+                            {
+                                "type": "paragraph",
+                                "props": {},
+                                "data": "Item 2.2: line 1."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "olist",
+                        "children": [
+                            {
+                                "type": "item",
+                                "data": [
+                                    {
+                                        "type": "paragraph",
+                                        "props": {},
+                                        "data": "Item 2.3.1: line 1."
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "item",
+                                "data": [
+                                    {
+                                        "type": "paragraph",
+                                        "props": {},
+                                        "data": "Item 2.3.2: line 1."
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "item",
+                                "data": [
+                                    {
+                                        "type": "paragraph",
+                                        "props": {},
+                                        "data": "Item 2.3.3: line 1."
+                                    }
+                                ]
+                            }
+                        ],
+                        "data": [
+                            {
+                                "type": "paragraph",
+                                "props": {},
+                                "data": "Item 2.3: line 1."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "item",
+                        "data": [
+                            {
+                                "type": "paragraph",
+                                "props": {},
+                                "data": "Item 2.4: line 1."
+                            }
+                        ]
+                    }
+                ],
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 2: line 1."
+                    }
+                ]
+            },
+            {
+                "type": "ulist",
+                "children": [
+                    {
+                        "type": "item",
+                        "data": [
+                            {
+                                "type": "paragraph",
+                                "props": {},
+                                "data": "Item 3.1: line 1."
+                            },
+                            {
+                                "type": "code",
+                                "props": {
+                                    "language": "python"
+                                },
+                                "data": [
+                                    [
+                                        [
+                                            "k",
+                                            "for"
+                                        ],
+                                        [
+                                            "w",
+                                            " "
+                                        ],
+                                        [
+                                            "n",
+                                            "p"
+                                        ],
+                                        [
+                                            "w",
+                                            " "
+                                        ],
+                                        [
+                                            "ow",
+                                            "in"
+                                        ],
+                                        [
+                                            "w",
+                                            " "
+                                        ],
+                                        [
+                                            "nb",
+                                            "range"
+                                        ],
+                                        [
+                                            "p",
+                                            "("
+                                        ],
+                                        [
+                                            "mi",
+                                            "3"
+                                        ],
+                                        [
+                                            "p",
+                                            ")"
+                                        ],
+                                        [
+                                            "p",
+                                            ":"
+                                        ]
+                                    ],
+                                    [
+                                        [
+                                            "nb",
+                                            "print"
+                                        ],
+                                        [
+                                            "p",
+                                            "("
+                                        ],
+                                        [
+                                            "n",
+                                            "p"
+                                        ],
+                                        [
+                                            "p",
+                                            ")"
+                                        ]
+                                    ]
+                                ]
+                            },
+                            {
+                                "type": "paragraph",
+                                "props": {},
+                                "data": "Item 3.1: line 3."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "item",
+                        "data": [
+                            {
+                                "type": "paragraph",
+                                "props": {},
+                                "data": "Item 3.2: line 1."
+                            }
+                        ]
+                    }
+                ],
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 3: line 1."
+                    }
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 4: line 1."
+                    }
+                ]
+            }
+        ]
     },
     {
         "type": "heading",

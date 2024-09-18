@@ -10,17 +10,18 @@ def lex_format(tokensource):
     current_line = []
     lines = []
     for ttype, value in tokensource:
+        
         if value == "\n":
             lines.append(current_line)
             current_line = []
             continue
         
-        if value == " ":
+        token = STANDARD_TYPES.get(ttype, "")
+        if not token and " " in value:
             token = "w"
             current_token = (token, value)
-        else:
-            token = STANDARD_TYPES.get(ttype, "")
-            current_token = (token, value)
+        
+        current_token = (token, value)
         current_line.append(current_token)
     
     if not len(lines):

@@ -1,4 +1,5 @@
 import re
+from textwrap import dedent
 from django_markdown_converter.patterns.classes.base import BasePattern
 
 class ListPattern(BasePattern):
@@ -15,23 +16,24 @@ class ListPattern(BasePattern):
         pass
 
 
-def FormatContent(fresh:str="") -> str:
+def FormatContent(fresh:str="", amount:int=1) -> str:
     fresh = fresh.strip().split("\n")
-    fresh = [_.lstrip() for _ in fresh]
+    fresh = [_.lstrip(" "*amount) for _ in fresh]
     return "\n".join(fresh)
 
 def FormatItem(yeet:dict=()):
-    #yeet["type"] = "item"
-    #yeet["level"] = len(yeet["level"])
-    #yeet["marker"] = "ulist" if yeet["marker"] == "- " else "olist"
-    #yeet["children"] = None
-    #yeet["data"] = FormatContent(yeet["data"])
+    """
+    TODO: use the level to set the amount of padding to remove 
+    from each line. it should be level + 1 i think, depending on 
+    type of list maybe
+    """
+    level = len(yeet["level"])
     return {
         "type": "item",
-        "level": len(yeet["level"]),
+        "level": level,
         "marker": "ulist" if yeet["marker"] == "- " else "olist",
         "children": None,
-        "data": FormatContent(yeet["data"]),
+        "data": FormatContent(yeet["data"], level),
     }
 
 

@@ -63,6 +63,28 @@ class BasePattern:
         if self.hasNested:
             self.bank.append(self.block)
         return self.block
+    
+    def revert(self, block:dict={}, *args, **kwargs) -> str:
+        """
+        
+        """
+        print(f"reverting: {self.blocktype}")
+        
+        self.get_match(content)
+        
+        if not self.match:
+            return {}
+        
+        self.block = {
+            "type": self.blocktype,
+            "props": self.get_props(props),
+            "data": self.get_data()
+        }
+        self.update_props()
+        
+        if self.hasNested:
+            self.bank.append(self.block)
+        return self.block
 
 
 def dedent(data):
