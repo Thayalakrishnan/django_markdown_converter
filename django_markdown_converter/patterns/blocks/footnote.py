@@ -12,12 +12,12 @@ class FootnotePattern(BasePattern):
         return dedent(self.match.group("data"))
     
     def revert(self, *args, **kwargs) -> str:
-        block = super().revert(*args, **kwargs)
+        super().revert(*args, **kwargs)
         
-        props = block.get("props", {})
+        props = self.block.get("props", {})
         index = props.get("index", 1)
         
-        data = block.get("data", "")
+        data = self.block.get("data", "")
         data = [f"    {_}" for _ in data.splitlines()]
         
         ret = []

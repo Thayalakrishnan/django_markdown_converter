@@ -18,10 +18,10 @@ class DListPattern(BasePattern):
 
 
     def revert(self, *args, **kwargs) -> str:
-        block = super().revert(*args, **kwargs)
+        super().revert(*args, **kwargs)
         
-        props = block.get("props", {})
-        data = block.get("data", "")
+        props = self.block.get("props", {})
+        data = self.block.get("data", "")
         
         term = data.get("term", "")
         definition = data.get("definition", [""])

@@ -37,9 +37,9 @@ class MetaPattern(BasePattern):
         return None
 
     def revert(self, *args, **kwargs) -> str:
-        block = super().revert(*args, **kwargs)
+        super().revert(*args, **kwargs)
         
-        data = block.get("data", "")
+        data = self.block.get("data", "")
         middle = [f"{key}: {data[key]}" for key in data]
         
         ret = []

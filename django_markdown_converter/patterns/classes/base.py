@@ -65,8 +65,7 @@ class BasePattern:
         return self.block
     
     def revert(self, block:dict={}, *args, **kwargs) -> str:
-        """
-        """
+        self.block = block
         print(f"reverting: {self.blocktype}")
         return block["data"]
 

@@ -37,10 +37,7 @@
                 "data": " aperiam dolorem numquam quisquam "
             },
             {
-                "tag": "IFootnote",
-                "props": {
-                    "index": "1"
-                },
+                "tag": "footnote",
                 "data": "1"
             },
             {
@@ -56,7 +53,7 @@
                 "data": " beatae ab inventore libero. Accusantium explicabo optio debitis magni sint earum excepturi. Dicta aliquid cupiditate. Consequuntur temporibus "
             },
             {
-                "tag": "ICode",
+                "tag": "code",
                 "data": "code"
             },
             {
@@ -72,10 +69,7 @@
                 "data": ". Aut maiores hic laudantium distinctio"
             },
             {
-                "tag": "IFootnote",
-                "props": {
-                    "index": "2"
-                },
+                "tag": "footnote",
                 "data": "2"
             },
             {
@@ -111,12 +105,11 @@
                 "data": "To include a link, we place the link text in brackets and immediately follow it with the link text in parentheses like "
             },
             {
-                "tag": "ILink",
-                "props": {
+                "tag": "link",
+                "data": {
                     "to": "https://lawen.thayalakrishnan.com",
                     "title": "this link"
-                },
-                "data": "this link](https://lawen.thayalakrishnan.com"
+                }
             },
             {
                 "tag": "text",
@@ -126,12 +119,11 @@
                 "tag": "strong",
                 "data": [
                     {
-                        "tag": "ILink",
-                        "props": {
+                        "tag": "link",
+                        "data": {
                             "to": "https://lawen.thayalakrishnan.com",
                             "title": "the link"
-                        },
-                        "data": "the link](https://lawen.thayalakrishnan.com"
+                        }
                     }
                 ]
             },
@@ -140,12 +132,11 @@
                 "data": " by enclosing the markdown in double asterisks. The same applies to single asterisk to italise "
             },
             {
-                "tag": "ILink",
-                "props": {
+                "tag": "link",
+                "data": {
                     "to": "https://lawen.thayalakrishnan.com",
                     "title": "the link"
-                },
-                "data": "the link](https://lawen.thayalakrishnan.com"
+                }
             },
             {
                 "tag": "text",
@@ -153,10 +144,7 @@
             },
             {
                 "tag": "rawlink",
-                "props": {
-                    "link": "://lawen.thayalakrishnan.com"
-                },
-                "data": "://lawen.thayalakrishnan.com"
+                "data": "https://lawen.thayalakrishnan.com"
             },
             {
                 "tag": "text",
@@ -164,9 +152,6 @@
             },
             {
                 "tag": "email",
-                "props": {
-                    "email": "example@email.com"
-                },
                 "data": "example@email.com"
             },
             {
@@ -1306,7 +1291,7 @@
                 [
                     [
                         {
-                            "tag": "ICode",
+                            "tag": "code",
                             "data": "Row 1 Column 1"
                         }
                     ],
@@ -2508,7 +2493,7 @@
                         "data": "Footnote 2 and some inline "
                     },
                     {
-                        "tag": "ICode",
+                        "tag": "code",
                         "data": "code"
                     },
                     {
@@ -2540,7 +2525,7 @@
                         "data": "Footnote 3 and some inline "
                     },
                     {
-                        "tag": "ICode",
+                        "tag": "code",
                         "data": "code"
                     },
                     {

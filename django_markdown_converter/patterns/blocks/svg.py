@@ -9,12 +9,18 @@ class SVGPattern(BasePattern):
 
 
     def revert(self, *args, **kwargs) -> str:
-        block = super().revert(*args, **kwargs)
+        super().revert(*args, **kwargs)
         
-        props = block.get("props", {})
-        data = block.get("data", "")
+        generate_attrs = lambda k,v: f'{k}="{v}"'
+        pad_if_present = lambda x: f' {x}' if len(x) else f''
+        wrap_html_content = lambda t, a, c: f'<{t}{pad_if_present(a)}>{c}</{t}>'
+        
+        props = self.block.get("props", {})
+        attrs = " ".join(list(map(generate_attrs, zip(props.keys(), props.values()))))
+        
+        data = self.block.get("data", "")
         
         ret = []
-        ret.append(f"")
-        ret.extend(data)
+        ret.append(wrap_html_content("svg", attrs, data))
+        ret.append("")
         return "\n".join(ret)

@@ -15,14 +15,23 @@ class TablePattern(BasePattern):
         }
         
     def revert(self, *args, **kwargs) -> str:
-        block = super().revert(*args, **kwargs)
+        super().revert(*args, **kwargs)
+        create_row_lambda = lambda x: f"| {' | '.join(x)} |"
         
-        props = block.get("props", {})
-        data = block.get("data", "")
+        data = self.block.get("data", "")
+        
+        header = data.get("header", [])
+        body = data.get("body", [])
+        breaker = ['---']*len(header)
         
         ret = []
         ret.append(f"")
         ret.extend(data)
+        
+        ret.append(create_row_lambda(header))
+        ret.append(create_row_lambda(breaker))
+        for row in body:
+            ret.append(create_row_lambda(row))
         return "\n".join(ret)
     
     

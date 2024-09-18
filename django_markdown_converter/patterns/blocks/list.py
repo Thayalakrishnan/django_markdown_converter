@@ -15,10 +15,10 @@ class ListPattern(BasePattern):
         pass
 
     def revert(self, *args, **kwargs) -> str:
-        block = super().revert(*args, **kwargs)
+        super().revert(*args, **kwargs)
         
-        props = block.get("props", {})
-        data = block.get("data", "")
+        props = self.block.get("props", {})
+        data = self.block.get("data", "")
         
         ret = []
         ret.append(f"")

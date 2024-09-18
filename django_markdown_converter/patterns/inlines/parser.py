@@ -11,9 +11,9 @@ R_CONTENT_ONE_OR_MORE = r'(?P<content>.+?)'
 # everything inbetween except whitespace
 R_CONTENT_NO_WSPACE = r'(?P<content>\S+)'
 
-R_CONTENT_RAWLINK = r'(?P<content>(?P<link>\S+))'
+R_CONTENT_RAWLINK = r'(?P<content>https\S+)'
 R_CONTENT_EMOJI = r'(?P<content>\S+)'
-R_CONTENT_FOOTNOTE = r'(?P<content>(?P<index>\d+?))'
+R_CONTENT_FOOTNOTE = r'(?P<content>\d+?)'
 
 # inline image
 R_CONTENT_INLINE_IMAGE = r'(?P<content>(?P<alt>.*?)\]\((?P<src>.*?))'
@@ -23,16 +23,20 @@ R_CONTENT_INLINE_IMAGE = r'(?P<content>(?P<props>.*?)\]\((?P<src>.*?))'
 R_CONTENT_LINK = r'(?P<content>(?P<title>.*?)\]\((?P<to>.*?))'
 
 # inline LINK
-R_EMAIL = r'(?P<content>(?P<email>\S+@\S+))'
+R_EMAIL = r'(?P<content>\S+@\S+)'
+
+
+
+
+
 # [pattern, tag, type, props]
 # if we have a custom vue element, replace the tag with that element
 CASES_LIST = [
-    #[ ("<repolink ", r'(?P<content>(?P<props>.*?)\>(?P<text>.*?))', "</repolink>"), "IRepolink", ["props", "text"] ],
-    [ ("<navlink ", r'(?P<content>(?P<props>.*?)\>(?P<text>.*?))', "</navlink>"), "INavlink", ["props", "text"] ],
-    [ ("`", r'(?P<content>.*?)', "`"), "ICode", [] ],
+    [ ("<navlink ", r'(?P<content>(?P<props>.*?)\>(?P<text>.*?))', "</navlink>"), "navlink", ["props", "text"] ],
+    [ ("`", r'(?P<content>.*?)', "`"), "code", [] ],
     #[ ("`", r'(?P<content>[^`]+?)', "`"), [] ],
-    [ ("<", R_EMAIL, ">"), "email", ["email"] ],
-    [ ("<https", R_CONTENT_RAWLINK, ">"),  "rawlink", ["link"] ],
+    [ ("<", R_EMAIL, ">"), "email", [] ],
+    [ ("<", R_CONTENT_RAWLINK, ">"),  "rawlink", [] ],
     [ ("**", R_CONTENT_NO_WSPACE, "**"), "strong", [] ],
     [ ("__", R_CONTENT_NO_WSPACE, "__"), "strong", [] ],
     [ ("**", r"(?P<content>.*?)", "**"), "strong", [] ],
@@ -43,18 +47,18 @@ CASES_LIST = [
     [ ("--", R_CONTENT, "--"), "del", [] ],
     [ ("==", R_CONTENT, "=="), "mark", [] ],
     [ ("``", R_CONTENT, "``"), "samp", [] ],
-    [ (":", R_CONTENT_EMOJI, ":"), "IEmoji", [] ],
+    [ (":", R_CONTENT_EMOJI, ":"), "emoji", [] ],
     [ ("_", R_CONTENT_NO_WSPACE, "_"),  "em", [] ],
     [ ("*", r"(?P<content>[^*]+?)", "*"),  "em", [] ],
     [ ("_", r"(?P<content>[^_]+?)", "_"),  "em", [] ],
-    [ ("![", R_CONTENT_INLINE_IMAGE, ")"), "IImage", ["props", "src"] ],
-    [ ("[^", R_CONTENT_FOOTNOTE, "]"), "IFootnote", ["index"] ],
-    [ ("[", R_CONTENT_LINK,")"),  "ILink", ["to", "title"] ],
+    #[ ("![", R_CONTENT_INLINE_IMAGE, ")"), "image", ["props", "src"] ],
+    [ ("[^", R_CONTENT_FOOTNOTE, "]"), "footnote", [] ],
+    [ ("[", R_CONTENT_LINK,")"),  "link", ["to", "title"] ],
     [ ("^", R_CONTENT_NO_WSPACE, "^"), "sup", [] ],
-    #[ ("~", R_CONTENT_NO_WSPACE, "~"), "sup", [] ],
     [ ("~", r"(?P<content>[^~]+?)", "~"), "sub", [] ],
-    [ ("$", R_CONTENT_NO_WSPACE, "$"),  "IMath", [] ],
+    [ ("$", R_CONTENT_NO_WSPACE, "$"),  "math", [] ],
 ]
+
 
 class Pattern:
     """
@@ -137,7 +141,6 @@ def convert_text(cases:list=[], line:str="", level:list=[]):
         before, middle, after = match.group("before"), match.group("content"), match.group("after")
         if len(before):
             level.append({"tag": "text", "data": before})
-            #level.append(before)
         if len(middle):
             if boundary.props:
                 props = {}
@@ -155,7 +158,8 @@ def convert_text(cases:list=[], line:str="", level:list=[]):
                             props["data"] = rawprop
                     else:
                         props[prop] = match.group(prop)
-                level.append({"tag": boundary.tag, "props": props, "data": middle})
+                #level.append({"tag": boundary.tag, "props": props, "data": middle})
+                level.append({"tag": boundary.tag, "data": props})
             else:
                 level.append({"tag": boundary.tag, "data": middle})
         if len(after):
@@ -176,6 +180,9 @@ def convert_text(cases:list=[], line:str="", level:list=[]):
 CASES = build_patterns(CASES_LIST)
 
 def inline_block_parser(block:dict={}, counter=0) -> dict:
+    if isinstance(block["data"], dict):
+        return
+    
     block["data"] = convert_text(CASES, block["data"], [])
     counter+=1
 

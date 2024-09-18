@@ -13,9 +13,9 @@ class BlockquotePattern(BasePattern):
         return "".join(lines)
     
     def revert(self, *args, **kwargs) -> str:
-        block = super().revert(*args, **kwargs)
+        super().revert(*args, **kwargs)
         
-        data = block.get("data", "")
+        data = self.block.get("data", "")
         data = [f"> {_}" for _ in data.splitlines()]
         
         ret = []

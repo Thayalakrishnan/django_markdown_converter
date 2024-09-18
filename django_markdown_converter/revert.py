@@ -13,6 +13,6 @@ def Revert(blocks:list=[]) -> str:
         print(f"type {block['type']}")
         current_block = PATTERN_LOOKUP[block["type"]].revert(block)
         stringlist.append(current_block)
-        
-    return stringlist
+    
+    return "\n".join(stringlist)
 

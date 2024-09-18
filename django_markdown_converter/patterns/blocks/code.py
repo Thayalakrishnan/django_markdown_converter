@@ -58,13 +58,13 @@ class CodePattern(BasePattern):
     
 
     def revert(self, *args, **kwargs) -> str:
-        block = super().revert(*args, **kwargs)
+        super().revert(*args, **kwargs)
         
-        props = block.get("props", {})
+        props = self.block.get("props", {})
         language = props.get("language", '')
         
         middle = []
-        data = block.get("data", "")
+        data = self.block.get("data", "")
         for row in data:
             line = "".join(list(map(lambda x: x[1], row)))
             middle.append(line)
