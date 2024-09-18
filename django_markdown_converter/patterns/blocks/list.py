@@ -1,5 +1,4 @@
 import re
-from textwrap import dedent
 from django_markdown_converter.patterns.classes.base import BasePattern
 
 class ListPattern(BasePattern):
@@ -16,11 +15,6 @@ class ListPattern(BasePattern):
         pass
 
 
-def FormatContent(fresh:str="", amount:int=1) -> str:
-    fresh = fresh.strip().split("\n")
-    fresh = [_.lstrip(" "*amount) for _ in fresh]
-    return "\n".join(fresh)
-
 def FormatItem(yeet:dict=()):
     """
     TODO: use the level to set the amount of padding to remove 
@@ -28,12 +22,15 @@ def FormatItem(yeet:dict=()):
     type of list maybe
     """
     level = len(yeet["level"])
+    padding = level + len(yeet["marker"]) 
+    data = yeet["data"]
+    data = re.sub(pattern=f'^ {{{padding}}}', repl='', string=data, flags=re.MULTILINE) 
     return {
         "type": "item",
         "level": level,
         "marker": "ulist" if yeet["marker"] == "- " else "olist",
+        "data": data,
         "children": None,
-        "data": FormatContent(yeet["data"], level),
     }
 
 

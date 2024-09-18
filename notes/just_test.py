@@ -82,6 +82,16 @@ md = """- Item 1: line 1.
 """
 
 
+md = """
+- Item 1 line 1.
+  Item 1 line 2.
+  
+  Item 1 line 3.
+- Item 2 line 1.
+- Item 3 line 1.
+"""
+
+
 # %%
 import re
 from textwrap import dedent
@@ -104,7 +114,6 @@ def FormatItem(yeet:dict=()):
     
     level = len(yeet["level"])
     padding = level + len(yeet["marker"]) 
-    
     data = yeet["data"]
     data = re.sub(pattern=f'^ {{{padding}}}', repl='', string=data, flags=re.MULTILINE) 
     

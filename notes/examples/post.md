@@ -188,8 +188,8 @@ def CreateCounter(dataset, position):
 { blocktype="u list" }
 
 - Multiline Item 1, line 1.
-  Multiline Item 1, line 2
-   
+  Multiline Item 1, line 2.
+  
   Multiline Item 1, line 3 after double line break
 - Item 2
 - Item 3
@@ -201,7 +201,7 @@ def CreateCounter(dataset, position):
 - Item 3
     - Multiline Item 3, Subitem 1, line 1.
       Multiline Item 3, Subitem 1, line 2.
-       
+      
       Multiline Item 3, Subitem 1, line 3.
     - Indented Item 2
 - Item 4
