@@ -35,3 +35,15 @@ class MetaPattern(BasePattern):
         if kvs:
             return kvs
         return None
+
+    def revert(self, *args, **kwargs) -> str:
+        block = super().revert(*args, **kwargs)
+        
+        data = block.get("data", "")
+        middle = [f"{key}: {data[key]}" for key in data]
+        
+        ret = []
+        ret.append("---")
+        ret.extend(middle)
+        ret.append("---")
+        return "\n".join(ret)

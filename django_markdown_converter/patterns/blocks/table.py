@@ -13,6 +13,17 @@ class TablePattern(BasePattern):
             "header": get_row(self.match.group("header")),
             "body": get_rows(self.match.group("body")),
         }
+        
+    def revert(self, *args, **kwargs) -> str:
+        block = super().revert(*args, **kwargs)
+        
+        props = block.get("props", {})
+        data = block.get("data", "")
+        
+        ret = []
+        ret.append(f"")
+        ret.extend(data)
+        return "\n".join(ret)
     
     
 def get_row(line:str="") -> list:

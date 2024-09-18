@@ -56,3 +56,23 @@ class CodePattern(BasePattern):
             return format_code(code, language.strip())
         return format_code(code)
     
+
+    def revert(self, *args, **kwargs) -> str:
+        block = super().revert(*args, **kwargs)
+        
+        props = block.get("props", {})
+        language = props.get("language", '')
+        
+        middle = []
+        data = block.get("data", "")
+        for row in data:
+            line = "".join(list(map(lambda x: x[1], row)))
+            middle.append(line)
+    
+        ret = []
+        ret.append(f"```{language}")
+        ret.extend(middle)
+        ret.append(f"```")
+        ret.append("")
+        
+        return "\n".join(ret)

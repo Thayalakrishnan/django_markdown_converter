@@ -1,3 +1,18 @@
+## copyandpaste
+
+```python
+def revert(self, *args, **kwargs) -> str:
+    block = super().revert(*args, **kwargs)
+    
+    props = block.get("props", {})
+    data = block.get("data", "")
+    
+    ret = []
+    ret.extend(data)
+    ret.append(f"")
+    return "\n".join(ret)
+```
+
 ## General
 - props which aren't apart of the blocks personal props, should be processed and returned as 
   - attrs placed at the end of the block
@@ -170,6 +185,7 @@ out = "\n".join(ret)
 atype = f' {block["props"].get("type", "")}'.rstrip()
 title = f' {block["props"].get("title", "")}'.rstrip()
 data = block["data"]
+
 data = [f"    {_}" for _ in data.splitlines()]
 ret = []
 ret.append(f"!!!{atype}{title}")
@@ -180,7 +196,8 @@ out = "\n".join(ret)
 ### output
 
 ```md
-
+!!! note "Example Admonition"
+    Content for the admonition.
 ```
 
 ## TABLE_PATTERN
@@ -304,10 +321,6 @@ out = "\n".join(ret)
 ### transform
 
 ```python
-get_spaced_value = lambda val: f' {val} '.strip()
-get_rspaced_value = lambda val: f' {val}'.rstrip()
-get_lspaced_value = lambda val: f'{val} '.lstrip()
-
 create_image_lambda = lambda a, s, t: f"![{a}]({s} \"{t}\")" if len(t) else f"![{a}]({s})"
 
 alt = block["props"].get("alt", "")

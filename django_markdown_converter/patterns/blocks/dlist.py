@@ -15,3 +15,20 @@ class DListPattern(BasePattern):
             "term": term,
             "definition": definition,
         }
+
+
+    def revert(self, *args, **kwargs) -> str:
+        block = super().revert(*args, **kwargs)
+        
+        props = block.get("props", {})
+        data = block.get("data", "")
+        
+        term = data.get("term", "")
+        definition = data.get("definition", [""])
+        definition = [f": {_}" for _ in definition]
+        
+        ret = []
+        ret.append(term)
+        ret.extend(definition)
+        ret.append("")
+        return "\n".join(ret)
