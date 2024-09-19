@@ -49,9 +49,6 @@ class ParagraphPattern(BasePattern):
             ret.append("")
             return "\n".join(ret)
         else:
-            #p = [INLINE_TAG_LOOKUP[subblock["tag"]](subblock["data"]) for subblock in data]
-            #p.append("\n")
-            #return "".join(p)
             p = [loop_recursion(data)]
             p.append("\n")
             return "".join(p)

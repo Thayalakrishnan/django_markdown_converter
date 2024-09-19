@@ -44,10 +44,19 @@ def nested_blocks_parser() -> bool:
     content_was_processed = False
     for pattern in PATTERN_LIST:
         if pattern.hasNested:
+            ## loop over our patterns whicvh 
+            ## may have nested content
             for _ in pattern.bank:
+                ## if the content is already formated skip it
                 if isinstance(_["data"], list):
-                    continue   
+                    continue  
+                
+                ## convert the content into blocks
                 newdata = list(block_parser(process_input_content(_["data"])))
+                
+                #if pattern.blocktype == "olist" or pattern.blocktype == "ulist":
+                #    if len(newdata) == 1:
+                
                 if len(newdata):
                     _["data"] = newdata
                     content_was_processed = True

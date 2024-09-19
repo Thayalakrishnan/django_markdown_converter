@@ -1,7 +1,7 @@
-#%%
 from django_markdown_converter.revert import Revert
 from django_markdown_converter.patterns.blocks.paragraph import ParagraphPattern
-from django_markdown_converter.patterns.lookups import PARAGRAPH_PATTERN
+from django_markdown_converter.patterns.blocks.list import ListPattern
+from django_markdown_converter.patterns.lookups import PARAGRAPH_PATTERN, ULIST_PATTERN
 
 BLOCKS = [
     {
@@ -140,7 +140,58 @@ PBLOCK_NESTED = {
 }
 
 
-print(ParagraphPattern(PARAGRAPH_PATTERN).revert(PBLOCK_NESTED))
+#print(ParagraphPattern(PARAGRAPH_PATTERN).revert(PBLOCK_NESTED))
 
 
-# %%
+LBLOCK = {
+    "type": "ulist",
+    "props": {
+        "blocktype": "u list"
+    },
+    "data": [
+        {
+            "type": "item",
+            "data": [
+                {
+                    "type": "paragraph",
+                    "props": {},
+                    "data": "Item 1"
+                }
+            ]
+        },
+        {
+            "type": "item",
+            "data": [
+                {
+                    "type": "paragraph",
+                    "props": {},
+                    "data": "Item 2"
+                }
+            ]
+        },
+        {
+            "type": "item",
+            "data": [
+                {
+                    "type": "paragraph",
+                    "props": {},
+                    "data": "Item 3"
+                }
+            ]
+        },
+        {
+            "type": "item",
+            "data": [
+                {
+                    "type": "paragraph",
+                    "props": {},
+                    "data": "Item 4"
+                }
+            ]
+        }
+    ]
+}
+
+
+print(ListPattern(ULIST_PATTERN).revert(LBLOCK))
+
