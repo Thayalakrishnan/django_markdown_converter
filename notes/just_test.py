@@ -13,6 +13,21 @@ md = """- Item 1: line 1.
   - Item 3.2: line 1.
 - Item 4: line 1."""
 
+## multiline before starting a nested list
+md = """- Item 1: line 1.
+- Item 2: line 1.
+  Item 2: line 2.
+  Item 2: line 3.
+  - Item 2.1: line 1.
+  - Item 2.2: line 1.
+    Item 2.2: line 2.
+    Item 2.2: line 3.
+  - Item 2.3: line 1.
+- Item 3: line 1.
+  - Item 3.1: line 1.
+  - Item 3.2: line 1.
+- Item 4: line 1."""
+
 
 md = """- Item 1: line 1.
   Item 1: line 2.
@@ -56,32 +71,6 @@ md = """
 - Item 1.
 """
 
-md = """- Item 1: line 1.
-- Item 3: line 1.
-  - Item 3.1: line 1.
-    Item 3.1: line 2.
-    
-    ```python
-    for p in range(3):
-        print(p)
-    ```
-    
-    Item 3.1: line 3.
-  - Item 3.2: line 1.
-    - Item 3.2.1: line 1.
-    - Item 3.2.2: line 1.
-      Item 3.2.2: line 2.
-      
-      ```python
-      for p in range(3):
-          print(p)
-      ```
-      
-      Item 3.2.2: line 3.
-- Item 4: line 1.
-"""
-
-
 md = """
 - Item 1 line 1.
   Item 1 line 2.
@@ -91,6 +80,18 @@ md = """
 - Item 3 line 1.
 """
 
+
+#%%
+
+
+md = """- Item 1: line 1.
+- Item 2: line 1.
+  - Item 2.1: line 1.
+  - Item 2.2: line 1.
+    - Item 2.2.1: line 1.
+    - Item 2.2.2: line 1.
+- Item 3: line 1.
+"""
 
 # %%
 import re
@@ -109,9 +110,15 @@ def FormatItem(yeet:dict=()):
         "type": "item",
         "level": level,
         "marker": "ulist" if yeet["marker"] == "- " else "olist",
-        "data": data,
-        "children": None,
+        "data": [{"type": "text", "data": data}],
     }
+
+
+def CreateListBlock(marker):
+  return {
+      "type": marker,
+      "data": [],
+  }
 
 
 def ConvertListIntoItems(source:str=""):
@@ -124,56 +131,73 @@ def AddItemToList(parent, child):
     parent.append(child)
 
 
-def ConvertList(items, bank):
+def ConvertList(source, bank):
     """
     """
+    items = ConvertListIntoItems(source)
     stack = []
-
     root = {
-        "level": -2,
+        "level": 0,
         "type": "root",
-        "props": {},
-        "children": None
+        "data": []
     }
-    cur_parent = {"children": [root]}
-    cur_lvl = -2
+    
+    cur_parent = root
+    cur_lvl = 0
 
-    for next_item in items:
-        item = FormatItem(next_item.groupdict())
-        bank.append(item)
+    for item in items:
+        current_item = FormatItem(item.groupdict())
+        bank.append(current_item)
 
         while True:
-            if item["level"] < cur_lvl:
+            if current_item["level"] < cur_lvl:
                 cur_parent, cur_lvl = stack.pop()
-            elif item["level"] > cur_lvl:
+            elif current_item["level"] > cur_lvl:
                 """
                 if the current items level is bigger than the
                 the current level, it is nested under the current item
                 """
                 stack.append((cur_parent, cur_lvl))
-                cur_lvl = item["level"]
-                cur_parent = cur_parent["children"][-1]
-
-                # if there are no current children, add a list
-                if not cur_parent["children"]:
-                    cur_parent["type"] = item["marker"]
-                    cur_parent["children"] = []
+                
+                #cur_parent = cur_parent["data"][-1]
+                cur_lvl = current_item["level"]
+                if cur_parent["data"]:
+                  previous_item = cur_parent["data"][-1]
+                else:
+                  previous_item = bank[-1]
+                
+                # create new list block using the current item
+                newlistblock = CreateListBlock(current_item["marker"])
+                #current_item["data"].append(newlistblock)
+                #cur_parent = item["data"]
+                previous_item["data"].append(newlistblock)
+                cur_parent = newlistblock
+                ## if there are no current children, add a list
+                #if not cur_parent["children"]:
+                #    cur_parent["type"] = current_item["marker"]
+                #    cur_parent["children"] = []
             else:
-                AddItemToList(cur_parent["children"], item)
+                cur_parent["data"].append(current_item)
+                #AddItemToList(cur_parent["children"], current_item)
                 break
     del root["level"]
+    
     for _ in bank:
-        if "children" in _ and not _["children"]:
-            del _["children"]
-    return root["children"]
+      if "marker" in _:
+        del _["marker"]
+      if "level" in _:
+        del _["level"]
+      #if "children" in _ and not _["children"]:
+      #    del _["children"]
+    return root
+mybank = []
+ret = ConvertList(md, mybank)
 
+print(ret)
 
-method2, b = ConvertList(md)
-
-print(method2)
-
-for _ in b:
-    print(_)
+#for _ in mybank:
+#    print(_)
+    
 print("Done!")
 
 # %%
