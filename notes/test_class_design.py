@@ -25,7 +25,6 @@ class Pattern:
     def __repr__(self) -> str:
         return self.name
     
-    #@property
     @classmethod
     def get_instances(cls):
         return list(cls.LOOKUP.values())
@@ -35,6 +34,7 @@ class Pattern:
         instances = cls.LOOKUP.values()
         for _ in instances:
             _.create_block()
+
 
 class TablePattern(Pattern):
     def __init__(self) -> None:
@@ -48,16 +48,19 @@ class ListPattern(Pattern):
     def __init__(self) -> None:
         super().__init__("list")
 
+class ParagraphPattern(Pattern):
+    def __init__(self) -> None:
+        super().__init__("paragraph")
+
 
 TablePattern()
-#CodePattern()
+CodePattern()
+ListPattern()
+ParagraphPattern()
 
 #print(code_pat.BANK)
 print(Pattern.BLOCKS)
 print(Pattern.get_instances())
-
-#for _ in Pattern.get_instances():
-#    print(_.__mro__)
 
 print(Pattern.LOOKUP)
 print(Pattern.__subclasses__())
@@ -66,4 +69,105 @@ print(Pattern.BLOCKS)
 
 
 
+# %%
+"""
+i want to see if its okay to edit a string that is stored in list and return
+an object in its place in that list. 
+"""
+
+blocklist = [
+    {
+        "type": "paragraph",
+        "props": {},
+        "data": [
+            "this is some raw stuff in this paragraph. ",
+            {
+                "tag": "text",
+                "data": "Pargraph 1 "
+            },
+            {
+                "tag": "strong",
+                "data": "with"
+            },
+            {
+                "tag": "text",
+                "data": " inline markup!"
+            },
+            "this is some more raw stuff at the end. ",
+        ]
+    }
+]
+
+print("stage 1")
+for block in blocklist:
+    subblockdata = block["data"]
+    for subb in range(len(subblockdata)):
+        print(subblockdata[subb])
+
+
+print("stage 2")
+for block in blocklist:
+    subblockdata = block["data"]
+    for subb in range(len(subblockdata)):
+        if isinstance(subblockdata[subb], str):
+            subblockdata[subb] = {"type": "text", "data": subblockdata[subb]}
+        
+print("stage 3")
+for block in blocklist:
+    subblockdata = block["data"]
+    for subb in range(len(subblockdata)):
+        print(subblockdata[subb])
+            
+
+print("done!")
+# %%
+"""
+i want to see if its okay to edit a string that is stored in list and return
+an object in its place in that list. 
+"""
+
+sentences = [
+    "sentence 1",
+    "sentence 2",
+    "sentence 3",
+    "sentence 4",
+]
+
+blocklist = [
+    {
+        "type": "paragraph",
+        "props": {},
+        "data": sentences[0]
+    },
+    {
+        "type": "paragraph",
+        "props": {},
+        "data": sentences[1]
+    },
+    {
+        "type": "paragraph",
+        "props": {},
+        "data": sentences[2]
+    },
+    {
+        "type": "paragraph",
+        "props": {},
+        "data": sentences[3]
+    },
+]
+
+
+print("stage 1")
+for sentence in sentences:
+    print(sentences)
+
+print("stage 2")
+for index, sentence in enumerate(sentences):
+    sentences[index] = {"data": sentence + " yeet!"}
+        
+print("stage 3")
+for sentence in sentences:
+    print(sentences)
+
+print("done!")
 # %%

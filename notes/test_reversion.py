@@ -192,6 +192,21 @@ LBLOCK = {
     ]
 }
 
+LBLOCK = """- Item 1: line 1.
+- Item 2: line 1.
+    - Item 2.1: line 1.
+        - Item 2.1.1: line 1.
+    - Item 2.2: line 1.
+- Item 3: line 1.
+    - Item 3.1: line 1.
+        - Item 3.1.1: line 1.
+    - Item 3.2: line 1.
+- Item 4: line 1.
+"""
 
-print(ListPattern(ULIST_PATTERN).revert(LBLOCK))
+
+converted = ListPattern(ULIST_PATTERN).convert(LBLOCK)
+
+print(converted)
+
 

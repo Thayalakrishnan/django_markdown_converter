@@ -4,6 +4,8 @@ from django_markdown_converter.helpers.processors import process_props
 
 class BasePattern:
     
+    PRIVATE_BANK = []
+    
     def __init__(self, pattern_object:dict={}, *args, **kwargs) -> None:
         self.blocktype = pattern_object["type"]
         
@@ -47,7 +49,7 @@ class BasePattern:
         """
         
         """
-        print(f"converting: {self.blocktype}")
+        #print(f"converting: {self.blocktype}")
         self.get_match(content)
         
         if not self.match:
@@ -59,10 +61,15 @@ class BasePattern:
             "data": self.get_data()
         }
         self.update_props()
-        
+        self.add_to_bank()
+        #if self.hasNested:
+        #    self.bank.append(self.block)
+        return self.block
+    
+    def add_to_bank(self, *args, **kwargs) -> None:
         if self.hasNested:
             self.bank.append(self.block)
-        return self.block
+            self.PRIVATE_BANK.append(self.block)
     
     def revert(self, block:dict={}, *args, **kwargs) -> str:
         self.block = block

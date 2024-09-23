@@ -1318,13 +1318,7 @@
             "blocktype": "blockquote",
             "cite": "www.google.com"
         },
-        "data": [
-            {
-                "type": "paragraph",
-                "props": {},
-                "data": "blockquote\nblockquote"
-            }
-        ]
+        "data": "blockquote\nblockquote\n"
     },
     {
         "type": "blockquote",
@@ -1332,24 +1326,7 @@
             "blocktype": "blockquote",
             "cite": "www.google.com"
         },
-        "data": [
-            {
-                "type": "paragraph",
-                "props": {},
-                "data": "Outside Quote"
-            },
-            {
-                "type": "blockquote",
-                "props": {},
-                "data": [
-                    {
-                        "type": "paragraph",
-                        "props": {},
-                        "data": "Inside Quote"
-                    }
-                ]
-            }
-        ]
+        "data": "Outside Quote\n\n> Inside Quote\n\n"
     },
     {
         "type": "blockquote",
@@ -1357,58 +1334,7 @@
             "blocktype": "blockquote",
             "cite": "www.google.com"
         },
-        "data": [
-            {
-                "type": "heading",
-                "props": {
-                    "blocktype": "heading",
-                    "level": 2
-                },
-                "data": "Blockquote heading"
-            },
-            {
-                "type": "paragraph",
-                "props": {},
-                "data": [
-                    {
-                        "tag": "text",
-                        "data": "A Paragraph is the default element. How about some "
-                    },
-                    {
-                        "tag": "strong",
-                        "data": "inline markdown"
-                    },
-                    {
-                        "tag": "text",
-                        "data": "?"
-                    }
-                ]
-            },
-            {
-                "type": "ulist",
-                "props": {},
-                "data": [
-                    {
-                        "type": "item",
-                        "data": [
-                            "list item 1\n"
-                        ]
-                    },
-                    {
-                        "type": "item",
-                        "data": [
-                            "list item 2\n"
-                        ]
-                    },
-                    {
-                        "type": "item",
-                        "data": [
-                            "list item 3\n"
-                        ]
-                    }
-                ]
-            }
-        ]
+        "data": "## Blockquote heading\n{ blocktype=\"heading\" }\n\nA Paragraph is the default element. How about some **inline markdown**?\n\n- list item 1\n- list item 2\n- list item 3\n"
     },
     {
         "type": "blockquote",
@@ -1416,82 +1342,7 @@
             "blocktype": "blockquote",
             "cite": "www.google.com"
         },
-        "data": [
-            {
-                "type": "blockquote",
-                "props": {},
-                "data": [
-                    {
-                        "type": "heading",
-                        "props": {
-                            "blocktype": "heading",
-                            "level": 2
-                        },
-                        "data": "Blockquote heading"
-                    },
-                    {
-                        "type": "paragraph",
-                        "props": {},
-                        "data": [
-                            {
-                                "tag": "text",
-                                "data": "A Paragraph is the default element. How about some "
-                            },
-                            {
-                                "tag": "strong",
-                                "data": "inline markdown"
-                            },
-                            {
-                                "tag": "text",
-                                "data": "?"
-                            }
-                        ]
-                    },
-                    {
-                        "type": "paragraph",
-                        "props": {},
-                        "data": [
-                            {
-                                "tag": "text",
-                                "data": "A second nested block in a blockquote with some "
-                            },
-                            {
-                                "tag": "strong",
-                                "data": "inline markdown"
-                            },
-                            {
-                                "tag": "text",
-                                "data": "?"
-                            }
-                        ]
-                    },
-                    {
-                        "type": "ulist",
-                        "props": {},
-                        "data": [
-                            {
-                                "type": "item",
-                                "data": [
-                                    "list item 1\n"
-                                ]
-                            },
-                            {
-                                "type": "item",
-                                "data": [
-                                    "list item 2\n"
-                                ]
-                            },
-                            {
-                                "type": "item",
-                                "data": [
-                                    "list item 3\n"
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]
+        "data": "\n> ## Blockquote heading\n> { blocktype=\"heading\" }\n>\n> A Paragraph is the default element. How about some **inline markdown**?\n>\n> A second nested block in a blockquote with some **inline markdown**?\n>\n> - list item 1\n> - list item 2\n> - list item 3\n\n"
     },
     {
         "type": "heading",
@@ -1949,13 +1800,7 @@
             "type": "note",
             "title": "Note Title"
         },
-        "data": [
-            {
-                "type": "paragraph",
-                "props": {},
-                "data": "this is an admonition."
-            }
-        ]
+        "data": "this is an admonition.\n"
     },
     {
         "type": "admonition",
@@ -1964,18 +1809,7 @@
             "type": "tip",
             "title": "Tip Title"
         },
-        "data": [
-            {
-                "type": "paragraph",
-                "props": {},
-                "data": "for tips and tricks."
-            },
-            {
-                "type": "paragraph",
-                "props": {},
-                "data": "multiline admontion."
-            }
-        ]
+        "data": "for tips and tricks.\n\nmultiline admontion.\n"
     },
     {
         "type": "admonition",
@@ -1984,94 +1818,7 @@
             "type": "tip",
             "title": "Tip Title"
         },
-        "data": [
-            {
-                "type": "paragraph",
-                "props": {},
-                "data": "for tips and tricks."
-            },
-            {
-                "type": "paragraph",
-                "props": {},
-                "data": "multiline admontion."
-            },
-            {
-                "type": "code",
-                "props": {
-                    "language": "python"
-                },
-                "data": [
-                    [
-                        [
-                            "k",
-                            "for"
-                        ],
-                        [
-                            "w",
-                            " "
-                        ],
-                        [
-                            "n",
-                            "i"
-                        ],
-                        [
-                            "w",
-                            " "
-                        ],
-                        [
-                            "ow",
-                            "in"
-                        ],
-                        [
-                            "w",
-                            " "
-                        ],
-                        [
-                            "nb",
-                            "range"
-                        ],
-                        [
-                            "p",
-                            "("
-                        ],
-                        [
-                            "mi",
-                            "5"
-                        ],
-                        [
-                            "p",
-                            ")"
-                        ],
-                        [
-                            "p",
-                            ":"
-                        ]
-                    ],
-                    [
-                        [
-                            "w",
-                            "    "
-                        ],
-                        [
-                            "nb",
-                            "print"
-                        ],
-                        [
-                            "p",
-                            "("
-                        ],
-                        [
-                            "n",
-                            "i"
-                        ],
-                        [
-                            "p",
-                            ")"
-                        ]
-                    ]
-                ]
-            }
-        ]
+        "data": "for tips and tricks.\n\nmultiline admontion.\n\n```python\nfor i in range(5):\n    print(i)\n```\n"
     },
     {
         "type": "admonition",
@@ -2080,13 +1827,7 @@
             "type": "top",
             "title": "question"
         },
-        "data": [
-            {
-                "type": "paragraph",
-                "props": {},
-                "data": "further ideas, further links etc."
-            }
-        ]
+        "data": "further ideas, further links etc.\n"
     },
     {
         "type": "heading",
@@ -2148,13 +1889,7 @@
             "blocktype": "footnote",
             "index": "1"
         },
-        "data": [
-            {
-                "type": "paragraph",
-                "props": {},
-                "data": "Footnote 1."
-            }
-        ]
+        "data": "Footnote 1.\n"
     },
     {
         "type": "footnote",
@@ -2162,31 +1897,7 @@
             "blocktype": "footnote",
             "index": "2"
         },
-        "data": [
-            {
-                "type": "paragraph",
-                "props": {},
-                "data": [
-                    {
-                        "tag": "text",
-                        "data": "Footnote 2 and some inline "
-                    },
-                    {
-                        "tag": "code",
-                        "data": "code"
-                    },
-                    {
-                        "tag": "text",
-                        "data": "."
-                    }
-                ]
-            },
-            {
-                "type": "paragraph",
-                "props": {},
-                "data": "This is a multiline footnote. It also does not matter where we put the footnote definition!"
-            }
-        ]
+        "data": "Footnote 2 and some inline `code`.\nIf we indent the paragraph we cant put as much content here as we would like.\n\nThis is a multiline footnote. It also does not matter where we put the footnote definition!\n"
     },
     {
         "type": "footnote",
@@ -2194,31 +1905,7 @@
             "blocktype": "footnote",
             "index": "3"
         },
-        "data": [
-            {
-                "type": "paragraph",
-                "props": {},
-                "data": [
-                    {
-                        "tag": "text",
-                        "data": "Footnote 3 and some inline "
-                    },
-                    {
-                        "tag": "code",
-                        "data": "code"
-                    },
-                    {
-                        "tag": "text",
-                        "data": "."
-                    }
-                ]
-            },
-            {
-                "type": "paragraph",
-                "props": {},
-                "data": "This is a multiline footnote. It also does not matter where we put the footnote definition!"
-            }
-        ]
+        "data": "Footnote 3 and some inline `code`.\nIf we indent the paragraph we cant put as much content here as we would like.\n\nThis is a multiline footnote. It also does not matter where we put the footnote definition!\n"
     },
     {
         "type": "heading",

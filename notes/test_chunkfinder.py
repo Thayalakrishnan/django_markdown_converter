@@ -23,8 +23,8 @@ for block in block_parser(raw_chunk):
     json_root_nu.append(block)
 
 
-while nested_blocks_parser():
-    continue
+#while nested_blocks_parser():
+#    continue
 #nested_blocks_parser()
 
 #write_to_file = "notes/examples/post_output"

@@ -5,11 +5,16 @@ class ListPattern(BasePattern):
     """
     olist, ulist
     """
+    def __init__(self, pattern_object: dict = ..., *args, **kwargs) -> None:
+        super().__init__(pattern_object, *args, **kwargs)
+        
+        self.item_bank = []
+    
     def get_match(self, content):
         self.match = ConvertListIntoItems(content)
 
     def get_data(self) -> dict:
-        return ConvertList(self.match, self.bank)
+        return self.convert_list(self.match)
 
     def update_props(self):
         pass
@@ -54,45 +59,112 @@ class ListPattern(BasePattern):
         ret.append("")
         return "\n".join(ret)
 
-#####
-##### New
-#####
+    def add_to_bank(self, *args, **kwargs) -> None:
+        pass
+
+    def create_list_item(self, yeet:dict=()):
+        """
+        TODO: use the level to set the amount of padding to remove
+        from each line. it should be level + 1 i think, depending on
+        type of list maybe
+        """
+        marker = yeet["marker"]
+        level = len(yeet["level"])
+        padding = level + len(marker)
+        # the triple curly braces translates f'^ {{{padding}}}' --> f'^ {4}' for padding = 4
+        data = re.sub(pattern=f'^ {{{padding}}}', repl='', string=yeet["data"], flags=re.MULTILINE)
+        #data = create_text_item(text)
+        #bank.append(data)
+        new_item = {
+            "type": "item",
+            "level": level,
+            "marker": DetermineListType(marker),
+            "data": self.create_text_item(data),
+        }
+        self.bank.append(new_item)
+        return new_item
+
+    def create_text_item(self, text):
+        self.item_bank.append([text])
+        return self.item_bank[len(self.item_bank) - 1]
+    
+    def create_list_block(self, marker):
+        return {
+            "type": marker,
+            "data": [],
+        }
+
+    def convert_list(self, items):
+        """
+        the way nested lists are rendered is by nesting them 
+        under an item of the parent list
+        our lists are mainly made up of items, lists and text blocks.
+        (they are also comprised of other nested block elements)
+        
+        - to convert our lists, we need to iterate over the items and determine 
+        the level of the item
+        - if the current item has a larger level then the previous item,
+        the current item should be nested under the previous item
+        - so we create a new list block based of the current item
+        - we then need to grab the previous item and place the new list block
+        as as a child under the previous item
+        """
+        stack = []
+        root = {
+            "level": 0,
+            "type": "root",
+            "data": []
+        }
+        
+        cur_parent = root
+        cur_lvl = 0
+
+        for item in items:
+            current_item = self.create_list_item(item.groupdict())
+
+            while True:
+                if current_item["level"] < cur_lvl:
+                    cur_parent, cur_lvl = stack.pop()
+                elif current_item["level"] > cur_lvl:
+                    """
+                    if the current items level is bigger than the
+                    the current level, it is nested under the current item
+                    
+                    the stack holds the reference to the parent items
+                    note: parent items will only ever reference an item that 
+                    can hold nested list items
+                    """
+                    # add the current level and the current parent to the stack
+                    stack.append((cur_parent, cur_lvl))
+                    
+                    # create new list block using the current item
+                    newlistblock = self.create_list_block(current_item["marker"])
+                    
+                    # our new parent needs to be the child of the previous item
+                    previous_item = cur_parent["data"][-1]
+                    
+                    # add the new list block as a child of the previous item
+                    previous_item["data"].append(newlistblock)
+                    
+                    # make the new list block the parent
+                    cur_parent = newlistblock
+                    
+                    # our new list level is created from the the current item
+                    cur_lvl = current_item["level"]
+                else:
+                    cur_parent["data"].append(current_item)
+                    break
+        
+        ## format our final output using the bank
+        FormatList(self.bank)
+        
+        #for _ in bank:
+        return root["data"]
+
+
 
 def DetermineListType(marker):
     return "ulist" if marker == "- " else "olist"
-
-def CreateListItem(yeet:dict=(), bank:list=[]):
-    """
-    TODO: use the level to set the amount of padding to remove
-    from each line. it should be level + 1 i think, depending on
-    type of list maybe
-    """
-    marker = yeet["marker"]
-    level = len(yeet["level"])
-    padding = level + len(marker)
-    # the triple curly braces translates f'^ {{{padding}}}' --> f'^ {4}' for padding = 4
-    data = re.sub(pattern=f'^ {{{padding}}}', repl='', string=yeet["data"], flags=re.MULTILINE)
-    #data = CreateTextItem(text)
-    #bank.append(data)
-    return {
-        "type": "item",
-        "level": level,
-        "marker": DetermineListType(marker),
-        "data": [data],
-    }
-
-
-def CreateTextItem(text):
-  return {
-      "type": "text",
-      "data": text,
-  }
-  
-def CreateListBlock(marker):
-  return {
-      "type": marker,
-      "data": [],
-  }
 
 def ConvertListIntoItems(source:str=""):
     lineitempattern = re.compile(r'(?P<level>^\s*?)(?P<marker>(?:- )|(?:\d+\. ))(?P<data>(?:.*?(?=^\s*?((- )|(\d+\. ))))|(?:.*?$\n?))', re.MULTILINE | re.DOTALL)
@@ -104,73 +176,3 @@ def FormatList(lst):
         del _["marker"]
       if "level" in _:
         del _["level"]
-
-def ConvertList(items, bank):
-    """
-    the way nested lists are rendered is by nesting them 
-    under an item of the parent list
-    our lists are mainly made up of items, lists and text blocks.
-    (they are also comprised of other nested block elements)
-    
-    - to convert our lists, we need to iterate over the items and determine 
-    the level of the item
-    - if the current item has a larger level then the previous item,
-    the current item should be nested under the previous item
-    - so we create a new list block based of the current item
-    - we then need to grab the previous item and place the new list block
-    as as a child under the previous item
-    """
-    #items = ConvertListIntoItems(source)
-    stack = []
-    root = {
-        "level": 0,
-        "type": "root",
-        "data": []
-    }
-    
-    cur_parent = root
-    cur_lvl = 0
-
-    for item in items:
-        current_item = CreateListItem(item.groupdict(), bank)
-        bank.append(current_item)
-
-        while True:
-            if current_item["level"] < cur_lvl:
-                cur_parent, cur_lvl = stack.pop()
-            elif current_item["level"] > cur_lvl:
-                """
-                if the current items level is bigger than the
-                the current level, it is nested under the current item
-                
-                the stack holds the reference to the parent items
-                note: parent items will only ever reference an item that 
-                can hold nested list items
-                """
-                # add the current level and the current parent to the stack
-                stack.append((cur_parent, cur_lvl))
-                
-                # create new list block using the current item
-                newlistblock = CreateListBlock(current_item["marker"])
-                
-                # our new parent needs to be the child of the previous item
-                previous_item = cur_parent["data"][-1]
-                
-                # add the new list block as a child of the previous item
-                previous_item["data"].append(newlistblock)
-                
-                # make the new list block the parent
-                cur_parent = newlistblock
-                
-                # our new list level is created from the the current item
-                cur_lvl = current_item["level"]
-            else:
-                cur_parent["data"].append(current_item)
-                break
-    
-    ## format our final output using the bank
-    FormatList(bank)
-    
-    #for _ in bank:
-    print(root["data"])
-    return root["data"]
