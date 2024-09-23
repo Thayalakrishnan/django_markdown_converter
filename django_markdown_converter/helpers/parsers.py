@@ -51,6 +51,9 @@ def nested_blocks_parser() -> bool:
                 if isinstance(_["data"], list):
                     continue  
                 
+                #if isinstance(_["data"], dict):
+                #    continue  
+                
                 ## convert the content into blocks
                 newdata = list(block_parser(process_input_content(_["data"])))
                 
