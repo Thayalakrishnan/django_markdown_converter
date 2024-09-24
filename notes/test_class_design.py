@@ -1,76 +1,5 @@
 # %%
 """
-see if we can add the instance creations to a shared bank
-so that we can auto keep track of all the patterns
-that have been subclasses on creation
-"""
-
-# %%
-
-class Pattern:
-    BLOCKS = []
-    LOOKUP = {}
-    
-    def __init__(self, name:str="") -> None:
-        self.name = name
-        self.count = 0
-        self.LOOKUP.update({self.name: self})
-    
-    def create_block(self):
-        self.count+=1
-        block = {"type": self.name, "index": self.count}
-        self.BLOCKS.append(block)
-        return block
-
-    def __repr__(self) -> str:
-        return self.name
-    
-    @classmethod
-    def get_instances(cls):
-        return list(cls.LOOKUP.values())
-
-    @classmethod
-    def create_blocks(cls):
-        instances = cls.LOOKUP.values()
-        for _ in instances:
-            _.create_block()
-
-
-class TablePattern(Pattern):
-    def __init__(self) -> None:
-        super().__init__("table")
-
-class CodePattern(Pattern):
-    def __init__(self) -> None:
-        super().__init__("code")
-
-class ListPattern(Pattern):
-    def __init__(self) -> None:
-        super().__init__("list")
-
-class ParagraphPattern(Pattern):
-    def __init__(self) -> None:
-        super().__init__("paragraph")
-
-
-TablePattern()
-CodePattern()
-ListPattern()
-ParagraphPattern()
-
-#print(code_pat.BANK)
-print(Pattern.BLOCKS)
-print(Pattern.get_instances())
-
-print(Pattern.LOOKUP)
-print(Pattern.__subclasses__())
-Pattern.create_blocks()
-print(Pattern.BLOCKS)
-
-
-
-# %%
-"""
 i want to see if its okay to edit a string that is stored in list and return
 an object in its place in that list. 
 """
@@ -118,7 +47,6 @@ for block in blocklist:
     for subb in range(len(subblockdata)):
         print(subblockdata[subb])
             
-
 print("done!")
 # %%
 """
@@ -170,4 +98,71 @@ for sentence in sentences:
     print(sentences)
 
 print("done!")
+# %%
+
+
+
+# %%
+"""
+see if we can add the instance creations to a shared bank
+so that we can auto keep track of all the patterns
+that have been subclasses on creation
+"""
+
+# %%
+class Pattern:
+    
+    def __new__(cls):
+        print("New Pattern")
+        return super().__new__(cls)
+    
+    def __init__(self, name:str="") -> None:
+        self.name = name
+        self.count = 0
+    
+    def create_block(self):
+        self.count+=1
+        block = {"type": self.name, "index": self.count}
+        self.BLOCKS.append(block)
+        return block
+
+    def __repr__(self) -> str:
+        return self.name
+
+
+class TablePattern(Pattern):
+    def __init__(self) -> None:
+        super().__init__("table")
+
+class CodePattern(Pattern):
+    def __init__(self) -> None:
+        super().__init__("code")
+
+class ListPattern(Pattern):
+    def __init__(self) -> None:
+        super().__init__("list")
+
+class ParagraphPattern(Pattern):
+    def __init__(self) -> None:
+        super().__init__("paragraph")
+
+
+class Manager:
+    BLOCKS = []
+    LOOKUP = {}
+    
+    def __new__(cls):
+        print("New Manager")
+        return super().__new__(cls)
+    
+    def __init__(self) -> None:
+        for pattern in Pattern.__subclasses__():
+            inst = pattern()
+            self.LOOKUP.update({str(inst): inst})
+
+
+#print(code_pat.BANK)
+#Pattern()
+pat = Manager()
+print(pat.LOOKUP)
 # %%

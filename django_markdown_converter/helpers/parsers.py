@@ -1,7 +1,6 @@
 from django_markdown_converter.patterns.generic import BLOCK_PATTERN
-from django_markdown_converter.helpers.processors import excise_props, process_input_content
-from django_markdown_converter.patterns.lookups import PATTERN_LIST, PATTERN_LOOKUP
-from django_markdown_converter.patterns.classes.base import BasePattern
+from django_markdown_converter.helpers.processors import process_input_content
+from django_markdown_converter.patterns.lookups import PATTERN_LIST
 
 
 def block_generator(content:str=""):
@@ -43,9 +42,6 @@ def nested_blocks_parser() -> bool:
     """
     """
     content_was_processed = False
-    
-    for _ in BasePattern.PRIVATE_BANK:
-        print(_["type"])
     
     for pattern in PATTERN_LIST:
         if pattern.hasNested:

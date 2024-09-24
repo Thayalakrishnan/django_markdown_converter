@@ -1,5 +1,5 @@
 from django_markdown_converter.blockify import Blockify
-from django_markdown_converter.helpers.helpers import ReadSourceFromFile, ReadJSONFromFile
+from django_markdown_converter.helpers.utility import ReadSourceFromFile, ReadJSONFromFile
 from pathlib import Path
 import os
 

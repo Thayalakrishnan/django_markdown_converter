@@ -1,4 +1,4 @@
-from django_markdown_converter.helpers.helpers import ReadSourceFromFile, WriteToMDFile, WriteJSONToFile
+from django_markdown_converter.helpers.utility import ReadSourceFromFile, WriteToMDFile, WriteJSONToFile
 from django_markdown_converter.helpers.processors import process_input_content, extract_meta_block
 from django_markdown_converter.helpers.parsers import block_parser, nested_blocks_parser
 

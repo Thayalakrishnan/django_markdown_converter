@@ -114,7 +114,7 @@ class ListPattern(BasePattern):
         return new_item
 
     def create_text_item(self, text):
-        self.item_bank.append([text])
+        self.item_bank.append(self.lookup_convert(text))
         return self.item_bank[len(self.item_bank) - 1]
     
     def create_list_block(self, marker):

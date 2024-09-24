@@ -1,6 +1,6 @@
 # %%
 from django_markdown_converter.blockify import NewBlockify
-from django_markdown_converter.helpers.helpers import ReadSourceFromFile
+from django_markdown_converter.helpers.utility import ReadSourceFromFile
 from pathlib import Path
 import os
 

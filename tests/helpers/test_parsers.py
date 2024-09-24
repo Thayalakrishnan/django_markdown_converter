@@ -1,6 +1,6 @@
 import pytest
 from django_markdown_converter.helpers.parsers import block_parser
-from django_markdown_converter.helpers.helpers import ReadSourceFromFile
+from django_markdown_converter.helpers.utility import ReadSourceFromFile
 from django_markdown_converter.helpers.processors import process_input_content, extract_meta_block
 
 def extract_solution(path):

@@ -1,6 +1,7 @@
 import re
 
-from django_markdown_converter.helpers.processors import process_props
+from django_markdown_converter.helpers.processors import process_props, process_input_content
+from django_markdown_converter.helpers.parsers import block_parser
 
 class BasePattern:
     
@@ -8,6 +9,8 @@ class BasePattern:
     BLOCK_LOOKUP = {}
     
     def __init__(self, pattern_object:dict={}, *args, **kwargs) -> None:
+        
+        self.addToLookup = pattern_object["addToLookup"]
         
         if self.addToLookup:
             self.blocktype = pattern_object["type"]
@@ -18,7 +21,6 @@ class BasePattern:
             self.hasNested = pattern_object["hasNested"]
             self.hasInline = pattern_object["hasInlineMarkup"]
             
-            self.addToLookup = pattern_object["addToLookup"]
             
             self.props = pattern_object["props"]
             self.data = pattern_object["data"]
@@ -87,12 +89,16 @@ class BasePattern:
         return self.BLOCK_LOOKUP[block["type"]].revert(block)
     
     def lookup_convert(self, content:str="") -> dict:
-        return self.BLOCK_LOOKUP[block["type"]].convert(block)
+        return list(block_parser(process_input_content(content)))
 
 
 
+class PatternManager:
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
 
 
+        
 
 def dedent(data):
     data = data.split("\n")
