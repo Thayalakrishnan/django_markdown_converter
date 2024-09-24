@@ -1,6 +1,6 @@
 import pytest
 from django_markdown_converter.patterns.blocks.list import ListPattern
-from django_markdown_converter.patterns.lookups import ULIST_PATTERN
+from django_markdown_converter.patterns.data import ULIST_PATTERN
 
 
 """

@@ -1,6 +1,6 @@
 import pytest
 from django_markdown_converter.patterns.blocks.svg import SVGPattern
-from django_markdown_converter.patterns.lookups import SVG_PATTERN
+from django_markdown_converter.patterns.data import SVG_PATTERN
 
 
 def test_basic_conversion():

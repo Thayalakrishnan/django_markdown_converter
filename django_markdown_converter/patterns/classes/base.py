@@ -1,5 +1,4 @@
 import re
-#@from django_markdown_converter.patterns.blocks import *
 
 def process_input_content(content:str="")-> str:
     """
@@ -22,9 +21,7 @@ def process_input_content(content:str="")-> str:
 def process_props(props:str="")-> dict:
     """
     receive a string that represents key value pairs
-    we want to:
-    - extract those attributes
-    - return them as a dict
+    return them as a dict
     """
     PATTERN_RAW = r'(\S*?)\=(\".*?\")|(\S*?)\=(\'.*?\')'
     PATTERN_RAW = r'(\S*?)\=(?P<open>[\"\'])(.*?)(?P=open)'
@@ -43,11 +40,12 @@ class BasePattern:
     BLOCK_LIST = []
     BLOCK_PATTERN = re.compile(BLOCK_PATTERN_RAW, re.MULTILINE | re.DOTALL)
     
-    def __init__(self, name:str="", pattern_object:dict={}, *args, **kwargs) -> None:
+    def __init__(self, name:str="base", pattern_object:dict={}, *args, **kwargs) -> None:
+        
         self.name = name
-        print(f"initialising {name}")
         
         if pattern_object:
+            print(f"initialising {name}")
             self.addToLookup = pattern_object["addToLookup"]
             
             if self.addToLookup:
@@ -67,13 +65,12 @@ class BasePattern:
                 self.bank = []
                 self.BLOCK_LOOKUP.update({self.blocktype: self})
                 self.BLOCK_LIST.append(self)
-
+        else:
+            self.InitialiseClasses()
+    
     @classmethod
     def InitialiseClasses(cls) -> None:
-        print("InitialiseClasses")
-        print(cls.__subclasses__())
         for _ in cls.__subclasses__():
-            print(_)
             _()
     
     def __repr__(self) -> str:
@@ -103,14 +100,10 @@ class BasePattern:
         return {}
             
     def convert(self, content:str="", props:str="", *args, **kwargs) -> dict:
-        """
-        """
-        #print(f"converting: {self.blocktype}")
+        print(f"converting: {self.blocktype}")
         self.get_match(content)
-        
         if not self.match:
             return {}
-        
         self.block = {
             "type": self.blocktype,
             "props": self.get_props(props),
@@ -118,8 +111,6 @@ class BasePattern:
         }
         self.update_props()
         self.add_to_bank()
-        #if self.hasNested:
-        #    self.bank.append(self.block)
         return self.block
     
     def add_to_bank(self, *args, **kwargs) -> None:
@@ -136,7 +127,11 @@ class BasePattern:
         return self.BLOCK_LOOKUP[block["type"]].revert(block)
     
     def lookup_convert(self, content:str="") -> dict:
-        return list(self.block_parser(process_input_content(content)))
+        con = list(self.block_parser(process_input_content(content)))
+        if len(con) > 1:
+            print(con)
+            return con
+        return [content]
 
     @classmethod
     def block_generator(cls, content:str=""):
@@ -178,24 +173,17 @@ class BasePattern:
         """
         """
         content_was_processed = False
-        
         for pattern in cls.BLOCK_LIST:
             if pattern.hasNested:
                 
                 if pattern.blocktype == "ulist" or pattern.blocktype == "olist":
-                    #print("list")
                     for item in pattern.item_bank:
-                        #print(f"number of items: {len(item)}")
                         for _ in range(len(item)):
                             if isinstance(item[_], str):
-                                #print(item[_])
-                                #item[_] = item[_] + " yeet"
                                 newdata = list(cls.block_parser(process_input_content(item[_])))
                                 if len(newdata):
                                     item[_] = newdata
                                     content_was_processed = True
-                        #    continue  
-                        #print(item)
                 else:
                     ## loop over our patterns whicvh 
                     ## may have nested content
@@ -203,16 +191,12 @@ class BasePattern:
                         ## if the content is already formated skip it
                         if isinstance(_["data"], list):
                             continue  
-                        
                         #if isinstance(_["data"], dict):
                         #    continue  
-                        
                         ## convert the content into blocks
                         newdata = list(cls.block_parser(process_input_content(_["data"])))
-                        
                         #if pattern.blocktype == "olist" or pattern.blocktype == "ulist":
                         #    if len(newdata) == 1:
-                        
                         if len(newdata):
                             _["data"] = newdata
                             content_was_processed = True
@@ -220,25 +204,4 @@ class BasePattern:
 
 
 from django_markdown_converter.patterns.blocks import *
-
-class APattern(BasePattern):
-    """
-    props:
-    - type
-    - title
-    """
-    
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__("a", {
-            "type": "a",
-            "check": r'.*',
-            "pattern": r'(?P<data>.*)',
-            "flags": re.MULTILINE | re.DOTALL,
-            "addToLookup": True,
-            "hasNested": False,
-            "hasInlineMarkup": True,
-            "props": [],
-            "data": ["data"],
-        }, *args, **kwargs)
-
     

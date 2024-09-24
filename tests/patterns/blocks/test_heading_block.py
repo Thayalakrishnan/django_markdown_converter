@@ -1,6 +1,6 @@
 import pytest
 from django_markdown_converter.patterns.blocks.heading import HeadingPattern
-from django_markdown_converter.patterns.lookups import HEADING_PATTERN
+from django_markdown_converter.patterns.data import HEADING_PATTERN
 
 def test_basic_conversion():
     heading_type = "heading"

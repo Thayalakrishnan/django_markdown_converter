@@ -12,6 +12,6 @@ def Convert(source:str="") -> list:
     source = process_input_content(source)
     for block in BasePattern.block_parser(source):
         blocks.append(block)
-    #while nested_blocks_parser():
-    #    continue
+    while BasePattern.nested_blocks_parser():
+        continue
     return blocks

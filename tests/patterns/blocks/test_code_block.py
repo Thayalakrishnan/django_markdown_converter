@@ -1,6 +1,6 @@
 import pytest
 from django_markdown_converter.patterns.blocks.code import CodePattern
-from django_markdown_converter.patterns.lookups import CODE_PATTERN
+from django_markdown_converter.patterns.data import CODE_PATTERN
 
 
 def test_basic_conversion():

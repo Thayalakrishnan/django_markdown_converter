@@ -1342,38 +1342,182 @@
     {
         "type": "olist",
         "props": {
-            "blocktype": "o list",
-            "marker": "1.",
-            "content": "Item 1"
+            "blocktype": "o list"
         },
-        "data": {}
+        "data": [
+            {
+                "type": "item",
+                "data": [
+                    "Item 1\n"
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    "Item 2\n"
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    "Item 3\n"
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    "Item 4\n"
+                ]
+            }
+        ]
     },
     {
         "type": "olist",
         "props": {
-            "blocktype": "o list",
-            "marker": "1.",
-            "content": "Item 1"
+            "blocktype": "o list"
         },
-        "data": {}
+        "data": [
+            {
+                "type": "item",
+                "data": [
+                    "Item 1\n"
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    "Item 2\n"
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    "Item 3\n",
+                    {
+                        "type": "olist",
+                        "data": [
+                            {
+                                "type": "item",
+                                "data": [
+                                    "Indented Item 1\n"
+                                ]
+                            },
+                            {
+                                "type": "item",
+                                "data": [
+                                    "Indented Item 2\n"
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    "Item 4\n"
+                ]
+            }
+        ]
     },
     {
         "type": "olist",
         "props": {
-            "blocktype": "o list",
-            "marker": "1.",
-            "content": "Multiline Item 1, line 1."
+            "blocktype": "o list"
         },
-        "data": {}
+        "data": [
+            {
+                "type": "item",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Multiline Item 1, line 1.\nMultiline Item 1, line 2."
+                    },
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Multiline Item 1, line 3 after double line break."
+                    }
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    "Item 2\n"
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    "Item 3\n"
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    "Item 4\n"
+                ]
+            }
+        ]
     },
     {
         "type": "olist",
         "props": {
-            "blocktype": "o list",
-            "marker": "1.",
-            "content": "Item 1"
+            "blocktype": "o list"
         },
-        "data": {}
+        "data": [
+            {
+                "type": "item",
+                "data": [
+                    "Item 1\n"
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    "Item 2\n"
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    "Item 3\n",
+                    {
+                        "type": "olist",
+                        "data": [
+                            {
+                                "type": "item",
+                                "data": [
+                                    {
+                                        "type": "paragraph",
+                                        "props": {},
+                                        "data": "Multiline Item 3, Subitem 1, line 1.\nMultiline Item 3, Subitem 1, line 2."
+                                    },
+                                    {
+                                        "type": "paragraph",
+                                        "props": {},
+                                        "data": "Multiline Item 3, Subitem 1, line 3."
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "item",
+                                "data": [
+                                    "Indented Item 2\n"
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    "Item 4\n"
+                ]
+            }
+        ]
     },
     {
         "type": "heading",
@@ -1386,47 +1530,377 @@
     {
         "type": "ulist",
         "props": {
-            "blocktype": "u list",
-            "marker": "-",
-            "content": "Item 1"
+            "blocktype": "u list"
         },
-        "data": {}
+        "data": [
+            {
+                "type": "item",
+                "data": [
+                    "Item 1\n"
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    "Item 2\n"
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    "Item 3\n"
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    "Item 4\n"
+                ]
+            }
+        ]
     },
     {
         "type": "ulist",
         "props": {
-            "blocktype": "u list",
-            "marker": "-",
-            "content": "Item 1"
+            "blocktype": "u list"
         },
-        "data": {}
+        "data": [
+            {
+                "type": "item",
+                "data": [
+                    "Item 1\n"
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    "Item 2\n"
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    "Item 3\n",
+                    {
+                        "type": "ulist",
+                        "data": [
+                            {
+                                "type": "item",
+                                "data": [
+                                    "Indented Item 1\n"
+                                ]
+                            },
+                            {
+                                "type": "item",
+                                "data": [
+                                    "Indented Item 2\n"
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    "Item 4\n"
+                ]
+            }
+        ]
     },
     {
         "type": "ulist",
         "props": {
-            "blocktype": "u list",
-            "marker": "-",
-            "content": "Multiline Item 1, line 1."
+            "blocktype": "u list"
         },
-        "data": {}
+        "data": [
+            {
+                "type": "item",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Multiline Item 1, line 1.\nMultiline Item 1, line 2."
+                    },
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Multiline Item 1, line 3 after double line break"
+                    }
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    "Item 2\n"
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    "Item 3\n"
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    "Item 4\n"
+                ]
+            }
+        ]
     },
     {
         "type": "ulist",
         "props": {
-            "blocktype": "u list",
-            "marker": "-",
-            "content": "Item 1"
+            "blocktype": "u list"
         },
-        "data": {}
+        "data": [
+            {
+                "type": "item",
+                "data": [
+                    "Item 1\n"
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    "Item 2\n"
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    "Item 3\n",
+                    {
+                        "type": "ulist",
+                        "data": [
+                            {
+                                "type": "item",
+                                "data": [
+                                    {
+                                        "type": "paragraph",
+                                        "props": {},
+                                        "data": "Multiline Item 3, Subitem 1, line 1.\nMultiline Item 3, Subitem 1, line 2."
+                                    },
+                                    {
+                                        "type": "paragraph",
+                                        "props": {},
+                                        "data": "Multiline Item 3, Subitem 1, line 3."
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "item",
+                                "data": [
+                                    "Indented Item 2\n"
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    "Item 4\n"
+                ]
+            }
+        ]
     },
     {
         "type": "ulist",
         "props": {
-            "blocktype": "u list",
-            "marker": "-",
-            "content": "Item 1: line 1."
+            "blocktype": "u list"
         },
-        "data": {}
+        "data": [
+            {
+                "type": "item",
+                "data": [
+                    "Item 1: line 1.\nItem 1: line 2.\n"
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 2: line 1.\nItem 2: line 2."
+                    },
+                    {
+                        "type": "paragraph",
+                        "props": {},
+                        "data": "Item 2: line 3."
+                    },
+                    {
+                        "type": "ulist",
+                        "data": [
+                            {
+                                "type": "item",
+                                "data": [
+                                    "Item 2.1: line 1.\n"
+                                ]
+                            },
+                            {
+                                "type": "item",
+                                "data": [
+                                    "Item 2.2: line 1.\n"
+                                ]
+                            },
+                            {
+                                "type": "item",
+                                "data": [
+                                    "Item 2.3: line 1.\n",
+                                    {
+                                        "type": "olist",
+                                        "data": [
+                                            {
+                                                "type": "item",
+                                                "data": [
+                                                    "Item 2.3.1: line 1.\n"
+                                                ]
+                                            },
+                                            {
+                                                "type": "item",
+                                                "data": [
+                                                    "Item 2.3.2: line 1.\n"
+                                                ]
+                                            },
+                                            {
+                                                "type": "item",
+                                                "data": [
+                                                    "Item 2.3.3: line 1.\n"
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "item",
+                                "data": [
+                                    "Item 2.4: line 1.\n"
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    "Item 3: line 1.\n",
+                    {
+                        "type": "ulist",
+                        "data": [
+                            {
+                                "type": "item",
+                                "data": [
+                                    {
+                                        "type": "paragraph",
+                                        "props": {},
+                                        "data": "Item 3.1: line 1.\nItem 3.1: line 2."
+                                    },
+                                    {
+                                        "type": "code",
+                                        "props": {
+                                            "language": "python"
+                                        },
+                                        "data": [
+                                            [
+                                                [
+                                                    "k",
+                                                    "for"
+                                                ],
+                                                [
+                                                    "w",
+                                                    " "
+                                                ],
+                                                [
+                                                    "n",
+                                                    "p"
+                                                ],
+                                                [
+                                                    "w",
+                                                    " "
+                                                ],
+                                                [
+                                                    "ow",
+                                                    "in"
+                                                ],
+                                                [
+                                                    "w",
+                                                    " "
+                                                ],
+                                                [
+                                                    "nb",
+                                                    "range"
+                                                ],
+                                                [
+                                                    "p",
+                                                    "("
+                                                ],
+                                                [
+                                                    "mi",
+                                                    "3"
+                                                ],
+                                                [
+                                                    "p",
+                                                    ")"
+                                                ],
+                                                [
+                                                    "p",
+                                                    ":"
+                                                ]
+                                            ],
+                                            [
+                                                [
+                                                    "w",
+                                                    "    "
+                                                ],
+                                                [
+                                                    "nb",
+                                                    "print"
+                                                ],
+                                                [
+                                                    "p",
+                                                    "("
+                                                ],
+                                                [
+                                                    "n",
+                                                    "p"
+                                                ],
+                                                [
+                                                    "p",
+                                                    ")"
+                                                ]
+                                            ]
+                                        ]
+                                    },
+                                    {
+                                        "type": "paragraph",
+                                        "props": {},
+                                        "data": "Item 3.1: line 3."
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "item",
+                                "data": [
+                                    "Item 3.2: line 1.\n"
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "item",
+                "data": [
+                    "Item 4: line 1.\n"
+                ]
+            }
+        ]
     },
     {
         "type": "heading",

@@ -1,6 +1,6 @@
 import pytest
 from django_markdown_converter.patterns.blocks.meta import MetaPattern
-from django_markdown_converter.patterns.lookups import META_PATTERN
+from django_markdown_converter.patterns.data import META_PATTERN
 
 
 def test_basic_conversion():

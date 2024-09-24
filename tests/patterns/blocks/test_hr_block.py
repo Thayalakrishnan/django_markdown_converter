@@ -1,6 +1,6 @@
 import pytest
 from django_markdown_converter.patterns.blocks.hr import HRPattern
-from django_markdown_converter.patterns.lookups import HR_PATTERN
+from django_markdown_converter.patterns.data import HR_PATTERN
 
 
 def test_basic_conversion():

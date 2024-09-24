@@ -1,6 +1,6 @@
 import pytest
 from django_markdown_converter.patterns.blocks.paragraph import ParagraphPattern
-from django_markdown_converter.patterns.lookups import PARAGRAPH_PATTERN
+from django_markdown_converter.patterns.data import PARAGRAPH_PATTERN
 
 
 def test_basic_conversion():

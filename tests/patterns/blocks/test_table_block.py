@@ -1,6 +1,6 @@
 import pytest
 from django_markdown_converter.patterns.blocks.table import TablePattern
-from django_markdown_converter.patterns.lookups import TABLE_PATTERN
+from django_markdown_converter.patterns.data import TABLE_PATTERN
 
 
 def test_basic_conversion():

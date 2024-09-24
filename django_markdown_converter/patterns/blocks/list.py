@@ -10,7 +10,6 @@ class ListPattern(BasePattern):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.item_bank = []
-        
     
     def get_match(self, content):
         self.match = ConvertListIntoItems(content)
@@ -62,7 +61,6 @@ class ListPattern(BasePattern):
         return "\n".join(ret)
     
     
-    
     def revert(self, *args, **kwargs) -> str:
         super().revert(*args, **kwargs)
         props = self.block.get("props", {})
@@ -104,6 +102,8 @@ class ListPattern(BasePattern):
         padding = level + len(marker)
         # the triple curly braces translates f'^ {{{padding}}}' --> f'^ {4}' for padding = 4
         data = re.sub(pattern=f'^ {{{padding}}}', repl='', string=yeet["data"], flags=re.MULTILINE)
+        print(repr(data))
+        
         #data = create_text_item(text)
         #bank.append(data)
         new_item = {
@@ -117,7 +117,9 @@ class ListPattern(BasePattern):
 
     def create_text_item(self, text):
         self.item_bank.append(self.lookup_convert(text))
-        return self.item_bank[len(self.item_bank) - 1]
+        ret = self.item_bank[len(self.item_bank) - 1]
+        print(ret)
+        return ret
     
     def create_list_block(self, marker):
         return {
@@ -151,8 +153,8 @@ class ListPattern(BasePattern):
         cur_lvl = 0
 
         for item in items:
+            
             current_item = self.create_list_item(item.groupdict())
-
             while True:
                 if current_item["level"] < cur_lvl:
                     cur_parent, cur_lvl = stack.pop()
@@ -208,18 +210,16 @@ def FormatList(lst):
       if "level" in _:
         del _["level"]
 
-
         
-class OListPattern(BasePattern):
+class OListPattern(ListPattern):
     """
     olist
     """
     def __init__(self, *args, **kwargs) -> None:
         super().__init__("olist", OLIST_PATTERN, *args, **kwargs)
-        self.item_bank = []
 
 
-class UListPattern(BasePattern):
+class UListPattern(ListPattern):
     """
     ulist
     """

@@ -1,6 +1,6 @@
 import pytest
 from django_markdown_converter.patterns.blocks.footnote import FootnotePattern
-from django_markdown_converter.patterns.lookups import FOOTNOTE_PATTERN
+from django_markdown_converter.patterns.data import FOOTNOTE_PATTERN
 
 
 def test_basic_conversion():

@@ -1,6 +1,6 @@
 import pytest
 from django_markdown_converter.patterns.blocks.image import ImagePattern
-from django_markdown_converter.patterns.lookups import IMAGE_PATTERN
+from django_markdown_converter.patterns.data import IMAGE_PATTERN
 
 
 def test_basic_conversion():

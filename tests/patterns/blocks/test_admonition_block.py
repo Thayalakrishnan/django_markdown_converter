@@ -1,6 +1,6 @@
 import pytest
 from django_markdown_converter.patterns.blocks.admonition import AdmonitionPattern
-from django_markdown_converter.patterns.lookups import ADMONITION_PATTERN
+from django_markdown_converter.patterns.data import ADMONITION_PATTERN
 
 
 def test_basic_conversion():

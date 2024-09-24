@@ -17,20 +17,19 @@ raw_chunk = ReadSourceFromFile(path_to_file)
 print("processed -------------------------")
 
 raw_chunk = process_input_content(raw_chunk)
-#raw_chunk, meta = extract_meta_block(raw_chunk)
 
-BasePattern.InitialiseClasses()
+#BasePattern.InitialiseClasses()
+bp = BasePattern()
 
 #print(BasePattern.BLOCK_LIST)
-print(BasePattern.BLOCK_LOOKUP)
+print(bp.BLOCK_LOOKUP)
 
-for block in BasePattern.block_parser(raw_chunk):
+for block in bp.block_parser(raw_chunk):
     json_root_nu.append(block)
 
-
-#while BasePattern.nested_blocks_parser():
+#while bp.nested_blocks_parser():
 #    continue
-#BasePattern.nested_blocks_parser()
+#bp.nested_blocks_parser()
 
 #write_to_file = "notes/examples/post_output"
 write_to_json_file = "notes/examples/post_output.json"

@@ -1,6 +1,6 @@
 import pytest
 from django_markdown_converter.patterns.blocks.blockquote import BlockquotePattern
-from django_markdown_converter.patterns.lookups import BLOCKQUOTE_PATTERN
+from django_markdown_converter.patterns.data import BLOCKQUOTE_PATTERN
 
 
 def test_basic_conversion():

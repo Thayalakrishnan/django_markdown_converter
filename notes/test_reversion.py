@@ -1,7 +1,5 @@
-from django_markdown_converter.revert import Revert
-from django_markdown_converter.patterns.blocks.paragraph import ParagraphPattern
-from django_markdown_converter.patterns.blocks.list import ListPattern
-from django_markdown_converter.patterns.lookups import PARAGRAPH_PATTERN, ULIST_PATTERN
+from django_markdown_converter.patterns.blocks.list import UListPattern
+from django_markdown_converter.patterns.data import ULIST_PATTERN
 
 BLOCKS = [
     {
@@ -195,6 +193,16 @@ LBLOCK = {
 LBLOCK = """- Item 1: line 1.
 - Item 2: line 1.
     - Item 2.1: line 1.
+      this is a multiline item.
+      
+      maybe its also a paragraph!
+    - Item 2.2: line 1.
+- Item 3: line 1.
+"""
+
+LBLOCK = """- Item 1: line 1.
+- Item 2: line 1.
+    - Item 2.1: line 1.
         - Item 2.1.1: line 1.
     - Item 2.2: line 1.
 - Item 3: line 1.
@@ -204,17 +212,8 @@ LBLOCK = """- Item 1: line 1.
 - Item 4: line 1.
 """
 
-LBLOCK = """- Item 1: line 1.
-- Item 2: line 1.
-    - Item 2.1: line 1.
-      this is a multiline item.
-      
-      maybe its also a paragraph!
-    - Item 2.2: line 1.
-- Item 3: line 1.
-"""
 
-converted = ListPattern(ULIST_PATTERN).convert(LBLOCK)
+converted = UListPattern(ULIST_PATTERN).convert(LBLOCK)
 
 print(converted)
 

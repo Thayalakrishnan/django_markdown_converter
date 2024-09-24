@@ -3,7 +3,6 @@ import pytest
 from django_markdown_converter.patterns.blocks.base import BasePattern
 
 
-
 """
 @@@ { property=value }
 Block content.

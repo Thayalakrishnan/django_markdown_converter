@@ -174,7 +174,6 @@ BLOCKQUOTE_PATTERN = {
 PARAGRAPH_PATTERN = {
     "type": "paragraph",
     "check": r'.*',
-    #"pattern": r'(?P<data>.*?)(?:\n|\n\n|$)',
     "pattern": r'(?P<data>.*)',
     "flags": re.MULTILINE | re.DOTALL,
     "addToLookup": True,

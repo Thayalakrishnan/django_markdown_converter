@@ -1,6 +1,6 @@
 import pytest
 from django_markdown_converter.patterns.blocks.dlist import DListPattern
-from django_markdown_converter.patterns.lookups import DLIST_PATTERN
+from django_markdown_converter.patterns.data import DLIST_PATTERN
 
 
 def test_basic_conversion():
