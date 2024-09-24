@@ -1,4 +1,4 @@
-from django_markdown_converter.patterns.lookups import PATTERN_LIST, PATTERN_LOOKUP
+from django_markdown_converter.patterns.classes.base import BasePattern
 
 
 def Revert(blocks:list=[]) -> str:
@@ -11,7 +11,7 @@ def Revert(blocks:list=[]) -> str:
     stringlist = []
     for block in blocks:
         print(f"type {block['type']}")
-        current_block = PATTERN_LOOKUP[block["type"]].revert(block)
+        current_block = BasePattern.BLOCK_LOOKUP[block["type"]].revert(block)
         stringlist.append(current_block)
     
     return "\n".join(stringlist)

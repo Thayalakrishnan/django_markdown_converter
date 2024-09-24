@@ -1,6 +1,6 @@
 from django_markdown_converter.helpers.utility import ReadSourceFromFile, WriteToMDFile, WriteJSONToFile
-from django_markdown_converter.helpers.processors import process_input_content, extract_meta_block
-from django_markdown_converter.helpers.parsers import block_parser, nested_blocks_parser
+from django_markdown_converter.patterns.classes.base import BasePattern, process_input_content
+
 
 """
 loop over the content and spit out chunks
@@ -19,13 +19,18 @@ print("processed -------------------------")
 raw_chunk = process_input_content(raw_chunk)
 #raw_chunk, meta = extract_meta_block(raw_chunk)
 
-for block in block_parser(raw_chunk):
+BasePattern.InitialiseClasses()
+
+#print(BasePattern.BLOCK_LIST)
+print(BasePattern.BLOCK_LOOKUP)
+
+for block in BasePattern.block_parser(raw_chunk):
     json_root_nu.append(block)
 
 
-#while nested_blocks_parser():
+#while BasePattern.nested_blocks_parser():
 #    continue
-#nested_blocks_parser()
+#BasePattern.nested_blocks_parser()
 
 #write_to_file = "notes/examples/post_output"
 write_to_json_file = "notes/examples/post_output.json"

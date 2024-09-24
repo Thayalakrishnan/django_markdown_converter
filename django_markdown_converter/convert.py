@@ -1,5 +1,4 @@
-from django_markdown_converter.helpers.processors import process_input_content
-from django_markdown_converter.helpers.parsers import block_parser, nested_blocks_parser
+from django_markdown_converter.patterns.classes.base import BasePattern, process_input_content
 
 
 def Convert(source:str="") -> list:
@@ -11,8 +10,8 @@ def Convert(source:str="") -> list:
     """
     blocks = []
     source = process_input_content(source)
-    for block in block_parser(source):
+    for block in BasePattern.block_parser(source):
         blocks.append(block)
-    while nested_blocks_parser():
-        continue
+    #while nested_blocks_parser():
+    #    continue
     return blocks

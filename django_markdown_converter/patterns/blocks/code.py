@@ -4,6 +4,8 @@ from pygments.token import STANDARD_TYPES
 from pygments.util import ClassNotFound
 
 from django_markdown_converter.patterns.classes.base import BasePattern
+from django_markdown_converter.patterns.data import CODE_PATTERN
+
 
 
 def lex_format(tokensource):
@@ -49,6 +51,9 @@ class CodePattern(BasePattern):
     """
     code
     """
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__("code", CODE_PATTERN, *args, **kwargs)
+            
     def get_data(self) -> dict:
         code = self.match.group("data").strip()
         language = self.match.group("language")

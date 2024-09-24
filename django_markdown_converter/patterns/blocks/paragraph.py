@@ -1,5 +1,7 @@
 from django_markdown_converter.patterns.classes.base import BasePattern
 from django_markdown_converter.patterns.inlines.parser import inline_parser
+from django_markdown_converter.patterns.data import PARAGRAPH_PATTERN
+
 
 INLINE_TAG_LOOKUP = {
     ## symetrical
@@ -34,6 +36,9 @@ def loop_recursion(subblocks:list=[]) -> str:
 
 class ParagraphPattern(BasePattern):
     
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__("paragraph", PARAGRAPH_PATTERN, *args, **kwargs)
+        
     def convert(self, content:str="", props:str="", *args, **kwargs) -> dict:
         super().convert(content, props, *args, **kwargs)
         self.block["data"] = inline_parser(self.block["data"])

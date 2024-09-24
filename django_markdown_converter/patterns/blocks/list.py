@@ -1,14 +1,16 @@
 import re
 from django_markdown_converter.patterns.classes.base import BasePattern
+from django_markdown_converter.patterns.data import OLIST_PATTERN, ULIST_PATTERN
+
 
 class ListPattern(BasePattern):
     """
     olist, ulist
     """
-    def __init__(self, pattern_object: dict = ..., *args, **kwargs) -> None:
-        super().__init__(pattern_object, *args, **kwargs)
-        
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
         self.item_bank = []
+        
     
     def get_match(self, content):
         self.match = ConvertListIntoItems(content)
@@ -205,3 +207,22 @@ def FormatList(lst):
         del _["marker"]
       if "level" in _:
         del _["level"]
+
+
+        
+class OListPattern(BasePattern):
+    """
+    olist
+    """
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__("olist", OLIST_PATTERN, *args, **kwargs)
+        self.item_bank = []
+
+
+class UListPattern(BasePattern):
+    """
+    ulist
+    """
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__("ulist", ULIST_PATTERN, *args, **kwargs)
+        

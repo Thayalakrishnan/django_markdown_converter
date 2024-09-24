@@ -1,11 +1,14 @@
 from django_markdown_converter.patterns.classes.base import BasePattern
+from django_markdown_converter.patterns.data import HEADING_PATTERN
 
 
 class HeadingPattern(BasePattern):
     """
     heading
     """
-    
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__("heading", HEADING_PATTERN, *args, **kwargs)
+        
     def update_props(self):
         super().update_props()
         self.block["props"]["level"] = len(self.block["props"]["level"])

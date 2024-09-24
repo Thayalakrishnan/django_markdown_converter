@@ -1,5 +1,6 @@
 from django_markdown_converter.patterns.classes.base import BasePattern
 from django_markdown_converter.patterns.inlines.parser import inline_parser
+from django_markdown_converter.patterns.data import TABLE_PATTERN
 
 
 class TablePattern(BasePattern):
@@ -8,6 +9,9 @@ class TablePattern(BasePattern):
     - header
     - body
     """
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__("table", TABLE_PATTERN, *args, **kwargs)
+            
     def get_data(self) -> dict:
         return {
             "header": get_row(self.match.group("header")),

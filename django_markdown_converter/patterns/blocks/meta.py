@@ -1,5 +1,6 @@
 import re
 from django_markdown_converter.patterns.classes.base import BasePattern
+from django_markdown_converter.patterns.data import META_PATTERN
 
 
 def process_meta_values(content:str="")-> dict:
@@ -23,6 +24,9 @@ class MetaPattern(BasePattern):
     """
     meta
     """
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__("meta", META_PATTERN, *args, **kwargs)
+        
     def get_data(self) -> dict:
         data = self.match.group("data").strip()
         

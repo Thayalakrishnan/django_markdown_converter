@@ -119,7 +119,7 @@ class Pattern:
     def __init__(self, name:str="") -> None:
         self.name = name
         self.count = 0
-    
+
     def create_block(self):
         self.count+=1
         block = {"type": self.name, "index": self.count}
@@ -163,6 +163,10 @@ class Manager:
 
 #print(code_pat.BANK)
 #Pattern()
+yeet = Pattern.__subclasses__()
+for _ in yeet:
+    print(repr(_))
+
 pat = Manager()
 print(pat.LOOKUP)
 # %%

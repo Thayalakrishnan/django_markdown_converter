@@ -1,4 +1,5 @@
 from django_markdown_converter.patterns.classes.base import BasePattern
+from django_markdown_converter.patterns.data import DLIST_PATTERN
 
 
 class DListPattern(BasePattern):
@@ -6,6 +7,9 @@ class DListPattern(BasePattern):
     props:
     - index
     """
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__("dlist", DLIST_PATTERN, *args, **kwargs)
+        
     def get_data(self) -> dict:
         definition = self.match.group("definition").split("\n")
         definition = [_.lstrip(": ") for _ in definition]

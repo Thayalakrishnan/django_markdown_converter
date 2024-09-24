@@ -1,4 +1,6 @@
 from django_markdown_converter.patterns.classes.base import BasePattern
+from django_markdown_converter.patterns.data import SVG_PATTERN
+
 
 class SVGPattern(BasePattern):
     """
@@ -6,7 +8,8 @@ class SVGPattern(BasePattern):
     props:
     - attrs
     """
-
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__("svg", SVG_PATTERN, *args, **kwargs)
 
     def revert(self, *args, **kwargs) -> str:
         super().revert(*args, **kwargs)
