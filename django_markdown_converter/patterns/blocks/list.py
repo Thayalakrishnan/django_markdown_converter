@@ -58,6 +58,35 @@ class ListPattern(BasePattern):
 
         ret.append("")
         return "\n".join(ret)
+    
+    
+    
+    def revert(self, *args, **kwargs) -> str:
+        super().revert(*args, **kwargs)
+        props = self.block.get("props", {})
+        ret = []
+        self.flatten(self.block, 0, ret)
+        return "".join(ret)
+    
+    def flatten(self, block:dict={}, level:int=0, shared_arr:list=[]):
+        blocklist = block["data"]
+        for block in blocklist:
+            for subblock in block["data"]:
+                """
+                if a subblock is a block (dict) we need to convert it
+                back to string form
+                if its a list block (either olist or ulist), we can flatten the list
+                right here
+                if its not a list block, we need to convert the block to a string appropriately
+                """
+                if isinstance(subblock, dict):
+                    if subblock["type"] == "olist" or subblock["type"] == "ulist":
+                        subblock = self.flatten(subblock, level+2, shared_arr)
+                    else:
+                        subblock = self.lookup_revert(block=subblock)
+
+                if isinstance(subblock, str):
+                    shared_arr.append(f"{level*' '}- {subblock}")
 
     def add_to_bank(self, *args, **kwargs) -> None:
         pass

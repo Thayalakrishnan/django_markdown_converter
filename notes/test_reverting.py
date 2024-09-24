@@ -255,6 +255,71 @@ BLOCK = {
     ]
 }
 
+
+
+#%%
+BLOCK = {
+    'type': 'ulist',
+    'data': [
+        {
+            'type': 'item',
+            'data': [
+                'Item 1: line 1.\n'
+            ]
+        },
+        {
+            'type': 'item',
+            'data': [
+                'Item 2: line 1.\n', 
+                {
+                    'type': 'ulist',
+                    'data': [
+                        {
+                            'type': 'item',
+                            'data': [
+                                'Item 2.1: line 1.\n', 
+                                {
+                                'type': 'ulist',
+                                'data': [
+                                    {
+                                    'type': 'item',
+                                    'data': ['Item 2.1.1: line 1.\n']
+                                }]
+                            }]
+                        },
+                {
+                    'type': 'item',
+                    'data': ['Item 2.2: line 1.\n']
+                }]
+            }]
+        },
+    {
+        'type': 'item',
+        'data': ['Item 3: line 1.\n', {
+            'type': 'ulist',
+            'data': [{
+                'type': 'item',
+                'data': ['Item 3.1: line 1.\n', {
+                    'type': 'ulist',
+                    'data': [{
+                        'type': 'item',
+                        'data': ['Item 3.1.1: line 1.\n']
+                    }]
+                }]
+            },
+            {
+                'type': 'item',
+                'data': ['Item 3.2: line 1.\n']
+            }]
+        }]
+    },
+    {
+        'type': 'item',
+        'data': ['Item 4: line 1.\n']
+    }]
+}
+
+
 #%%
 def TraverseList(blocklist:list=[]):
     for block in blocklist:
@@ -299,4 +364,78 @@ TraverseList(BLOCK["data"])
 print("traversal done")
 
 print("done")
+# %%
+
+BLOCK = {
+    'type': 'ulist',
+    'data': [
+        {
+            'type': 'item',
+            'data': [
+                'Item 1: line 1.\n'
+            ]
+        },
+        {
+            'type': 'item',
+            'data': [
+                'Item 2: line 1.\n'
+            ]
+        },
+        {
+            'type': 'item',
+            'data': [
+                'Item 3: line 1.\n'
+            ]
+        },
+        {
+            'type': 'item',
+            'data': [
+                'Item 4: line 1.\n'
+            ]
+        },
+        {
+            'type': 'item',
+            'data': [
+                'Item 5: line 1.\n'
+            ]
+        },
+    ]
+}
+
+
+
+#%%
+"""
+the functions after removing "children" from the list object
+"""
+
+
+def Flatten(block:dict={}, level:int=0, shared_arr:list=[]):
+    #print(f"level: {level}")
+    blocklist = block["data"]
+    for block in blocklist:
+        for subblock in block["data"]:
+            """
+            if a subblock is a block (dict) we need to convert it
+            back to string form
+            if its a list block (either olist or ulist), we can flatten the list
+            right here
+            if its not a list block, we need to convert the block to a string appropriately
+            """
+            if isinstance(subblock, dict):
+                if subblock["type"] == "olist" or subblock["type"] == "ulist":
+                    subblock = Flatten(subblock, level+2, shared_arr)
+                #else:
+                #    subblock = 
+            if isinstance(subblock, str):
+                shared_arr.append(f"{level*' '}- {subblock}")
+    
+
+def Revert(block:dict={}):
+    myarr = []
+    Flatten(block, 0, myarr)
+    return "".join(myarr)
+
+
+print(Revert(BLOCK))
 # %%

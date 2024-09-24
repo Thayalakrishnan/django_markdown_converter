@@ -204,9 +204,21 @@ LBLOCK = """- Item 1: line 1.
 - Item 4: line 1.
 """
 
+LBLOCK = """- Item 1: line 1.
+- Item 2: line 1.
+    - Item 2.1: line 1.
+      this is a multiline item.
+      
+      maybe its also a paragraph!
+    - Item 2.2: line 1.
+- Item 3: line 1.
+"""
 
 converted = ListPattern(ULIST_PATTERN).convert(LBLOCK)
 
 print(converted)
 
+#reverted = ListPattern(ULIST_PATTERN).revert(converted)
+#
+#print(reverted)
 

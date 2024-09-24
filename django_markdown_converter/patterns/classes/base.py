@@ -5,22 +5,29 @@ from django_markdown_converter.helpers.processors import process_props
 class BasePattern:
     
     PRIVATE_BANK = []
+    BLOCK_LOOKUP = {}
     
     def __init__(self, pattern_object:dict={}, *args, **kwargs) -> None:
-        self.blocktype = pattern_object["type"]
         
-        self.check_pattern = re.compile(pattern_object["check"], re.MULTILINE | re.DOTALL)
-        self.pattern = re.compile(pattern_object["pattern"], pattern_object["flags"])
+        if self.addToLookup:
+            self.blocktype = pattern_object["type"]
+            
+            self.check_pattern = re.compile(pattern_object["check"], re.MULTILINE | re.DOTALL)
+            self.pattern = re.compile(pattern_object["pattern"], pattern_object["flags"])
+            
+            self.hasNested = pattern_object["hasNested"]
+            self.hasInline = pattern_object["hasInlineMarkup"]
+            
+            self.addToLookup = pattern_object["addToLookup"]
+            
+            self.props = pattern_object["props"]
+            self.data = pattern_object["data"]
         
-        self.hasNested = pattern_object["hasNested"]
-        self.hasInline = pattern_object["hasInlineMarkup"]
-        
-        self.props = pattern_object["props"]
-        self.data = pattern_object["data"]
-    
-        self.match = False
-        self.block = None
-        self.bank = []
+            self.match = False
+            self.block = None
+            self.bank = []
+            self.BLOCK_LOOKUP.update({self.blocktype: self})
+
 
     def check(self, block) -> bool:
         return self.check_pattern.match(block)
@@ -75,6 +82,16 @@ class BasePattern:
         self.block = block
         print(f"reverting: {self.blocktype}")
         return block["data"]
+    
+    def lookup_revert(self, block:dict={}) -> str:
+        return self.BLOCK_LOOKUP[block["type"]].revert(block)
+    
+    def lookup_convert(self, content:str="") -> dict:
+        return self.BLOCK_LOOKUP[block["type"]].convert(block)
+
+
+
+
 
 
 def dedent(data):
