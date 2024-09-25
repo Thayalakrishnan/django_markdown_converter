@@ -4,45 +4,87 @@ import re
 
 class Pattern:
     
-    def __init__(self, name:str="") -> None:
-        self.left = name
-        self.right = name
-
-class InlinePattern:
+    def __init__(self, pat:tuple=(), name:str="") -> None:
+        left, right = pat
+        
+        self.name = name
+        self.pattern = f"({re.escape(left)}.+?{re.escape(right)})"
+        
+        ## functions
+        self.extract = lambda x: x[len(left):len(right)*(-1)]
+        self.format = lambda x: f"{left}{x}{right}"
+        
+        self.left = left
+        self.right = right
+        
+class MultiPattern:
     
-    def __init__(self, name:str="") -> None:
-        self.pattern = name
-        self.patterns = name
-        self.count = 0
+    def __init__(self, pats:list=[], name:str="") -> None:
+        left, right = pats[0]
+        self.name = name
+        self.patterns = [Pattern(p) for p in pats]
+        
+        ## functions
+        self.extract = lambda x: x[len(left):len(right)*(-1)]
+        self.format = lambda x: f"{left}{x}{right}"
+        
+        self.left = left
+        self.right = right
+        
+        
 
 
-def lambda_extractor(pat:tuple=()):
-    left, right = len(pat[0]), len(pat[1])*(-1)
-    return lambda x: x[left:right]
+class PatternManager:
+    
+    def __init__(self, cases:list=[]) -> None:
+        self.EXTRACT = {}
+        self.FORMAT = {}
+        
+        generated_pattern_list = []
+        
+        for case in cases:
+            
+            patterns, key = case
+            
+            if isinstance(patterns, list):
+                
+                # multipattern: get the first pattern
+                pat = patterns[0]
+                cpattern = multi_pattern(pat, key)
+            else:
+                pat = patterns
+                cpattern = simple_pattern(pat, key)
 
-def lambda_formatter(pat:tuple=()):
-    left, right = pat
-    return lambda x: f"{left}{x}{right}"
+
+            self.EXTRACT[key] = lambda_extractor(pat)
+            self.FORMAT[key] = lambda_formatter(pat)
+            
+            generated_pattern_list.append(cpattern)
+            
+        joined_pattern_list = or_join_patterns(generated_pattern_list)
+        
+        self.RE_INLINE_PATTERNS = re.compile(joined_pattern_list)
+
+
 
 CASES = [
     ## symettrical
-    [("`", "`"), "code", True],
-    [[("**", "**"), ("__", "__")], "strong", True],
-    [[("*", "*"), ("_", "_")], "em", True],
-    [[("~~", "~~"), ("--", "--")], "del", True],
-    [("==", "=="), "mark", True],
-    [("``", "``"), "samp", True],
-    [(":", ":"), "emoji", True],
-    [("^", "^"), "sup", True],
-    [("~", "~"), "sub", True],
-    [("$", "$"), "math", True],
+    [("`", "`"), "code"],
+    [[("**", "**"), ("__", "__")], "strong"],
+    [[("*", "*"), ("_", "_")], "em"],
+    [[("~~", "~~"), ("--", "--")], "del"],
+    [("==", "=="), "mark"],
+    [("``", "``"), "samp"],
+    [(":", ":"), "emoji"],
+    [("^", "^"), "sup"],
+    [("~", "~"), "sub"],
+    [("$", "$"), "math"],
     
     ## non symettrical
-    [("<navlink ", "</navlink>"), "navlink", False],
-    [("<", ">"), "rawlink", True],
-    [("[^", "]"), "footnote", False],
-    [("[", ")"), "link", False],
-    #[(" ", " "), "text", True],
+    [("<navlink ", "</navlink>"), "navlink"],
+    [("<", ">"), "rawlink"],
+    [("[^", "]"), "footnote"],
+    [("[", ")"), "link"],
 ]
 
 
@@ -56,7 +98,6 @@ or_join_patterns = lambda pats: "|".join(pats)
 label_pattern = lambda label, pats: f"(?P<{label}>{pats})"
 
 # label: label <string>, pats: patterns <list>
-#multi_pattern = lambda pats, label: label_pattern(label, or_join_patterns([single_pattern(pat) for pat in pats]))
 multi_pattern = lambda pats, label: label_pattern(label, or_join_patterns(map(single_pattern, pats)))
 
 # label: label <string>, pat: pattern <tuple>
