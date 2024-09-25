@@ -8,26 +8,6 @@ from typing import Union, List
 (?P<o>\W|\W\W).+?(?P=o)
 
 (?P<code>(?:`).+?(?:`))|
-(?P<strong>(?:__).+?(?:__))|
-(?P<strong2>(?:\*\*).+?(?:\*\*))|
-(?P<em>(?:\*).+?(?:\*))|
-(?P<em2>(?:_).+?(?:_))|
-(?P<del>(?:\~\~).+?(?:\~\~))|
-(?P<del2>(?:\-\-).+?(?:\-\-))|
-(?P<mark>(?:==).+?(?:==))|
-(?P<samp>(?:``).+?(?:``))|
-(?P<emoji>(?::).+?(?::))|
-(?P<sup>(?:\^).+?(?:\^))|
-(?P<sub>(?:\~).+?(?:\~))|
-(?P<math>(?:\$).+?(?:\$))|
-(?P<navlink>(?:<navlink\ ).+?(?:</navlink>))|
-(?P<rawlink>(?:<).+?(?:>))|
-(?P<footnote>(?:\[\^).+?(?:\]))|
-(?P<link>(?:\[).+?(?:\)))
-
-
-
-(?P<code>(?:`).+?(?:`))|
 (?P<strong>(__.+?__)|(\*\*.+?\*\*))|
 (?P<em>(\*.+?\*)|(_.+?_))|
 (?P<del>(\~\~.+?\~\~)|(\-\-.+?\-\-))|
@@ -46,92 +26,28 @@ from typing import Union, List
 
 """
 pattern
-name
-symmetrical?
+key
+symmetrical
 """
-CASES_LIST = [
-    ## symettrical
-    [ ("`", "`"), "code", True ],
-    [ ("__", "__"), "strong", True ],
-    [ ("**", "**"), "strong", True ],
-    [ ("*", "*"),  "em", True ],
-    [ ("_", "_"),  "em", True ],
-    [ ("~~", "~~"), "del", True ],
-    [ ("--", "--"), "del", True ],
-    [ ("==", "=="), "mark", True ],
-    [ ("``", "``"), "samp", True ],
-    [ (":", ":"), "emoji", True ],
-    [ ("^", "^"), "sup", True ],
-    [ ("~", "~"), "sub", True ],
-    [ ("$", "$"),  "math", True ],
-
-    ## non symettrical
-    [ ("<navlink ", "</navlink>"), "navlink", False ],
-    [ ("<", ">"), "email", False ],
-    [ ("<", ">"),  "rawlink", False ],
-    [ ("[^", "]"), "footnote", False ],
-    [ ("[", ")"),  "link", False ],
-]
-
-INLINE_MARKUP_PATTERN = re.compile(
-    r"""
-    (?P<code>(?:`).+?(?:`))|
-    (?P<strong>(?P<substrong>(?:\*\*)|(?:__)).+?(?P=substrong))|
-    (?P<em>(?P<subem>(?:\*)|(?:_)).+?(?P=subem))|
-    (?P<del>(?P<subdel>(?:\~\~)|(?:\-\-)).+?(?P=subdel))|
-    (?P<mark>(?:==).+?(?:==))|
-    (?P<samp>(?:``).+?(?:``))|
-    (?P<emoji>(?::).+?(?::))|
-    (?P<sup>(?:\^).+?(?:\^))|
-    (?P<sub>(?:\~).+?(?:\~))|
-    (?P<math>(?:\$).+?(?:\$))|
-    (?P<navlink>(?:<navlink\ ).+?(?:</navlink>))|
-    (?P<rawlink>(?:<).+?(?:>))|
-    (?P<footnote>(?:\[\^).+?(?:\]))|
-    (?P<link>(?:\[).+?(?:\)))
-    """
-    , re.VERBOSE)
-
-INLINE_MARKUP_PATTERN = re.compile(r"""
-(?P<code>(?:`).+?(?:`))|
-(?P<strong>(__.+?__)|(\*\*.+?\*\*))|
-(?P<em>(\*.+?\*)|(_.+?_))|
-(?P<del>(\~\~.+?\~\~)|(\-\-.+?\-\-))|
-(?P<mark>(?:==).+?(?:==))|
-(?P<samp>(?:``).+?(?:``))|
-(?P<emoji>(?::).+?(?::))|
-(?P<sup>(?:\^).+?(?:\^))|
-(?P<sub>(?:\~).+?(?:\~))|
-(?P<math>(?:\$).+?(?:\$))|
-(?P<navlink>(?:<navlink\ ).+?(?:</navlink>))|
-(?P<rawlink>(?:<).+?(?:>))|
-(?P<footnote>(?:\[\^).+?(?:\]))|
-(?P<link>(?:\[).+?(?:\)))""", re.VERBOSE)
-
-
-#INLINE_MARKUP_PATTERN = re.compile(r'(?P<code>(?:`).+?(?:`))|(?P<strong>(__.+?__)|(\*\*.+?\*\*)|(?P<em>(\*.+?\*)|(_.+?_)|(?P<del>(\~\~.+?\~\~)|(\-\-.+?\-\-)|(?P<mark>(?:==).+?(?:==))|(?P<samp>(?:``).+?(?:``))|(?P<emoji>(?::).+?(?::))|(?P<sup>(?:\^).+?(?:\^))|(?P<sub>(?:\~).+?(?:\~))|(?P<math>(?:\$).+?(?:\$))|(?P<navlink>(?:<navlink\ ).+?(?:</navlink>))|(?P<rawlink>(?:<).+?(?:>))|(?P<footnote>(?:\[\^).+?(?:\]))|(?P<link>(?:\[).+?(?:\)))')
-
-#INLINE_PATTERN_RAW = r'(?:``.+?``)|(?:__.+?__)|(?:\*\*.+?\*\*)|(?:~~.+?~~)|(?:--.+?--)|(?:==.+?==)|(?:\^\^.+?\^\^)|(?:`.+?`)|(?:\*.+?\*)|(?:\:.+?\:)|(?:~.+?~)|(?:\$.+?\$)|(?:_.+?_)'
-#INLINE_PATTERN = re.compile(INLINE_PATTERN_RAW)
-
 CASES = [
     ## symettrical
-    [ ("`", "`"), "code", False, "code"],
-    [ [("**", "**"), ("__", "__")], "strong", True, "strong"],
-    [ [("*", "*"), ("_", "_")], "em", True, "em"],
-    [ [("~~", "~~"), ("--", "--")], "del", True, "del"],
-    [ ("==", "=="), "mark", False, "mark"],
-    [ ("``", "``"), "samp", False, "samp"],
-    [ (":", ":"), "emoji", False, "emoji"],
-    [ ("^", "^"), "sup", False, "sup"],
-    [ ("~", "~"), "sub", False, "sub"],
-    [ ("$", "$"), "math", False, "math"],
+    [("`", "`"), "code", True],
+    [[("**", "**"), ("__", "__")], "strong", True],
+    [[("*", "*"), ("_", "_")], "em", True],
+    [[("~~", "~~"), ("--", "--")], "del", True],
+    [("==", "=="), "mark", True],
+    [("``", "``"), "samp", True],
+    [(":", ":"), "emoji", True],
+    [("^", "^"), "sup", True],
+    [("~", "~"), "sub", True],
+    [("$", "$"), "math", True],
+    
     ## non symettrical
-    [ ("<navlink ", "</navlink>"), "navlink", False, "navlink"],
-    [ ("<", ">"), "rawlink", False, "rawlink"],
-    [ ("[^", "]"), "footnote", False, "footnote"],
-    [ ("[", ")"), "link", False, "link"],
-    #[ (" ", " "), "text", True, "text"],
+    [("<navlink ", "</navlink>"), "navlink", False],
+    [("<", ">"), "rawlink", True],
+    [("[^", "]"), "footnote", False],
+    [("[", ")"), "link", False],
+    #[(" ", " "), "text", True],
 ]
 
 def lambda_extractor(len_start:int=0, len_stop:int=0):
@@ -141,37 +57,70 @@ def lambda_formatter(start:str="", stop:str=""):
     return lambda x: f"{start}{x}{stop}"
 
 
-#def multi_pattern(patterns:list=[]):
-#    for pat in patterns:
-#        f"(?:{re.escape(pat[0])})"
-#    
-#    f"(?P<strong>(?P<substrong>(?:\*\*)|(?:__)).+?(?P=substrong))"
-#    return lambda x: f"{start}{x}{stop}"
+def multi_pattern(patterns:list=[], pattern_key:str=""):
+    """
+    (?P<pattern_key>(patterns[0][0].+?patterns[0][1])|(patterns[1][0].+?patterns[1][1]))
+    """
+    stage1 = "|".join([f"({re.escape(pat[0])}.+?{re.escape(pat[1])})" for pat in patterns])
+    return f"(?P<{pattern_key}>{stage1})"
 
-compilespatterns = []
-symettrical_pattern = lambda x, l: f"(?P<{l}>(?:{x}).+?(?:{x}))"
-non_symettrical_pattern = lambda x,y,l: f"(?P<{l}>(?:{x}).+?(?:{y}))"
+def simple_pattern(pat:str="", pattern_key:str=""):
+    """
+    (?P<pattern_key>(left.+?right))
+    """
+    return f"(?P<{pattern_key}>({pat[0]}.+?{pat[1]}))"
 
-EXTRACT = {}
-FORMAT = {}
+def label_pattern(pat:str="", pattern_key:str=""):
+    """
+    (?P<pattern_key>(left.+?right))
+    """
+    return f"(?P<{pattern_key}>{pat})"
 
-for case in CASES:
+
+# pat: pattern <tuple>
+simple_pattern = lambda pat: f"({pat[0]}.+?{pat[1]})"
+
+# pats: patterns <list>
+or_join_patterns = lambda pats: "|".join(pats)
+
+# label: label <string>, pat: pattern <tuple>
+label_pattern = lambda label, pats: f"(?P<{label}>{pats})"
+
+# label: label <string>, pats: patterns <list>
+multi_pattern = lambda pats, label: label_pattern(label, or_join_patterns([simple_pattern(pat) for pat in pats]))
+
+
+
+def create_inline_markup_patterns(case_list:list=[]):
+    generated_pattern_list = []
+    extract_dict = {}
+    format_dict = {}
     
-    pattern, key, multi, name = case
-    
-    if isinstance(pattern, list):
-        # multpattern
-        firstpattern = pattern[0]
-        cpattern = non_symettrical_pattern(re.escape(firstpattern[0]), re.escape(firstpattern[1]), key)
-        EXTRACT[key] = lambda_extractor(len(firstpattern[0]), len(firstpattern[1]))
-        FORMAT[key] = lambda_formatter(firstpattern[0], firstpattern[1])
-    else:
-        cpattern = non_symettrical_pattern(re.escape(pattern[0]), re.escape(pattern[1]), key)
-        EXTRACT[key] = lambda_extractor(len(pattern[0]), len(pattern[1]))
-        FORMAT[key] = lambda_formatter(pattern[0], pattern[1])
-    
-    compilespatterns.append(cpattern)
+    for case in case_list:
 
+        pattern, key, issymettrical = case
+
+        if isinstance(pattern, list):
+            # multipattern
+            firstpattern = pattern[0]
+            cpattern = multi_pattern(pattern, key)
+            extract_dict[key] = lambda_extractor(len(firstpattern[0]), len(firstpattern[1]))
+            format_dict[key] = lambda_formatter(firstpattern[0], firstpattern[1])
+        else:
+            cpattern = simple_pattern(re.escape(pattern[0]), re.escape(pattern[1]), key)
+            extract_dict[key] = lambda_extractor(len(pattern[0]), len(pattern[1]))
+            format_dict[key] = lambda_formatter(pattern[0], pattern[1])
+
+        generated_pattern_list.append(cpattern)
+        
+    joined_pattern_list = "|".join(generated_pattern_list)
+    
+    return re.compile(joined_pattern_list), extract_dict, format_dict
+
+#EXTRACT = {}
+#FORMAT = {}
+
+INLINE_MARKUP_PATTERN, EXTRACT, FORMAT = create_inline_markup_patterns(CASES)
 # no flags
 #INLINE_MARKUP_PATTERN_RAW = "|".join(compilespatterns)
 #INLINE_MARKUP_PATTERN = re.compile(INLINE_MARKUP_PATTERN_RAW)
@@ -190,25 +139,18 @@ def get_text_between(pre:tuple=(), cur:tuple=(), content:str="") -> str:
 def get_text_after(cur:tuple=(), content:str="") -> str:
     return content[cur[1]::]
 
-
 def create_text_object(content):
-    return {
-        "type": "text", 
-        "data": content
-    }
-    
+    return {"type": "text", "data": content}
+
 def create_markup_object(pattern_key, content):
     formatted_content = EXTRACT[pattern_key](content)
-    return {
-        "type": pattern_key, 
-        "data": formatted_content
-    }
+    return {"type": pattern_key, "data": formatted_content}
 
 def find_and_convert_inline(source:str="", bank:list=[]) -> Union[str, List]:
     """
-    using our inline markup pattern, create a generator 
+    using our inline markup pattern, create a generator
     that will return non overlapping markup
-    use this to split the text. 
+    use this to split the text.
     return a list of converted blocks or the source string
     """
     pos_previous = (0,0)
@@ -216,15 +158,15 @@ def find_and_convert_inline(source:str="", bank:list=[]) -> Union[str, List]:
     non_overlapping_content = []
 
     matches = INLINE_MARKUP_PATTERN.finditer(source)
-    
+
     for _ in matches:
         # last group returns the last group to match
         # which in our case is the only group to match
         group_key = _.lastgroup
-        
+
         # get the current position of the match
         pos_current = _.span()
-        
+
         # extract the text between the previous match and the current match
         text_between = get_text_between(pos_previous, pos_current, source)
         if len(text_between):
@@ -232,16 +174,16 @@ def find_and_convert_inline(source:str="", bank:list=[]) -> Union[str, List]:
             new_between = create_text_object(text_between)
             non_overlapping_content.append(new_between)
             bank.append(new_between)
-        
+
         # extract the text captured
         text_captured = get_text_captured(pos_current, source)
         new_captured = create_markup_object(group_key, text_captured)
         non_overlapping_content.append(new_captured)
         bank.append(new_captured)
-        
+
         # set the previous position to the current position
         pos_previous = pos_current
-    
+
     if len(non_overlapping_content):
         # make sure we only do this if there is content before
         text_after = get_text_after(pos_current, source)
@@ -250,7 +192,7 @@ def find_and_convert_inline(source:str="", bank:list=[]) -> Union[str, List]:
             new_after = create_text_object(text_after)
             non_overlapping_content.append(new_after)
             bank.append(new_after)
-    
+
     if len(non_overlapping_content):
         return non_overlapping_content
     return source
@@ -269,7 +211,7 @@ def loop_over_data_and_conver_inline(blocklist:list=[], level:int=1, bank:list=[
                 loop_over_data_and_conver_inline(block["data"], level+1, bank)
     return
 
-    
+
 def convert(source:str="") -> list:
     mybank = []
     block_root = {"type": "root", "data": source}
