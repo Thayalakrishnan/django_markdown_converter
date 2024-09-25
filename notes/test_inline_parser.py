@@ -180,41 +180,32 @@ CASES = [
 def lambda_extractor(len_start:int=0, len_stop:int=0):
     return lambda x: x[len_start:len_stop*(-1)]
 
+def lambda_formatter(start:str="", stop:str=""):
+    return lambda x: f"{start}{x}{stop}"
+
 compilespatterns = []
 symettrical_pattern = lambda x, l: f"(?P<{l}>(?:{x}).+?(?:{x}))"
 non_symettrical_pattern = lambda x,y,l: f"(?P<{l}>(?:{x}).+?(?:{y}))"
 
 EXTRACT = {}
+FORMAT = {}
 
 for case in CASES:
     pattern, key, symmetrical, name = case
+    
     if not symmetrical:
         cpattern = non_symettrical_pattern(re.escape(pattern[0]), re.escape(pattern[1]), key)
     else:
         cpattern = non_symettrical_pattern(re.escape(pattern[0]), re.escape(pattern[1]), key)
         #cpattern = symettrical_pattern(re.escape(pattern[0]), key)
+    
     EXTRACT[key] = lambda_extractor(len(pattern[0]), len(pattern[1]))
+    FORMAT[key] = lambda_formatter(pattern[0], pattern[1])
     compilespatterns.append(cpattern)
 
 # no flags
 INLINE_MARKUP_PATTERN_RAW = "|".join(compilespatterns)
-print(INLINE_MARKUP_PATTERN_RAW)
-
 INLINE_MARKUP_PATTERN = re.compile(INLINE_MARKUP_PATTERN_RAW)
-
-MD = [
-    """**Markdown Example** with _**Inline Markup**_.""",
-    #"""This is a **bold** statement, and this is an _italicized_ one.""",
-    #"""You can even combine them to make text _**both italic and bold**_.""",
-    #"""If you need to reference a link, here's a [link to Markdown documentation](https://www.markdownguide.org).""",
-    #"""This item has some inline markup like _italics_ and **bold** text.""",
-    #"""Nested list item with a [link to a website](https://example.com) and some `inline code`.""",
-    #"""Even deeper nesting: _Italicized_ **bold** list item with `code` inline.""",
-    #"""Another item with **nested** inline **markup**.""",
-    #"""This list item uses some `inline code` and ends with _**italicized and bold**_ text.""",
-    #"""To write code, you can use backticks for `inline code`, like this.""",
-]
-MD = " ".join(MD)
 
 def extract_string(content:str="", pos:tuple=()):
     b, a = pos
@@ -230,7 +221,6 @@ def get_text_between(pre:tuple=(), cur:tuple=(), content:str="") -> str:
 def get_text_after(cur:tuple=(), content:str="") -> str:
     return content[cur[1]::]
 
-# %%
 
 def create_text_object(content):
     return {
@@ -295,7 +285,8 @@ def find_and_convert_inline(source:str="", bank:list=[]) -> Union[str, List]:
     if len(non_overlapping_content):
         return non_overlapping_content
     return source
-# %%
+
+
 def loop_over_data_and_conver_inline(blocklist:list=[], level:int=1, bank:list=[]):
     """
     receive a list of blocks
@@ -309,17 +300,52 @@ def loop_over_data_and_conver_inline(blocklist:list=[], level:int=1, bank:list=[
                 loop_over_data_and_conver_inline(block["data"], level+1, bank)
     return
 
-mybank = []
-block_data_as_list = [{"type": "root", "data": MD}]
-loop_over_data_and_conver_inline(block_data_as_list, 1, mybank)
-
-#print(block_data_as_list)
-
-for _ in filter(lambda x: isinstance(x["data"], str), mybank):
-    print(_)
     
-#for _ in mybank:
-#    print(_)
-   
+def convert(source:str="") -> list:
+    mybank = []
+    block_root = {"type": "root", "data": source}
+    block_data_as_list = [block_root]
+    loop_over_data_and_conver_inline(block_data_as_list, 1, mybank)
+
+    #for _ in filter(lambda x: isinstance(x["data"], str), mybank):
+    #    print(_)
+    return block_root["data"]
+
+
+def revert(blocklist:list=[]) -> str:
+    current_level = []
+    for b in blocklist:
+        if isinstance(b["data"], list):
+            b["data"] = revert(b["data"])
+        if isinstance(b["data"], str):
+            if b["type"] != "text":
+                line = FORMAT[b["type"]](b["data"])
+                current_level.append(line)
+            else:
+                current_level.append(b["data"])
+    return "".join(current_level)
+
+
+# %%
+
+MD = [
+    """**Markdown Example** with _**Inline Markup**_.""",
+    """This is a **bold** statement, and this is an _italicized_ one.""",
+    """You can even combine them to make text _**both italic and bold**_.""",
+    """If you need to reference a link, here's a [link to Markdown documentation](https://www.markdownguide.org).""",
+    """This item has some inline markup like _italics_ and **bold** text.""",
+    """Nested list item with a [link to a website](https://example.com) and some `inline code`.""",
+    """Even deeper nesting: _Italicized_ **bold** list item with `code` inline.""",
+    """Another item with **nested** inline **markup**.""",
+    """This list item uses some `inline code` and ends with _**italicized and bold**_ text.""",
+    """To write code, you can use backticks for `inline code`, like this.""",
+]
+MD = " ".join(MD)
+
+converted = convert(MD)
+print(converted)
+reverted = revert(converted)
+print(reverted)
+
 print("done")
 # %%
