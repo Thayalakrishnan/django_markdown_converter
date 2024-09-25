@@ -1,5 +1,48 @@
+#%%
 import re
 from typing import Union, List
+
+
+"""
+(?<=\b).+?(?=\b)
+(?P<o>\W|\W\W).+?(?P=o)
+
+(?P<code>(?:`).+?(?:`))|
+(?P<strong>(?:__).+?(?:__))|
+(?P<strong2>(?:\*\*).+?(?:\*\*))|
+(?P<em>(?:\*).+?(?:\*))|
+(?P<em2>(?:_).+?(?:_))|
+(?P<del>(?:\~\~).+?(?:\~\~))|
+(?P<del2>(?:\-\-).+?(?:\-\-))|
+(?P<mark>(?:==).+?(?:==))|
+(?P<samp>(?:``).+?(?:``))|
+(?P<emoji>(?::).+?(?::))|
+(?P<sup>(?:\^).+?(?:\^))|
+(?P<sub>(?:\~).+?(?:\~))|
+(?P<math>(?:\$).+?(?:\$))|
+(?P<navlink>(?:<navlink\ ).+?(?:</navlink>))|
+(?P<rawlink>(?:<).+?(?:>))|
+(?P<footnote>(?:\[\^).+?(?:\]))|
+(?P<link>(?:\[).+?(?:\)))
+
+
+
+(?P<code>(?:`).+?(?:`))|
+(?P<strong>(__.+?__)|(\*\*.+?\*\*))|
+(?P<em>(\*.+?\*)|(_.+?_))|
+(?P<del>(\~\~.+?\~\~)|(\-\-.+?\-\-))|
+(?P<mark>(?:==).+?(?:==))|
+(?P<samp>(?:``).+?(?:``))|
+(?P<emoji>(?::).+?(?::))|
+(?P<sup>(?:\^).+?(?:\^))|
+(?P<sub>(?:\~).+?(?:\~))|
+(?P<math>(?:\$).+?(?:\$))|
+(?P<navlink>(?:<navlink\ ).+?(?:</navlink>))|
+(?P<rawlink>(?:<).+?(?:>))|
+(?P<footnote>(?:\[\^).+?(?:\]))|
+(?P<link>(?:\[).+?(?:\)))
+"""
+
 
 """
 pattern
@@ -29,146 +72,60 @@ CASES_LIST = [
     [ ("[^", "]"), "footnote", False ],
     [ ("[", ")"),  "link", False ],
 ]
-"""
-(?<=\b).+?(?=\b)
-(?P<o>\W|\W\W).+?(?P=o)
- (?P<o>(?:(?:`)|(?:``)|(?:\*)|(?:\*\*)|(?:~~)|(?:\:)|(?:--)|(?:==)|(?:\^\^)|(?:~)|(?:\$)|(?:_)|(?:__))).+?(?P=o)
 
-
-(?:``.+?``)|
-(?:__.+?__)|
-(?:\*\*.+?\*\*)|
-(?:~~.+?~~)|
-(?:--.+?--)|
-(?:==.+?==)|
-(?:\^\^.+?\^\^)|
-(?:`.+?`)|
-(?:\*.+?\*)|
-(?:\:.+?\:)|
-(?:~.+?~)|
-(?:\$.+?\$)|
-(?:_.+?_)
-"""
-INLINE_PATTERN_RAW = r'(?P<block>^(?:```.*?```.*?)|(?:.*?))(?:^\{(?P<props>.*?)\} *?$\n)?^\n'
-# r"""(?P<open>(?:\`)|(?:\_\_)|(?:\_\_)|(?:\_\_)|(?:\_\_))  # the integral part
-INLINE_PATTERN = re.compile(r"(?P<open>(?:\`)|(?:\_\_)).*?(?P=open)", re.MULTILINE | re.DOTALL)
-INLINE_PATTERN = re.compile(r"(?P<o>(?:\`)|(?:\_\_)).*?(?P=o)", re.MULTILINE | re.DOTALL)
-INLINE_PATTERN = re.compile(
+INLINE_MARKUP_PATTERN = re.compile(
     r"""
-    (?P<o>
-        (?:\`)|
-        (?:\`\`)|
-        (?:\*)|
-        (?:\*\*)|
-        (?:\~\~)|
-        (?:\:)|
-        (?:\-\-)|
-        (?:\=\=)|
-        (?:\^\^)|
-        (?:\~)|
-        (?:\$)|
-        (?:\_))
-        (?:\_\_))
-    .*?
-    (?P=o)"""
-    , re.MULTILINE | re.DOTALL | re.VERBOSE)
+    (?P<code>(?:`).+?(?:`))|
+    (?P<strong>(?P<substrong>(?:\*\*)|(?:__)).+?(?P=substrong))|
+    (?P<em>(?P<subem>(?:\*)|(?:_)).+?(?P=subem))|
+    (?P<del>(?P<subdel>(?:\~\~)|(?:\-\-)).+?(?P=subdel))|
+    (?P<mark>(?:==).+?(?:==))|
+    (?P<samp>(?:``).+?(?:``))|
+    (?P<emoji>(?::).+?(?::))|
+    (?P<sup>(?:\^).+?(?:\^))|
+    (?P<sub>(?:\~).+?(?:\~))|
+    (?P<math>(?:\$).+?(?:\$))|
+    (?P<navlink>(?:<navlink\ ).+?(?:</navlink>))|
+    (?P<rawlink>(?:<).+?(?:>))|
+    (?P<footnote>(?:\[\^).+?(?:\]))|
+    (?P<link>(?:\[).+?(?:\)))
+    """
+    , re.VERBOSE)
 
-#INLINE_PATTERN = re.compile(INLINE_PATTERN_RAW, re.MULTILINE | re.DOTALL | re.VERBOSE)
-
-INLINE_PATTERN_RAW = r'(?:``.+?``)|(?:__.+?__)|(?:\*\*.+?\*\*)|(?:~~.+?~~)|(?:--.+?--)|(?:==.+?==)|(?:\^\^.+?\^\^)|(?:`.+?`)|(?:\*.+?\*)|(?:\:.+?\:)|(?:~.+?~)|(?:\$.+?\$)|(?:_.+?_)'
-INLINE_PATTERN = re.compile(INLINE_PATTERN_RAW)
-
-MD = ""
-
-
-
-
-# %%
-
-
-
-import re
-
-pattern1 = re.compile(r'(?:\_\_)')
-pattern2 = re.compile(r'(?:__)')
-pattern3 = re.compile(re.escape(r'(?:__)'))
-
-#print(pattern1.pattern)
-#print(pattern2.pattern)
-#print(pattern3.pattern)
-
-pattern1 = f'(?:**)'
-pattern2 = r'(?:**)'
-pattern3 = f'(?:\*\*)'
-pattern4 = r'(?:\*\*)'
-pattern5 = re.escape(pattern1)
-pattern6 = re.escape(pattern2)
-pattern7 = re.escape(pattern3)
-pattern8 = re.escape(pattern4)
-pattern9 = r'(?:' + re.escape("**") + r')'
-pattern10 = f'(?:{re.escape("**")})'
-
-print(repr(pattern1)) #  '(?:**)' | f string
-print(repr(pattern2)) #  '(?:**)' | raw string
-print(repr(pattern3)) #  '(?:\\*\\*)' | f string with escaped characters
-print(repr(pattern4)) #  '(?:\\*\\*)' | raw string with escaped characters
-print(repr(pattern5)) #  '\\(\\?:\\*\\*\\)' | re.escaped f string
-print(repr(pattern6)) #  '\\(\\?:\\*\\*\\)' | re.escaped raw string
-print(repr(pattern7)) #  '\\(\\?:\\\\\\*\\\\\\*\\)' | re.escaped raw string
-print(repr(pattern8)) #  '\\(\\?:\\\\\\*\\\\\\*\\)' | re.escaped raw string
-print(repr(pattern9)) #  '(?:\\*\\*)' |
-print(repr(pattern10)) # '(?:\\*\\*)' |
-
-print(pattern1) # (?:**) | f string
-print(pattern2) # (?:**) | raw string
-print(pattern3) # (?:\*\*) | f string with escaped characters
-print(pattern4) # (?:\*\*) | raw string with escaped characters
-print(pattern5) # \(\?:\*\*\) | re.escaped f string
-print(pattern6) # \(\?:\*\*\) | re.escaped raw string
-print(pattern7) # \(\?:\\\*\\\*\) | re.escaped raw string
-print(pattern8) # \(\?:\\\*\\\*\) | re.escaped raw string
-print(pattern9) # (?:\*\*) |
-print(pattern10) # (?:\*\*) |
+INLINE_MARKUP_PATTERN = re.compile(r"""
+(?P<code>(?:`).+?(?:`))|
+(?P<strong>(__.+?__)|(\*\*.+?\*\*))|
+(?P<em>(\*.+?\*)|(_.+?_))|
+(?P<del>(\~\~.+?\~\~)|(\-\-.+?\-\-))|
+(?P<mark>(?:==).+?(?:==))|
+(?P<samp>(?:``).+?(?:``))|
+(?P<emoji>(?::).+?(?::))|
+(?P<sup>(?:\^).+?(?:\^))|
+(?P<sub>(?:\~).+?(?:\~))|
+(?P<math>(?:\$).+?(?:\$))|
+(?P<navlink>(?:<navlink\ ).+?(?:</navlink>))|
+(?P<rawlink>(?:<).+?(?:>))|
+(?P<footnote>(?:\[\^).+?(?:\]))|
+(?P<link>(?:\[).+?(?:\)))""", re.VERBOSE)
 
 
-## repr returns the canonical representation of the string
-## it escapes characters so that they can be printed on stdout
+#INLINE_MARKUP_PATTERN = re.compile(r'(?P<code>(?:`).+?(?:`))|(?P<strong>(__.+?__)|(\*\*.+?\*\*)|(?P<em>(\*.+?\*)|(_.+?_)|(?P<del>(\~\~.+?\~\~)|(\-\-.+?\-\-)|(?P<mark>(?:==).+?(?:==))|(?P<samp>(?:``).+?(?:``))|(?P<emoji>(?::).+?(?::))|(?P<sup>(?:\^).+?(?:\^))|(?P<sub>(?:\~).+?(?:\~))|(?P<math>(?:\$).+?(?:\$))|(?P<navlink>(?:<navlink\ ).+?(?:</navlink>))|(?P<rawlink>(?:<).+?(?:>))|(?P<footnote>(?:\[\^).+?(?:\]))|(?P<link>(?:\[).+?(?:\)))')
 
-"""
-'end': 
-'endpos': 
-'expand': 
-'group': 
-'groupdict': 
-'groups': 
-'lastgroup': 
-'lastindex': 
-'pos': 
-'re': 
-'regs': 
-'span': 
-'start': 
-'string': full input string
-"""
-#%%
-import re
-from typing import Union, List
+#INLINE_PATTERN_RAW = r'(?:``.+?``)|(?:__.+?__)|(?:\*\*.+?\*\*)|(?:~~.+?~~)|(?:--.+?--)|(?:==.+?==)|(?:\^\^.+?\^\^)|(?:`.+?`)|(?:\*.+?\*)|(?:\:.+?\:)|(?:~.+?~)|(?:\$.+?\$)|(?:_.+?_)'
+#INLINE_PATTERN = re.compile(INLINE_PATTERN_RAW)
 
 CASES = [
     ## symettrical
-    [ ("`", "`"), "code", True, "code"],
-    [ ("__", "__"), "strong", True, "strong"],
-    [ ("**", "**"), "strong2", True, "strong"],
-    [ ("*", "*"), "em", True, "em"],
-    [ ("_", "_"), "em2", True, "em"],
-    [ ("~~", "~~"), "del", True, "del"],
-    [ ("--", "--"), "del2", True, "del"],
-    [ ("==", "=="), "mark", True, "mark"],
-    [ ("``", "``"), "samp", True, "samp"],
-    [ (":", ":"), "emoji", True, "emoji"],
-    [ ("^", "^"), "sup", True, "sup"],
-    [ ("~", "~"), "sub", True, "sub"],
-    [ ("$", "$"), "math", True, "math"],
+    [ ("`", "`"), "code", False, "code"],
+    [ [("**", "**"), ("__", "__")], "strong", True, "strong"],
+    [ [("*", "*"), ("_", "_")], "em", True, "em"],
+    [ [("~~", "~~"), ("--", "--")], "del", True, "del"],
+    [ ("==", "=="), "mark", False, "mark"],
+    [ ("``", "``"), "samp", False, "samp"],
+    [ (":", ":"), "emoji", False, "emoji"],
+    [ ("^", "^"), "sup", False, "sup"],
+    [ ("~", "~"), "sub", False, "sub"],
+    [ ("$", "$"), "math", False, "math"],
     ## non symettrical
     [ ("<navlink ", "</navlink>"), "navlink", False, "navlink"],
     [ ("<", ">"), "rawlink", False, "rawlink"],
@@ -183,6 +140,14 @@ def lambda_extractor(len_start:int=0, len_stop:int=0):
 def lambda_formatter(start:str="", stop:str=""):
     return lambda x: f"{start}{x}{stop}"
 
+
+#def multi_pattern(patterns:list=[]):
+#    for pat in patterns:
+#        f"(?:{re.escape(pat[0])})"
+#    
+#    f"(?P<strong>(?P<substrong>(?:\*\*)|(?:__)).+?(?P=substrong))"
+#    return lambda x: f"{start}{x}{stop}"
+
 compilespatterns = []
 symettrical_pattern = lambda x, l: f"(?P<{l}>(?:{x}).+?(?:{x}))"
 non_symettrical_pattern = lambda x,y,l: f"(?P<{l}>(?:{x}).+?(?:{y}))"
@@ -191,21 +156,25 @@ EXTRACT = {}
 FORMAT = {}
 
 for case in CASES:
-    pattern, key, symmetrical, name = case
     
-    if not symmetrical:
-        cpattern = non_symettrical_pattern(re.escape(pattern[0]), re.escape(pattern[1]), key)
+    pattern, key, multi, name = case
+    
+    if isinstance(pattern, list):
+        # multpattern
+        firstpattern = pattern[0]
+        cpattern = non_symettrical_pattern(re.escape(firstpattern[0]), re.escape(firstpattern[1]), key)
+        EXTRACT[key] = lambda_extractor(len(firstpattern[0]), len(firstpattern[1]))
+        FORMAT[key] = lambda_formatter(firstpattern[0], firstpattern[1])
     else:
         cpattern = non_symettrical_pattern(re.escape(pattern[0]), re.escape(pattern[1]), key)
-        #cpattern = symettrical_pattern(re.escape(pattern[0]), key)
+        EXTRACT[key] = lambda_extractor(len(pattern[0]), len(pattern[1]))
+        FORMAT[key] = lambda_formatter(pattern[0], pattern[1])
     
-    EXTRACT[key] = lambda_extractor(len(pattern[0]), len(pattern[1]))
-    FORMAT[key] = lambda_formatter(pattern[0], pattern[1])
     compilespatterns.append(cpattern)
 
 # no flags
-INLINE_MARKUP_PATTERN_RAW = "|".join(compilespatterns)
-INLINE_MARKUP_PATTERN = re.compile(INLINE_MARKUP_PATTERN_RAW)
+#INLINE_MARKUP_PATTERN_RAW = "|".join(compilespatterns)
+#INLINE_MARKUP_PATTERN = re.compile(INLINE_MARKUP_PATTERN_RAW)
 
 def extract_string(content:str="", pos:tuple=()):
     b, a = pos
@@ -326,8 +295,6 @@ def revert(blocklist:list=[]) -> str:
     return "".join(current_level)
 
 
-# %%
-
 MD = [
     """**Markdown Example** with _**Inline Markup**_.""",
     """This is a **bold** statement, and this is an _italicized_ one.""",
@@ -348,4 +315,5 @@ reverted = revert(converted)
 print(reverted)
 
 print("done")
+
 # %%
