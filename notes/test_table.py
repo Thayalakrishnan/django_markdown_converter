@@ -2,14 +2,18 @@
 import re
 
 single_pattern = lambda pat: f"({re.escape(pat[0])}.+?{re.escape(pat[1])})" # pat: pattern <tuple>
-or_join_patterns = lambda pats: "|".join(pats) # pats: patterns <list>
+join_patterns = lambda pats: "|".join(pats) # pats: patterns <list>
 label_pattern = lambda label, pats: f"(?P<{label}>{pats})" # label: label <string>, pat: pattern <tuple>
-multi_pattern = lambda label, pats: label_pattern(label, or_join_patterns(map(single_pattern, pats))) # label: label <string>, pats: patterns <list>
-simple_pattern = lambda label, pat: label_pattern(label, single_pattern(pat)) # label: label <string>, pat: pattern <tuple>
+generate_pattern = lambda label, pats: label_pattern(label, join_patterns(map(single_pattern, pats))) # label: label <string>, pats: patterns <list>
 
 class Pattern:
     
     def __init__(self, name:str="", pats:list=[]) -> None:
+        """
+        patterns is a list of patterns that correspond to the same
+        markup. so we chose the first pattern from the list to represent
+        the patterns
+        """
         self.name = name
         left, right = pats[0]
         
@@ -18,7 +22,7 @@ class Pattern:
         self.format = lambda x: f"{left}{x}{right}"
         
         ## regex patterns
-        self.re_pattern = multi_pattern(name, pats)
+        self.re_pattern = generate_pattern(name, pats)
         
 
 class PatternManager:
@@ -45,7 +49,7 @@ class PatternManager:
         
     def generate_regex(self, cases):
         self.add_patterns(cases)
-        return re.compile(or_join_patterns(self.PATTERNS))
+        return re.compile(join_patterns(self.PATTERNS))
 
 CASES = [
     ## symettrical

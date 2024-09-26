@@ -22,3 +22,13 @@ match = pattern.search(chunk)
 if match:
     #print(match.groups())
     print(match.groupdict())
+
+
+#%% 
+## remove start and end of string
+lambda_extractor = lambda start, stop: lambda x: x[start:stop*(-1)]
+remove2 = lambda_extractor(2, 2)
+print(remove2("xxyeetxx"))
+
+
+# %%

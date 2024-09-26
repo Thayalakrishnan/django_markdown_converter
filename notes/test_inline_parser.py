@@ -2,28 +2,6 @@
 import re
 from typing import Union, List
 
-
-"""
-(?<=\b).+?(?=\b)
-(?P<o>\W|\W\W).+?(?P=o)
-
-(?P<code>(?:`).+?(?:`))|
-(?P<strong>(__.+?__)|(\*\*.+?\*\*))|
-(?P<em>(\*.+?\*)|(_.+?_))|
-(?P<del>(\~\~.+?\~\~)|(\-\-.+?\-\-))|
-(?P<mark>(?:==).+?(?:==))|
-(?P<samp>(?:``).+?(?:``))|
-(?P<emoji>(?::).+?(?::))|
-(?P<sup>(?:\^).+?(?:\^))|
-(?P<sub>(?:\~).+?(?:\~))|
-(?P<math>(?:\$).+?(?:\$))|
-(?P<navlink>(?:<navlink\ ).+?(?:</navlink>))|
-(?P<rawlink>(?:<).+?(?:>))|
-(?P<footnote>(?:\[\^).+?(?:\]))|
-(?P<link>(?:\[).+?(?:\)))
-"""
-
-
 """
 pattern
 key
@@ -31,64 +9,40 @@ symmetrical
 """
 CASES = [
     ## symettrical
-    [("`", "`"), "code", True],
-    [[("**", "**"), ("__", "__")], "strong", True],
-    [[("*", "*"), ("_", "_")], "em", True],
-    [[("~~", "~~"), ("--", "--")], "del", True],
-    [("==", "=="), "mark", True],
-    [("``", "``"), "samp", True],
-    [(":", ":"), "emoji", True],
-    [("^", "^"), "sup", True],
-    [("~", "~"), "sub", True],
-    [("$", "$"), "math", True],
+    [[("`", "`")], "code"],
+    [[("**", "**"), ("__", "__")], "strong"],
+    [[("*", "*"), ("_", "_")], "em"],
+    [[("~~", "~~"), ("--", "--")], "del"],
+    [[("==", "==")], "mark"],
+    [[("``", "``")], "samp"],
+    [[(":", ":")], "emoji"],
+    [[("^", "^")], "sup"],
+    [[("~", "~")], "sub"],
+    [[("$", "$")], "math"],
     
     ## non symettrical
-    [("<navlink ", "</navlink>"), "navlink", False],
-    [("<", ">"), "rawlink", True],
-    [("[^", "]"), "footnote", False],
-    [("[", ")"), "link", False],
+    [[("<navlink ", "</navlink>")], "navlink"],
+    [[("<", ">")], "rawlink"],
+    [[("[^", "]")], "footnote"],
+    [[("[", ")")], "link"],
     #[(" ", " "), "text", True],
 ]
 
-def lambda_extractor(len_start:int=0, len_stop:int=0):
-    return lambda x: x[len_start:len_stop*(-1)]
-
-def lambda_formatter(start:str="", stop:str=""):
-    return lambda x: f"{start}{x}{stop}"
-
-
-def multi_pattern(patterns:list=[], pattern_key:str=""):
-    """
-    (?P<pattern_key>(patterns[0][0].+?patterns[0][1])|(patterns[1][0].+?patterns[1][1]))
-    """
-    stage1 = "|".join([f"({re.escape(pat[0])}.+?{re.escape(pat[1])})" for pat in patterns])
-    return f"(?P<{pattern_key}>{stage1})"
-
-def simple_pattern(pat:str="", pattern_key:str=""):
-    """
-    (?P<pattern_key>(left.+?right))
-    """
-    return f"(?P<{pattern_key}>({pat[0]}.+?{pat[1]}))"
-
-def label_pattern(pat:str="", pattern_key:str=""):
-    """
-    (?P<pattern_key>(left.+?right))
-    """
-    return f"(?P<{pattern_key}>{pat})"
-
+lambda_extractor = lambda pat: lambda x: x[len(pat[0]):len(pat[1])*(-1)]
+lambda_formatter = lambda pat: lambda x: f"{pat[0]}{x}{pat[1]}"
 
 # pat: pattern <tuple>
-simple_pattern = lambda pat: f"({pat[0]}.+?{pat[1]})"
+single_pattern = lambda pat: f"({re.escape(pat[0])}.+?{re.escape(pat[1])})" 
+join_patterns = lambda pats: "|".join(pats) # pats: patterns <list>
+label_pattern = lambda label, pats: f"(?P<{label}>{pats})" # label: label <string>, pat: pattern <tuple>
+generate_pattern = lambda pats, label: label_pattern(label, join_patterns([single_pattern(pat) for pat in pats])) # label: label <string>, pats: patterns <list>
 
-# pats: patterns <list>
-or_join_patterns = lambda pats: "|".join(pats)
-
-# label: label <string>, pat: pattern <tuple>
-label_pattern = lambda label, pats: f"(?P<{label}>{pats})"
-
-# label: label <string>, pats: patterns <list>
-multi_pattern = lambda pats, label: label_pattern(label, or_join_patterns([simple_pattern(pat) for pat in pats]))
-
+# processing content
+get_text_captured = lambda cur, content: content[cur[0]:cur[1]]
+get_text_between = lambda pre, cur, content: content[pre[1]:cur[0]]
+get_text_after = lambda cur, content: content[cur[1]::]
+create_text_object = lambda content: {"type": "text", "data": content}
+create_markup_object = lambda name, content, lookup: {"type": name, "data": lookup[name](content)}
 
 
 def create_inline_markup_patterns(case_list:list=[]):
@@ -97,54 +51,27 @@ def create_inline_markup_patterns(case_list:list=[]):
     format_dict = {}
     
     for case in case_list:
-
-        pattern, key, issymettrical = case
-
-        if isinstance(pattern, list):
-            # multipattern
-            firstpattern = pattern[0]
-            cpattern = multi_pattern(pattern, key)
-            extract_dict[key] = lambda_extractor(len(firstpattern[0]), len(firstpattern[1]))
-            format_dict[key] = lambda_formatter(firstpattern[0], firstpattern[1])
-        else:
-            cpattern = simple_pattern(re.escape(pattern[0]), re.escape(pattern[1]), key)
-            extract_dict[key] = lambda_extractor(len(pattern[0]), len(pattern[1]))
-            format_dict[key] = lambda_formatter(pattern[0], pattern[1])
-
-        generated_pattern_list.append(cpattern)
+        patterns, name = case
         
-    joined_pattern_list = "|".join(generated_pattern_list)
-    
-    return re.compile(joined_pattern_list), extract_dict, format_dict
+        pattern = patterns[0]
+        extract_dict[name] = lambda_extractor(pattern)
+        format_dict[name] = lambda_formatter(pattern)
+        
+        compiled_pattern = generate_pattern(patterns, name)
+        generated_pattern_list.append(compiled_pattern)
+        
+    joined_pattern_list = join_patterns(generated_pattern_list)
+    compiled_patterns = re.compile(joined_pattern_list)
+    return compiled_patterns, extract_dict, format_dict
 
 #EXTRACT = {}
 #FORMAT = {}
 
 INLINE_MARKUP_PATTERN, EXTRACT, FORMAT = create_inline_markup_patterns(CASES)
+
 # no flags
 #INLINE_MARKUP_PATTERN_RAW = "|".join(compilespatterns)
 #INLINE_MARKUP_PATTERN = re.compile(INLINE_MARKUP_PATTERN_RAW)
-
-def extract_string(content:str="", pos:tuple=()):
-    b, a = pos
-    before, middle, after = content[0:b], content[b:a], content[a:]
-    return before, middle, after
-
-def get_text_captured(cur:tuple=(), content:str="") -> str:
-    return content[cur[0]:cur[1]]
-
-def get_text_between(pre:tuple=(), cur:tuple=(), content:str="") -> str:
-    return content[pre[1]:cur[0]]
-
-def get_text_after(cur:tuple=(), content:str="") -> str:
-    return content[cur[1]::]
-
-def create_text_object(content):
-    return {"type": "text", "data": content}
-
-def create_markup_object(pattern_key, content):
-    formatted_content = EXTRACT[pattern_key](content)
-    return {"type": pattern_key, "data": formatted_content}
 
 def find_and_convert_inline(source:str="", bank:list=[]) -> Union[str, List]:
     """
@@ -177,7 +104,7 @@ def find_and_convert_inline(source:str="", bank:list=[]) -> Union[str, List]:
 
         # extract the text captured
         text_captured = get_text_captured(pos_current, source)
-        new_captured = create_markup_object(group_key, text_captured)
+        new_captured = create_markup_object(group_key, text_captured, EXTRACT)
         non_overlapping_content.append(new_captured)
         bank.append(new_captured)
 
