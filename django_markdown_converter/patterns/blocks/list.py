@@ -66,11 +66,12 @@ class ListPattern(BasePattern):
         props = self.block.get("props", {})
         ret = []
         self.flatten(self.block, 0, ret)
-        return "".join(ret)
+        return "\n".join(ret)
     
-    def flatten(self, block:dict={}, level:int=0, shared_arr:list=[]):
-        blocklist = block["data"]
-        for block in blocklist:
+    def flatten(self, root_block:dict={}, level:int=0, shared_arr:list=[]):
+        blocklist = root_block["data"]
+        
+        for index, block in enumerate(blocklist):
             for subblock in block["data"]:
                 """
                 if a subblock is a block (dict) we need to convert it
@@ -86,7 +87,10 @@ class ListPattern(BasePattern):
                         subblock = self.lookup_revert(block=subblock)
 
                 if isinstance(subblock, str):
-                    shared_arr.append(f"{level*' '}- {subblock}")
+                    if root_block["type"] == "ulist":
+                        shared_arr.append(f"{level*' '}- {subblock}")
+                    else:
+                        shared_arr.append(f"{level*' '}{index+1}. {subblock}")
 
     def add_to_bank(self, *args, **kwargs) -> None:
         pass
@@ -102,8 +106,6 @@ class ListPattern(BasePattern):
         padding = level + len(marker)
         # the triple curly braces translates f'^ {{{padding}}}' --> f'^ {4}' for padding = 4
         data = re.sub(pattern=f'^ {{{padding}}}', repl='', string=yeet["data"], flags=re.MULTILINE)
-        print(repr(data))
-        
         #data = create_text_item(text)
         #bank.append(data)
         new_item = {
@@ -116,9 +118,8 @@ class ListPattern(BasePattern):
         return new_item
 
     def create_text_item(self, text):
-        self.item_bank.append(self.lookup_convert(text))
+        self.item_bank.append(self.lookup_convert(text.strip()))
         ret = self.item_bank[len(self.item_bank) - 1]
-        print(ret)
         return ret
     
     def create_list_block(self, marker):

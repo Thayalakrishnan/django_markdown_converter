@@ -19,3 +19,28 @@ def test_basic_conversion():
     assert block_data_term == output["data"]["term"]
     assert block_data_definition in output["data"]["definition"]
 
+
+def test_basic_reversion():
+    """
+    """
+    block = {
+        "type": "dlist",
+        "props": {},
+        "data": {
+            "term": "mole",
+            "definition": ["a small burrowing mammal"],
+        }
+    }
+    
+    md_data_term = block['data']['term']
+    md_data_definition = block['data']['definition'][0]
+    
+    md = [
+        f'{md_data_term}',
+        f': {md_data_definition}',
+        f''
+    ]
+    md = "\n".join(md)
+    output = DListPattern().revert(block)
+    assert isinstance(output, str)
+    assert md == output

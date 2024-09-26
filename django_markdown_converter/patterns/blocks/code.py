@@ -79,5 +79,4 @@ class CodePattern(BasePattern):
         ret.extend(middle)
         ret.append(f"```")
         ret.append("")
-        
         return "\n".join(ret)

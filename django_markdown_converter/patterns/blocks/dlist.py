@@ -27,12 +27,18 @@ class DListPattern(BasePattern):
         props = self.block.get("props", {})
         data = self.block.get("data", "")
         
-        term = data.get("term", "")
-        definition = data.get("definition", [""])
-        definition = [f": {_}" for _ in definition]
-        
         ret = []
+        # term
+        term = data.get("term", "")
         ret.append(term)
-        ret.extend(definition)
+        
+        ## check here if the definition is a list or an
+        definition = data.get("definition", "")
+        if isinstance(definition, list):
+            definition = [f": {_}" for _ in definition]
+            ret.extend(definition)
+        else:
+            definition = f": {definition}"
+            ret.append(definition)
         ret.append("")
         return "\n".join(ret)

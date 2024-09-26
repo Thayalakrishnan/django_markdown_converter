@@ -15,20 +15,25 @@ class AdmonitionPattern(BasePattern):
     def get_data(self) -> dict:
         return dedent(self.match.group("data"))
     
-    
     def revert(self, *args, **kwargs) -> str:
         super().revert(*args, **kwargs)
         
         props = self.block.get("props", {})
         data = self.block.get("data", "")
         
-        atype = f' {props.get("type", "")}'.rstrip()
-        title = f' {props.get("title", "")}'.rstrip()
+        header = ["!!!"]
+        atype = props.get("type", "")
+        if atype:
+            header.append(atype)
 
+        title = props.get("title", "")
+        if title:
+            header.append(f"\"{title}\"")
+            
         data = [f"    {_}" for _ in data.splitlines()]
         
         ret = []
-        ret.append(f"!!!{atype}{title}")
+        ret.append(" ".join(header))
         ret.extend(data)
         ret.append(f"")
         return "\n".join(ret)

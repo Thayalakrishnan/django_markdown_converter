@@ -1,7 +1,5 @@
 import pytest
 from django_markdown_converter.patterns.blocks.table import TablePattern
-from django_markdown_converter.patterns.data import TABLE_PATTERN
-
 
 def test_basic_conversion():
     md = [
@@ -12,7 +10,7 @@ def test_basic_conversion():
         f'',
     ]
     md = "\n".join(md)
-    output = TablePattern(TABLE_PATTERN).convert(md)
+    output = TablePattern().convert(md)
     
     assert isinstance(output, dict)
     assert "table" == output["type"]
@@ -23,3 +21,33 @@ def test_basic_conversion():
     assert isinstance(output["data"]["header"], list)
     assert isinstance(output["data"]["body"], list)
     
+
+def test_basic_reversion():
+    """
+    """
+    header = ["column 1", "column 2"]
+    body = [
+        ["row 1 col 1", "row 1 col 2"], 
+        ["row 2 col 1", "row 2 col 2"]
+    ]
+    
+    block = {
+        "type": "table",
+        "props": {},
+        "data": {
+            "header": header,
+            "body": body
+        }
+    }
+    md = [
+        f'| {header[0]} | {header[1]} |',
+        f'| --- | --- |',
+        f'| {body[0][0]} | {body[0][1]} |',
+        f'| {body[1][0]} | {body[1][1]} |',
+        f'',
+    ]
+    
+    md = "\n".join(md)
+    output = TablePattern().revert(block)
+    assert isinstance(output, str)
+    assert md == output

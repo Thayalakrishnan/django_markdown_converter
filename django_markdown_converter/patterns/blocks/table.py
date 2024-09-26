@@ -20,22 +20,20 @@ class TablePattern(BasePattern):
         
     def revert(self, *args, **kwargs) -> str:
         super().revert(*args, **kwargs)
-        create_row_lambda = lambda x: f"| {' | '.join(x)} |"
+        create_row = lambda x: f"| {' | '.join(x)} |"
         
-        data = self.block.get("data", "")
+        data = self.block.get("data", {"header": [], "body": [[]]})
         
         header = data.get("header", [])
         body = data.get("body", [])
         breaker = ['---']*len(header)
         
         ret = []
-        ret.append(f"")
-        ret.extend(data)
-        
-        ret.append(create_row_lambda(header))
-        ret.append(create_row_lambda(breaker))
+        ret.append(create_row(header))
+        ret.append(create_row(breaker))
         for row in body:
-            ret.append(create_row_lambda(row))
+            ret.append(create_row(row))
+        ret.append(f"")
         return "\n".join(ret)
     
     
