@@ -8,11 +8,9 @@ def Revert(blocks:list=[]) -> str:
     converting the blocks into markdown
     return the blocks as the markdown string form
     """
-    stringlist = []
-    for block in blocks:
-        print(f"type {block['type']}")
-        current_block = BasePattern.BLOCK_LOOKUP[block["type"]].revert(block)
-        stringlist.append(current_block)
-    
-    return "\n".join(stringlist)
+    strings = []
+    bp = BasePattern()
+    for string in bp.block_reverter(blocks):
+        strings.append(string)
+    return "\n".join(strings)
 

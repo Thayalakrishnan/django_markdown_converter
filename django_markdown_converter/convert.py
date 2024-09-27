@@ -9,8 +9,10 @@ def Convert(source:str="") -> list:
     and return this object
     """
     blocks = []
+    bp = BasePattern()
     source = process_input_content(source)
-    for block in BasePattern.block_parser(source):
+    for block in bp.block_parser(source):
+        print(f"converting: {block['type']}")
         blocks.append(block)
     while BasePattern.nested_blocks_parser():
         continue

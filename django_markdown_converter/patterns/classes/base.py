@@ -201,7 +201,11 @@ class BasePattern:
                             _["data"] = newdata
                             content_was_processed = True
         return content_was_processed
-
+    
+    def block_reverter(self, blocklist:list=[]):
+        for block in blocklist:
+            string = self.BLOCK_LOOKUP[block["type"]].revert(block)
+            yield string
 
 from django_markdown_converter.patterns.blocks import *
     

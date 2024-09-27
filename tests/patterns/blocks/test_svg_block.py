@@ -26,9 +26,8 @@ def test_basic_reversion():
     }
     
     md = [
-        f'<svg>',
-        f'{block_data}',
-        f'</svg>',
+        f'<svg>{block_data}</svg>',
+        f'',
     ]
     md = "\n".join(md)
     output = SVGPattern().revert(block)

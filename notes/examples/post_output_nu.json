@@ -1348,25 +1348,25 @@
             {
                 "type": "item",
                 "data": [
-                    "Item 1\n"
+                    "Item 1"
                 ]
             },
             {
                 "type": "item",
                 "data": [
-                    "Item 2\n"
+                    "Item 2"
                 ]
             },
             {
                 "type": "item",
                 "data": [
-                    "Item 3\n"
+                    "Item 3"
                 ]
             },
             {
                 "type": "item",
                 "data": [
-                    "Item 4\n"
+                    "Item 4"
                 ]
             }
         ]
@@ -1380,32 +1380,32 @@
             {
                 "type": "item",
                 "data": [
-                    "Item 1\n"
+                    "Item 1"
                 ]
             },
             {
                 "type": "item",
                 "data": [
-                    "Item 2\n"
+                    "Item 2"
                 ]
             },
             {
                 "type": "item",
                 "data": [
-                    "Item 3\n",
+                    "Item 3",
                     {
                         "type": "olist",
                         "data": [
                             {
                                 "type": "item",
                                 "data": [
-                                    "Indented Item 1\n"
+                                    "Indented Item 1"
                                 ]
                             },
                             {
                                 "type": "item",
                                 "data": [
-                                    "Indented Item 2\n"
+                                    "Indented Item 2"
                                 ]
                             }
                         ]
@@ -1415,7 +1415,7 @@
             {
                 "type": "item",
                 "data": [
-                    "Item 4\n"
+                    "Item 4"
                 ]
             }
         ]
@@ -1444,19 +1444,19 @@
             {
                 "type": "item",
                 "data": [
-                    "Item 2\n"
+                    "Item 2"
                 ]
             },
             {
                 "type": "item",
                 "data": [
-                    "Item 3\n"
+                    "Item 3"
                 ]
             },
             {
                 "type": "item",
                 "data": [
-                    "Item 4\n"
+                    "Item 4"
                 ]
             }
         ]
@@ -1470,19 +1470,19 @@
             {
                 "type": "item",
                 "data": [
-                    "Item 1\n"
+                    "Item 1"
                 ]
             },
             {
                 "type": "item",
                 "data": [
-                    "Item 2\n"
+                    "Item 2"
                 ]
             },
             {
                 "type": "item",
                 "data": [
-                    "Item 3\n",
+                    "Item 3",
                     {
                         "type": "olist",
                         "data": [
@@ -1504,7 +1504,7 @@
                             {
                                 "type": "item",
                                 "data": [
-                                    "Indented Item 2\n"
+                                    "Indented Item 2"
                                 ]
                             }
                         ]
@@ -1514,7 +1514,7 @@
             {
                 "type": "item",
                 "data": [
-                    "Item 4\n"
+                    "Item 4"
                 ]
             }
         ]
@@ -1536,25 +1536,25 @@
             {
                 "type": "item",
                 "data": [
-                    "Item 1\n"
+                    "Item 1"
                 ]
             },
             {
                 "type": "item",
                 "data": [
-                    "Item 2\n"
+                    "Item 2"
                 ]
             },
             {
                 "type": "item",
                 "data": [
-                    "Item 3\n"
+                    "Item 3"
                 ]
             },
             {
                 "type": "item",
                 "data": [
-                    "Item 4\n"
+                    "Item 4"
                 ]
             }
         ]
@@ -1568,32 +1568,32 @@
             {
                 "type": "item",
                 "data": [
-                    "Item 1\n"
+                    "Item 1"
                 ]
             },
             {
                 "type": "item",
                 "data": [
-                    "Item 2\n"
+                    "Item 2"
                 ]
             },
             {
                 "type": "item",
                 "data": [
-                    "Item 3\n",
+                    "Item 3",
                     {
                         "type": "ulist",
                         "data": [
                             {
                                 "type": "item",
                                 "data": [
-                                    "Indented Item 1\n"
+                                    "Indented Item 1"
                                 ]
                             },
                             {
                                 "type": "item",
                                 "data": [
-                                    "Indented Item 2\n"
+                                    "Indented Item 2"
                                 ]
                             }
                         ]
@@ -1603,7 +1603,7 @@
             {
                 "type": "item",
                 "data": [
-                    "Item 4\n"
+                    "Item 4"
                 ]
             }
         ]
@@ -1632,19 +1632,19 @@
             {
                 "type": "item",
                 "data": [
-                    "Item 2\n"
+                    "Item 2"
                 ]
             },
             {
                 "type": "item",
                 "data": [
-                    "Item 3\n"
+                    "Item 3"
                 ]
             },
             {
                 "type": "item",
                 "data": [
-                    "Item 4\n"
+                    "Item 4"
                 ]
             }
         ]
@@ -1658,19 +1658,19 @@
             {
                 "type": "item",
                 "data": [
-                    "Item 1\n"
+                    "Item 1"
                 ]
             },
             {
                 "type": "item",
                 "data": [
-                    "Item 2\n"
+                    "Item 2"
                 ]
             },
             {
                 "type": "item",
                 "data": [
-                    "Item 3\n",
+                    "Item 3",
                     {
                         "type": "ulist",
                         "data": [
@@ -1692,7 +1692,7 @@
                             {
                                 "type": "item",
                                 "data": [
-                                    "Indented Item 2\n"
+                                    "Indented Item 2"
                                 ]
                             }
                         ]
@@ -1702,7 +1702,7 @@
             {
                 "type": "item",
                 "data": [
-                    "Item 4\n"
+                    "Item 4"
                 ]
             }
         ]
@@ -1716,7 +1716,7 @@
             {
                 "type": "item",
                 "data": [
-                    "Item 1: line 1.\nItem 1: line 2.\n"
+                    "Item 1: line 1.\nItem 1: line 2."
                 ]
             },
             {
@@ -1738,38 +1738,38 @@
                             {
                                 "type": "item",
                                 "data": [
-                                    "Item 2.1: line 1.\n"
+                                    "Item 2.1: line 1."
                                 ]
                             },
                             {
                                 "type": "item",
                                 "data": [
-                                    "Item 2.2: line 1.\n"
+                                    "Item 2.2: line 1."
                                 ]
                             },
                             {
                                 "type": "item",
                                 "data": [
-                                    "Item 2.3: line 1.\n",
+                                    "Item 2.3: line 1.",
                                     {
                                         "type": "olist",
                                         "data": [
                                             {
                                                 "type": "item",
                                                 "data": [
-                                                    "Item 2.3.1: line 1.\n"
+                                                    "Item 2.3.1: line 1."
                                                 ]
                                             },
                                             {
                                                 "type": "item",
                                                 "data": [
-                                                    "Item 2.3.2: line 1.\n"
+                                                    "Item 2.3.2: line 1."
                                                 ]
                                             },
                                             {
                                                 "type": "item",
                                                 "data": [
-                                                    "Item 2.3.3: line 1.\n"
+                                                    "Item 2.3.3: line 1."
                                                 ]
                                             }
                                         ]
@@ -1779,7 +1779,7 @@
                             {
                                 "type": "item",
                                 "data": [
-                                    "Item 2.4: line 1.\n"
+                                    "Item 2.4: line 1."
                                 ]
                             }
                         ]
@@ -1789,7 +1789,7 @@
             {
                 "type": "item",
                 "data": [
-                    "Item 3: line 1.\n",
+                    "Item 3: line 1.",
                     {
                         "type": "ulist",
                         "data": [
@@ -1887,7 +1887,7 @@
                             {
                                 "type": "item",
                                 "data": [
-                                    "Item 3.2: line 1.\n"
+                                    "Item 3.2: line 1."
                                 ]
                             }
                         ]
@@ -1897,7 +1897,7 @@
             {
                 "type": "item",
                 "data": [
-                    "Item 4: line 1.\n"
+                    "Item 4: line 1."
                 ]
             }
         ]
