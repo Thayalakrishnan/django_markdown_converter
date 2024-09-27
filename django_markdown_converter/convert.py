@@ -14,6 +14,6 @@ def Convert(source:str="") -> list:
     for block in bp.block_parser(source):
         print(f"converting: {block['type']}")
         blocks.append(block)
-    while BasePattern.nested_blocks_parser():
-        continue
+    #while bp.nested_blocks_parser():
+    #    continue
     return blocks

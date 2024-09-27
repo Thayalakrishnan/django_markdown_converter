@@ -111,6 +111,8 @@ class BasePattern:
         }
         self.update_props()
         self.add_to_bank()
+        if self.hasNested:
+            self.block_converter(self.block)
         return self.block
     
     def add_to_bank(self, *args, **kwargs) -> None:
@@ -132,6 +134,7 @@ class BasePattern:
             print(con)
             return con
         return [content]
+
 
     @classmethod
     def block_generator(cls, content:str=""):
@@ -167,7 +170,20 @@ class BasePattern:
         blocks = cls.block_generator(content)
         for block, props, index in blocks:
             yield cls.block_detector(block, props, index)
-
+            
+    @classmethod
+    def block_converter(cls, block:dict={}) -> dict:
+        """
+        take a block as input and convert its "data" key form md to blocks
+        """
+        blocks = []
+        source = process_input_content(block["data"])
+        for b in cls.block_parser(source):
+            print(f"converting: {b['type']}")
+            blocks.append(b)
+        if len(blocks):
+            block["data"] = blocks
+        
     @classmethod
     def nested_blocks_parser(cls) -> bool:
         """
