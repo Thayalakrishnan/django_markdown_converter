@@ -10,16 +10,16 @@ def test_basic_conversion():
         f'',
     ]
     md = "\n".join(md)
-    output = TablePattern().convert(md)
+    result = TablePattern().convert(md)
     
-    assert isinstance(output, dict)
-    assert "table" == output["type"]
+    assert isinstance(result, dict)
+    assert "table" == result["type"]
     
-    assert "header" in output["data"]
-    assert "body" in output["data"]
+    assert "header" in result["data"]
+    assert "body" in result["data"]
     
-    assert isinstance(output["data"]["header"], list)
-    assert isinstance(output["data"]["body"], list)
+    assert isinstance(result["data"]["header"], list)
+    assert isinstance(result["data"]["body"], list)
     
 
 def test_basic_reversion():
@@ -48,6 +48,6 @@ def test_basic_reversion():
     ]
     
     md = "\n".join(md)
-    output = TablePattern().revert(block)
-    assert isinstance(output, str)
-    assert md == output
+    result = TablePattern().revert(block)
+    assert isinstance(result, str)
+    assert md == result

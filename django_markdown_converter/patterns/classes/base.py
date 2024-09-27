@@ -183,40 +183,15 @@ class BasePattern:
             blocks.append(b)
         if len(blocks):
             block["data"] = blocks
-        
+            
     @classmethod
-    def nested_blocks_parser(cls) -> bool:
+    def convert_md_to_json(cls, md:str="") -> dict:
         """
+        take a block as input and convert its "data" key form md to blocks
         """
-        content_was_processed = False
-        for pattern in cls.BLOCK_LIST:
-            if pattern.hasNested:
-                
-                if pattern.blocktype == "ulist" or pattern.blocktype == "olist":
-                    for item in pattern.item_bank:
-                        for _ in range(len(item)):
-                            if isinstance(item[_], str):
-                                newdata = list(cls.block_parser(process_input_content(item[_])))
-                                if len(newdata):
-                                    item[_] = newdata
-                                    content_was_processed = True
-                else:
-                    ## loop over our patterns whicvh 
-                    ## may have nested content
-                    for _ in pattern.bank:
-                        ## if the content is already formated skip it
-                        if isinstance(_["data"], list):
-                            continue  
-                        #if isinstance(_["data"], dict):
-                        #    continue  
-                        ## convert the content into blocks
-                        newdata = list(cls.block_parser(process_input_content(_["data"])))
-                        #if pattern.blocktype == "olist" or pattern.blocktype == "ulist":
-                        #    if len(newdata) == 1:
-                        if len(newdata):
-                            _["data"] = newdata
-                            content_was_processed = True
-        return content_was_processed
+        root = {"type": "root", "data": md}
+        cls.block_converter(root)
+        return root["data"]
     
     def block_reverter(self, blocklist:list=[]):
         for block in blocklist:

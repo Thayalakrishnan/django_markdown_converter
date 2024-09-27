@@ -10,10 +10,10 @@ def test_basic_conversion():
         r'</svg>',
     ]
     md = "\n".join(md)
-    output = SVGPattern().convert(md)
-    assert isinstance(output, dict)
-    assert "svg" == output["type"]
-    assert block_data == output["data"]
+    result = SVGPattern().convert(md)
+    assert isinstance(result, dict)
+    assert "svg" == result["type"]
+    assert block_data == result["data"]
 
 
 def test_basic_reversion():
@@ -30,6 +30,6 @@ def test_basic_reversion():
         f'',
     ]
     md = "\n".join(md)
-    output = SVGPattern().revert(block)
-    assert isinstance(output, str)
-    assert md == output
+    result = SVGPattern().revert(block)
+    assert isinstance(result, str)
+    assert md == result

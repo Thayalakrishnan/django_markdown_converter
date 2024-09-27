@@ -13,11 +13,11 @@ def test_basic_conversion():
         ""
     ]
     md = "\n".join(md)
-    output = ParagraphPattern().convert(md)
+    result = ParagraphPattern().convert(md)
     
-    assert "paragraph" == output["type"]
-    assert isinstance(output["data"], str)
-    assert block_data_sentence_1 == output["data"]
+    assert "paragraph" == result["type"]
+    assert isinstance(result["data"], str)
+    assert block_data_sentence_1 == result["data"]
 
 
 def test_basic_reversion():
@@ -36,6 +36,6 @@ def test_basic_reversion():
         f''
     ]
     md = "\n".join(md)
-    output = ParagraphPattern().revert(block)
-    assert isinstance(output, str)
-    assert md == output
+    result = ParagraphPattern().revert(block)
+    assert isinstance(result, str)
+    assert md == result

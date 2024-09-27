@@ -16,13 +16,13 @@ def test_basic_conversion():
     ]
     md = "\n".join(md)
     
-    output = AdmonitionPattern().convert(md)
+    result = AdmonitionPattern().convert(md)
     
-    assert isinstance(output, dict)
-    assert "admonition" == output["type"]
-    assert block_prop_type == output["props"]["type"]
-    assert block_prop_title == output["props"]["title"]
-    assert block_data == output["data"]
+    assert isinstance(result, dict)
+    assert "admonition" == result["type"]
+    assert block_prop_type == result["props"]["type"]
+    assert block_prop_title == result["props"]["title"]
+    assert block_data == result["data"]
 
 
 
@@ -50,10 +50,10 @@ def test_basic_reversion():
         f''
     ]
     md = "\n".join(md)
-    output = AdmonitionPattern().revert(block)
+    result = AdmonitionPattern().revert(block)
     
     print(repr(md))
-    print(repr(output))
+    print(repr(result))
     
-    assert isinstance(output, str)
-    assert md == output
+    assert isinstance(result, str)
+    assert md == result

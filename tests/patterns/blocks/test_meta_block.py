@@ -16,13 +16,13 @@ def test_basic_conversion():
     ]
     
     md = "\n".join(md)
-    output = MetaPattern().convert(md)
+    result = MetaPattern().convert(md)
     
-    assert isinstance(output, dict)
-    assert "meta" == output["type"]
-    assert block_value_1 == output["data"][block_key_1]
-    assert block_value_2 == output["data"][block_key_2]
-    #assert block_data == output["data"]
+    assert isinstance(result, dict)
+    assert "meta" == result["type"]
+    assert block_value_1 == result["data"][block_key_1]
+    assert block_value_2 == result["data"][block_key_2]
+    #assert block_data == result["data"]
 
 
 def test_basic_reversion():
@@ -48,6 +48,6 @@ def test_basic_reversion():
         f'---',
     ]
     md = "\n".join(md)
-    output = MetaPattern().revert(block)
-    assert isinstance(output, str)
-    assert md == output
+    result = MetaPattern().revert(block)
+    assert isinstance(result, str)
+    assert md == result

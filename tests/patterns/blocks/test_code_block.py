@@ -28,14 +28,14 @@ def test_basic_conversion():
         f'```',
     ]
     md = "\n".join(md)
-    output = CodePattern().convert(md, block_props_string)
+    result = CodePattern().convert(md, block_props_string)
     
-    assert isinstance(output, dict)
-    assert "code" == output["type"]
+    assert isinstance(result, dict)
+    assert "code" == result["type"]
     
-    assert block_prop_language == output["props"]["language"]
-    assert block_prop_title == output["props"]["title"]
-    assert block_prop_caption == output["props"]["caption"]
+    assert block_prop_language == result["props"]["language"]
+    assert block_prop_title == result["props"]["title"]
+    assert block_prop_caption == result["props"]["caption"]
 
 
 
@@ -64,7 +64,7 @@ def test_basic_reversion():
         f'',
     ]
     md = "\n".join(md)
-    output = CodePattern().revert(block)
-    assert isinstance(output, str)
-    assert md == output
+    result = CodePattern().revert(block)
+    assert isinstance(result, str)
+    assert md == result
     

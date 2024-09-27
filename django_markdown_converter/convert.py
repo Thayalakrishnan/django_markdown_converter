@@ -8,12 +8,5 @@ def Convert(source:str="") -> list:
     convert the markdown into our json format
     and return this object
     """
-    blocks = []
     bp = BasePattern()
-    source = process_input_content(source)
-    for block in bp.block_parser(source):
-        print(f"converting: {block['type']}")
-        blocks.append(block)
-    #while bp.nested_blocks_parser():
-    #    continue
-    return blocks
+    return bp.convert_md_to_json(source)

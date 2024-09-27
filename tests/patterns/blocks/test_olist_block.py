@@ -17,12 +17,12 @@ def test_basic_conversion():
     ]
     
     md = "\n".join(md)
-    output = OListPattern().convert(md)
+    result = OListPattern().convert(md)
     
-    assert isinstance(output, dict)
-    assert "olist" == output["type"]
-    assert isinstance(output["data"], list)
-    for index, item in enumerate(output["data"]):
+    assert isinstance(result, dict)
+    assert "olist" == result["type"]
+    assert isinstance(result["data"], list)
+    for index, item in enumerate(result["data"]):
         assert item["type"] == "item"
         assert item["data"] == [block_list_items[index]]
 
@@ -63,6 +63,6 @@ def test_basic_reversion():
     ]
     
     md = "\n".join(md)
-    output = OListPattern().revert(block)
-    assert isinstance(output, str)
-    assert md == output
+    result = OListPattern().revert(block)
+    assert isinstance(result, str)
+    assert md == result

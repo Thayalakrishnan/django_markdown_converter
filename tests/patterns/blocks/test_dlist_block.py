@@ -13,11 +13,11 @@ def test_basic_conversion():
         "",
     ]
     md = "\n".join(md)
-    output = DListPattern(DLIST_PATTERN).convert(md)
-    assert isinstance(output, dict)
-    assert "dlist" == output["type"]
-    assert block_data_term == output["data"]["term"]
-    assert block_data_definition in output["data"]["definition"]
+    result = DListPattern(DLIST_PATTERN).convert(md)
+    assert isinstance(result, dict)
+    assert "dlist" == result["type"]
+    assert block_data_term == result["data"]["term"]
+    assert block_data_definition in result["data"]["definition"]
 
 
 def test_basic_reversion():
@@ -41,6 +41,6 @@ def test_basic_reversion():
         f''
     ]
     md = "\n".join(md)
-    output = DListPattern().revert(block)
-    assert isinstance(output, str)
-    assert md == output
+    result = DListPattern().revert(block)
+    assert isinstance(result, str)
+    assert md == result

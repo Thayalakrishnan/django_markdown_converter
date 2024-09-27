@@ -12,13 +12,13 @@ def test_basic_conversion():
         f'',
     ]
     md = "\n".join(md)
-    output = ImagePattern().convert(md)
+    result = ImagePattern().convert(md)
     
-    assert isinstance(output, dict)
-    assert "image" == output["type"]
-    assert block_prop_title == output["props"]["title"]
-    assert block_prop_alt == output["props"]["alt"]
-    assert block_prop_src == output["data"]
+    assert isinstance(result, dict)
+    assert "image" == result["type"]
+    assert block_prop_title == result["props"]["title"]
+    assert block_prop_alt == result["props"]["alt"]
+    assert block_prop_src == result["data"]
 
 
 def test_basic_reversion():
@@ -43,6 +43,6 @@ def test_basic_reversion():
         f''
     ]
     md = "\n".join(md)
-    output = ImagePattern().revert(block)
-    assert isinstance(output, str)
-    assert md == output
+    result = ImagePattern().revert(block)
+    assert isinstance(result, str)
+    assert md == result

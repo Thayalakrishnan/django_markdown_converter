@@ -20,16 +20,7 @@ raw_chunk = process_input_content(raw_chunk)
 
 #BasePattern.InitialiseClasses()
 bp = BasePattern()
-
-#print(BasePattern.BLOCK_LIST)
-print(bp.BLOCK_LOOKUP)
-
-for block in bp.block_parser(raw_chunk):
-    json_root_nu.append(block)
-
-#while bp.nested_blocks_parser():
-#    continue
-#bp.nested_blocks_parser()
+json_root_nu = bp.convert_md_to_json(raw_chunk)
 
 #write_to_file = "notes/examples/post_output"
 write_to_json_file = "notes/examples/post_output.json"

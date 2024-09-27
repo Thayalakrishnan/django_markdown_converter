@@ -10,11 +10,11 @@ def test_basic_conversion():
         "",
     ]
     md = "\n".join(md)
-    output = FootnotePattern().convert(md)
+    result = FootnotePattern().convert(md)
     
-    assert isinstance(output, dict)
-    assert "footnote" == output["type"]
-    assert block_index == output["props"]["index"]
+    assert isinstance(result, dict)
+    assert "footnote" == result["type"]
+    assert block_index == result["props"]["index"]
 
 
 def test_basic_reversion():
@@ -37,6 +37,6 @@ def test_basic_reversion():
         f''
     ]
     md = "\n".join(md)
-    output = FootnotePattern().revert(block)
-    assert isinstance(output, str)
-    assert md == output
+    result = FootnotePattern().revert(block)
+    assert isinstance(result, str)
+    assert md == result

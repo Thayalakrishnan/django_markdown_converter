@@ -8,9 +8,9 @@ def test_basic_conversion():
         f'',
     ]
     md = "\n".join(md)
-    output = HRPattern().convert(md)
-    assert isinstance(output, dict)
-    assert "hr" == output["type"]
+    result = HRPattern().convert(md)
+    assert isinstance(result, dict)
+    assert "hr" == result["type"]
 
 
 def test_basic_reversion():
@@ -28,6 +28,6 @@ def test_basic_reversion():
         f''
     ]
     md = "\n".join(md)
-    output = HRPattern().revert(block)
-    assert isinstance(output, str)
-    assert md == output
+    result = HRPattern().revert(block)
+    assert isinstance(result, str)
+    assert md == result

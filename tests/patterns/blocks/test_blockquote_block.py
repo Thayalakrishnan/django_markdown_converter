@@ -10,12 +10,12 @@ def test_basic_conversion():
         f"> {block_data}",
     ]
     md = "\n".join(md)
-    output = BlockquotePattern().convert(md)
+    result = BlockquotePattern().convert(md)
     
-    assert isinstance(output, dict)
-    assert "blockquote" == output["type"]
-    assert block_props == output["props"]
-    assert block_data == output["data"]
+    assert isinstance(result, dict)
+    assert "blockquote" == result["type"]
+    assert block_props == result["props"]
+    assert block_data == result["data"]
 
 
 
@@ -36,6 +36,6 @@ def test_basic_reversion():
     ]
     md = "\n".join(md)
     
-    output = BlockquotePattern().revert(block)
-    assert isinstance(output, str)
-    assert md == output
+    result = BlockquotePattern().revert(block)
+    assert isinstance(result, str)
+    assert md == result
