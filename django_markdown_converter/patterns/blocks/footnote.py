@@ -27,5 +27,5 @@ class FootnotePattern(BasePattern):
         ret = []
         ret.append(f"[^{index}]:")
         ret.extend(data)
-        ret.append(f"")
+        #ret.append(f"")
         return "\n".join(ret)

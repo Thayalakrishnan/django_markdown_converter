@@ -25,5 +25,5 @@ class SVGPattern(BasePattern):
         
         ret = []
         ret.append(wrap_html_content("svg", attrs, data))
-        ret.append("")
+        #ret.append("")
         return "\n".join(ret)

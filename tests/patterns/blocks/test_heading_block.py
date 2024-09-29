@@ -1,20 +1,7 @@
 import pytest
 from django_markdown_converter.patterns.blocks.heading import HeadingPattern
 
-def test_basic_conversion():
-    heading_type = "heading"
-    heading_data = "This is a heading"
-    heading_id = heading_data.lower().replace(" ", "-")
-    heading_level = 2
-    heading_raw = f"{'#'*heading_level} {heading_data}"
-    md = heading_raw
-    
-    result = HeadingPattern().convert(md)
-    assert isinstance(result, dict)
-    assert heading_type == result["type"]
-    #assert heading_id == result["props"]["id"]
-    assert heading_level == result["props"]["level"]
-    assert heading_data == result["data"]
+
 
 def test_heading_levels():
     # test heading level 0 - 7
@@ -41,30 +28,23 @@ def test_heading_with_extra_content():
     md = "\n".join(md)
     result = HeadingPattern().convert(md)
     assert isinstance(result, dict)
-    
-    
-    
+
+HEADING_BLOCK_DATA = {
+    "type": "heading",
+    "props": {
+        "level": 2,
+    },
+    "data": "Example Heading"
+}
+
+
+HEADING_MD_DATA = f'''## {HEADING_BLOCK_DATA["data"]}'''
+
+
+def test_basic_conversion():
+    result = HeadingPattern().convert(HEADING_MD_DATA)
+    assert HEADING_BLOCK_DATA == result
 
 def test_basic_reversion():
-    """
-    """
-    block = {
-        "type": "heading",
-        "props": {
-            "level": 2,
-            "id": "Example Note",
-        },
-        "data": "Heading content!"
-    }
-    
-    md_props_level = block['props']['level']
-    md_data = block['data']
-    
-    md = [
-        '#'*md_props_level + f' {md_data}',
-        f''
-    ]
-    md = "\n".join(md)
-    result = HeadingPattern().revert(block)
-    assert isinstance(result, str)
-    assert md == result
+    result = HeadingPattern().revert(HEADING_BLOCK_DATA)
+    assert HEADING_MD_DATA == result

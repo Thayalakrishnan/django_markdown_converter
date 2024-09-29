@@ -12,5 +12,5 @@ class HRPattern(BasePattern):
         data = self.block.get("data", "---")
         ret = []
         ret.append(data)
-        ret.append("")
+        #ret.append("")
         return "\n".join(ret)

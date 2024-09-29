@@ -19,5 +19,5 @@ class ImagePattern(BasePattern):
         
         ret = []
         ret.append(create_image_lambda(alt, src, title))
-        ret.append("")
+        #ret.append("")
         return "\n".join(ret)

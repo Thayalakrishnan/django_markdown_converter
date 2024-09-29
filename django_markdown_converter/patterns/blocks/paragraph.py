@@ -51,7 +51,7 @@ class ParagraphPattern(BasePattern):
         if isinstance(data, str):
             ret = []
             ret.append(data)
-            ret.append("")
+            #ret.append("")
             return "\n".join(ret)
         else:
             p = [loop_recursion(data)]

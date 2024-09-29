@@ -1,33 +1,19 @@
 import pytest
 from django_markdown_converter.patterns.blocks.hr import HRPattern
 
-def test_basic_conversion():
-    block_data = ""
-    md = [
-        f'***',
-        f'',
-    ]
-    md = "\n".join(md)
-    result = HRPattern().convert(md)
-    assert isinstance(result, dict)
-    assert "hr" == result["type"]
+HR_BLOCK_DATA = {
+    "type": "hr",
+    "props": {},
+    "data": "---"
+}
 
+
+HR_MD_DATA = f'''---'''
+
+def test_basic_conversion():
+    result = HRPattern().convert(HR_MD_DATA)
+    assert HR_BLOCK_DATA == result
 
 def test_basic_reversion():
-    """
-    """
-    block = {
-        "type": "hr",
-        "props": {
-        },
-        "data": "---"
-    }
-    md_data = block['data']
-    md = [
-        f'{md_data}',
-        f''
-    ]
-    md = "\n".join(md)
-    result = HRPattern().revert(block)
-    assert isinstance(result, str)
-    assert md == result
+    result = HRPattern().revert(HR_BLOCK_DATA)
+    assert HR_MD_DATA == result

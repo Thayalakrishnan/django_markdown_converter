@@ -24,5 +24,4 @@ class BlockquotePattern(BasePattern):
         
         ret = []
         ret.extend(data)
-        ret.append(f"")
         return "\n".join(ret)

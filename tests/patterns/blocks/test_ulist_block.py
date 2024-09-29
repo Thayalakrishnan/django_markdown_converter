@@ -1,67 +1,35 @@
 import pytest
 from django_markdown_converter.patterns.blocks.list import UListPattern
+    
+ULIST_BLOCK_DATA = {
+    "type": "ulist",
+    "props": {},
+    "data": [
+        {
+            "type": "item",
+            "data": ["List Item 1"]
+        },
+        {
+            "type": "item",
+            "data": ["List Item 2"]
+        },
+        {
+            "type": "item",
+            "data": ["List Item 3"]
+        },
+    ]
+}
+
+
+ULIST_MD_DATA = f'''- {ULIST_BLOCK_DATA["data"][0]["data"][0]}
+- {ULIST_BLOCK_DATA["data"][1]["data"][0]}
+- {ULIST_BLOCK_DATA["data"][2]["data"][0]}
+'''
 
 def test_basic_conversion():
-    block_list_items = [
-        "List Item 1",
-        "List Item 2",
-        "List Item 3",
-    ]
-    
-    md = [
-        f'- {block_list_items[0]}',
-        f'- {block_list_items[1]}',
-        f'- {block_list_items[2]}',
-        f'',
-    ]
-    
-    md = "\n".join(md)
-    result = UListPattern().convert(md)
-    
-    assert isinstance(result, dict)
-    assert "ulist" == result["type"]
-    assert isinstance(result["data"], list)
-    for index, item in enumerate(result["data"]):
-        assert item["type"] == "item"
-        assert item["data"] == [block_list_items[index]]
-
+    result = UListPattern().convert(ULIST_MD_DATA)
+    assert ULIST_BLOCK_DATA == result
 
 def test_basic_reversion():
-    """
-    """
-    block_list_items = [
-        "List Item 1",
-        "List Item 2",
-        "List Item 3",
-    ]
-        
-    block = {
-        "type": "ulist",
-        "props": {
-        },
-        "data": [
-            {
-                "type": "item",
-                "data": [block_list_items[0]]
-            },
-            {
-                "type": "item",
-                "data": [block_list_items[1]]
-            },
-            {
-                "type": "item",
-                "data": [block_list_items[2]]
-            },
-        ]
-    }
-    
-    md = [
-        f'- {block_list_items[0]}',
-        f'- {block_list_items[1]}',
-        f'- {block_list_items[2]}',
-    ]
-
-    md = "\n".join(md)
-    result = UListPattern().revert(block)
-    assert isinstance(result, str)
-    assert md == result
+    result = UListPattern().revert(ULIST_BLOCK_DATA)
+    assert ULIST_MD_DATA == result

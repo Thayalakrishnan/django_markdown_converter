@@ -1,35 +1,21 @@
 import pytest
 from django_markdown_converter.patterns.blocks.svg import SVGPattern
 
+SVG_BLOCK_DATA = {
+    "type": "svg",
+    "props": {
+        "title": "graphic title"
+    },
+    "data": "content"
+}
+
+
+SVG_MD_DATA = f'''<svg title="graphic title">{SVG_BLOCK_DATA["data"]}</svg>'''
 
 def test_basic_conversion():
-    block_data = "content"
-    md = [
-        r'<svg title="graphic title">',
-        f'{block_data}',
-        r'</svg>',
-    ]
-    md = "\n".join(md)
-    result = SVGPattern().convert(md)
-    assert isinstance(result, dict)
-    assert "svg" == result["type"]
-    assert block_data == result["data"]
-
+    result = SVGPattern().convert(SVG_MD_DATA)
+    assert SVG_BLOCK_DATA == result
 
 def test_basic_reversion():
-    block_data = "content"
-    block = {
-        "type": "svg",
-        "props": {
-        },
-        "data": block_data
-    }
-    
-    md = [
-        f'<svg>{block_data}</svg>',
-        f'',
-    ]
-    md = "\n".join(md)
-    result = SVGPattern().revert(block)
-    assert isinstance(result, str)
-    assert md == result
+    result = SVGPattern().revert(SVG_BLOCK_DATA)
+    assert SVG_MD_DATA == result

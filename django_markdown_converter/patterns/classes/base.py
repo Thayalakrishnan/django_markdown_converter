@@ -43,6 +43,7 @@ class BasePattern:
     def __init__(self, name:str="base", pattern_object:dict={}, *args, **kwargs) -> None:
         
         self.name = name
+        self.can_process_nested_blocks = False
         
         if pattern_object:
             print(f"initialising {name}")
@@ -67,6 +68,7 @@ class BasePattern:
                 self.BLOCK_LIST.append(self)
         else:
             self.InitialiseClasses()
+            self.can_process_nested_blocks = True
     
     @classmethod
     def InitialiseClasses(cls) -> None:
@@ -100,7 +102,7 @@ class BasePattern:
         return {}
             
     def convert(self, content:str="", props:str="", *args, **kwargs) -> dict:
-        print(f"converting: {self.blocktype}")
+        #print(f"converting: {self.blocktype}")
         self.get_match(content)
         if not self.match:
             return {}
@@ -111,7 +113,7 @@ class BasePattern:
         }
         self.update_props()
         self.add_to_bank()
-        if self.hasNested:
+        if self.can_process_nested_blocks and self.hasNested:
             self.block_converter(self.block)
         return self.block
     
@@ -122,7 +124,7 @@ class BasePattern:
     
     def revert(self, block:dict={}, *args, **kwargs) -> str:
         self.block = block
-        print(f"reverting: {self.blocktype}")
+        #print(f"reverting: {self.blocktype}")
         return block["data"]
     
     def lookup_revert(self, block:dict={}) -> str:
@@ -178,9 +180,11 @@ class BasePattern:
         """
         blocks = []
         source = process_input_content(block["data"])
+        print(source)
         for b in cls.block_parser(source):
-            print(f"converting: {b['type']}")
-            blocks.append(b)
+            #print(f"converting: {b['type']}")
+            if b:
+                blocks.append(b)
         if len(blocks):
             block["data"] = blocks
             

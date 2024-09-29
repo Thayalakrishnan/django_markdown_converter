@@ -23,5 +23,5 @@ class HeadingPattern(BasePattern):
         
         ret = []
         ret.append(create_heading_lambda(level, data))
-        ret.append(f"")
+        #ret.append(f"")
         return "\n".join(ret)
