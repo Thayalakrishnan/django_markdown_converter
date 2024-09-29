@@ -2,6 +2,32 @@
 import re
 from typing import Union, List
 
+
+"""
+- this method stuggled with the edge cases of finding the largest match possible
+- for example, given the string:
+***Markdown Example** with *.but we could keep going and going *till there is another one* italizczed. 
+- we should match:
+    - Markdown Example <italics><strong>
+    -  with <italics>
+    - .but we could keep going and going 
+    - till there is another one <italics>
+    -  italizczed. 
+- one option is to do the nested permutations as well:
+(?P<strong>(?!\*)\*\*.+?\*\*)|(?P<em>\*.[^*]+?\*)|(?P<strongem>\*\*.*?\*.*?\*.*?\*\*)|(?P<em_strong>\*.*?\*\*.*?\*\*.*?\*)
+
+
+- an alternate way to structure the patterns so that we dont have to do an extraction
+(?:\*\*(?P<strong_em>.*?\*.*?\*.*?)\*\*)|
+(?:\*(?P<em_strong>.*?\*\*.*?\*\*.*?)\*)|
+(?:\*\*(?P<strong>.+?)\*\*)|
+(?:\*(?P<em>.[^*]+?)\*)
+
+- an alternate way to structure the patterns so that we dont have to do an extraction
+(?:\*\*(?P<strong>.+?)\*\*)|
+(?:\*(?P<em>.[^*]+?)\*)
+"""
+
 """
 pattern
 key
