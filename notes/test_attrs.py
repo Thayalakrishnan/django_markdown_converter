@@ -34,3 +34,29 @@ for m in matches:
     #print(m)
     print(m.groupdict())
 # %%
+
+block = {
+    "type": "svg",
+    "props": {
+        "title": "generic title"
+    },
+    "type": "content"
+}
+
+
+generate_attrs = lambda k: f'{k[0]}="{k[1]}"'
+pad_if_present = lambda x: f' {x}' if len(x) else f''
+wrap_html_content = lambda t, a, c: f'<{t}{pad_if_present(a)}>{c}</{t}>'
+
+props = block.get("props", {})
+print(props)
+print(list(props.items()))
+
+props = [('title', 'generic title')]
+
+print(list(map(generate_attrs, props)))
+attrs = ""
+
+#if props:
+#    attrs = " ".join(list(map(generate_attrs, props)))
+# %%

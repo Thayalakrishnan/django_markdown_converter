@@ -23,8 +23,7 @@ ULIST_BLOCK_DATA = {
 
 ULIST_MD_DATA = f'''- {ULIST_BLOCK_DATA["data"][0]["data"][0]}
 - {ULIST_BLOCK_DATA["data"][1]["data"][0]}
-- {ULIST_BLOCK_DATA["data"][2]["data"][0]}
-'''
+- {ULIST_BLOCK_DATA["data"][2]["data"][0]}'''
 
 def test_basic_conversion():
     result = UListPattern().convert(ULIST_MD_DATA)

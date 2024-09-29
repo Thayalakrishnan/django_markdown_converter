@@ -12,5 +12,5 @@ def Revert(blocks:list=[]) -> str:
     bp = BasePattern()
     for string in bp.block_reverter(blocks):
         strings.append(string)
-    return "\n".join(strings)
+    return "\n\n".join(strings) + "\n"
 

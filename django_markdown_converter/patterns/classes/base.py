@@ -87,6 +87,10 @@ class BasePattern:
                 continue
             if self.match.group(p):
                 self.block["props"].update({p: self.match.group(p).strip()})
+            if p == "attrs":
+                attrs = process_props(self.match.group("attrs"))
+                self.block["props"].update(attrs)
+                del self.block["props"]["attrs"]
 
     def get_props(self, props:str="") -> dict:
         if props:
@@ -100,8 +104,13 @@ class BasePattern:
         if "data" in self.data:
             return self.match.group("data").strip()
         return {}
-            
+    
     def convert(self, content:str="", props:str="", *args, **kwargs) -> dict:
+        """
+        the props can come in as:
+        - curly braced enclosed attrs, after a block elelemt
+        - a string of key value pairs from something like a XML element
+        """
         #print(f"converting: {self.blocktype}")
         self.get_match(content)
         if not self.match:

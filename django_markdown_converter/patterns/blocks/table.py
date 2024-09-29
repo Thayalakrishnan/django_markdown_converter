@@ -33,7 +33,7 @@ class TablePattern(BasePattern):
         ret.append(create_row(breaker))
         for row in body:
             ret.append(create_row(row))
-        #ret.append(f"")
+        ret.append(f"")
         return "\n".join(ret)
     
     

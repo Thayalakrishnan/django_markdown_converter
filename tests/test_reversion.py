@@ -16,5 +16,7 @@ def test_basic_reversion():
     ]
     expected = "\n".join(expected)
     result = Revert(blocks)
+    print(repr(expected))
+    print(repr(result))
     assert isinstance(result, str)
     assert expected == result

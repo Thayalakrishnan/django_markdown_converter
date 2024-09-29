@@ -9,8 +9,7 @@ SVG_BLOCK_DATA = {
     "data": "content"
 }
 
-
-SVG_MD_DATA = f'''<svg title="graphic title">{SVG_BLOCK_DATA["data"]}</svg>'''
+SVG_MD_DATA = f'''<svg title="{SVG_BLOCK_DATA["props"]["title"]}">{SVG_BLOCK_DATA["data"]}</svg>'''
 
 def test_basic_conversion():
     result = SVGPattern().convert(SVG_MD_DATA)
