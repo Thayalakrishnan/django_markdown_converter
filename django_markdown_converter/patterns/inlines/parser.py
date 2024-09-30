@@ -20,7 +20,7 @@ R_CONTENT_INLINE_IMAGE = r'(?P<content>(?P<alt>.*?)\]\((?P<src>.*?))'
 R_CONTENT_INLINE_IMAGE = r'(?P<content>(?P<props>.*?)\]\((?P<src>.*?))'
 
 # inline LINK
-R_CONTENT_LINK = r'(?P<content>(?P<title>.*?)\]\((?P<to>.*?))'
+R_CONTENT_LINK = r'(?P<content>(?P<title>[^\]]*?)\]\((?P<to>[^\)]*?))'
 
 # inline LINK
 R_EMAIL = r'(?P<content>\S+@\S+)'
@@ -48,7 +48,7 @@ CASES_LIST = [
     [ ("*", r"(?P<content>[^*]+?)", "*"),  "em", [] ],
     [ ("_", r"(?P<content>[^_]+?)", "_"),  "em", [] ],
     #[ ("![", R_CONTENT_INLINE_IMAGE, ")"), "image", ["props", "src"] ],
-    [ ("[^", R_CONTENT_FOOTNOTE, "]"), "footnote", [] ],
+    [ ("[^", r'(?P<content>\d+?)', "]"), "footnote", [] ],
     [ ("[", R_CONTENT_LINK,")"),  "link", ["to", "title"] ],
     [ ("^", r"(?P<content>[^\^]+?)", "^"), "sup", [] ],
     [ ("~", r"(?P<content>[^~]+?)", "~"), "sub", [] ],
@@ -135,6 +135,12 @@ def convert_text(cases:list=[], line:str="", level:list=[]):
     """if we have matched a valid boundary, extract it, if not return"""
     if boundary:
         before, middle, after = match.group("before"), match.group("content"), match.group("after")
+        
+        print(f"match  | {boundary.tag}--------------------------------#")
+        print(f"before | {before}")
+        print(f"middle | {middle}")
+        print(f" after | {after}")
+        
         if len(before):
             level.append({"tag": "text", "data": before})
         if len(middle):
@@ -241,6 +247,7 @@ def loop_recursion(subblocks:list=[]) -> str:
         if isinstance(subblock["data"], str):
             fragments.append(INLINE_TAG_LOOKUP[subblock["tag"]](subblock["data"]))
         elif isinstance(subblock["data"], dict):
+            print(f'loop_recursion: dict: {subblock["tag"]}')
             if subblock["data"].keys() == INLINE_TAG_KEYS[subblock["tag"]].keys():
                 fragments.append(INLINE_TAG_LOOKUP[subblock["tag"]](subblock["data"]))
         else:

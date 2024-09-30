@@ -204,7 +204,7 @@ INLINE_BLOCK_DATA_BIG = [
     },
     {
         "tag": "text",
-        "data": ". This is some math "
+        "data": "."
     },
 ]
 
