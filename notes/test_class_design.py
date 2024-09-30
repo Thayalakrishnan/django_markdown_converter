@@ -98,9 +98,6 @@ for sentence in sentences:
     print(sentences)
 
 print("done!")
-# %%
-
-
 
 # %%
 """
@@ -119,6 +116,9 @@ class Pattern:
     def __init__(self, name:str="") -> None:
         self.name = name
         self.count = 0
+        
+    def __repr__(self) -> str:
+        return self.name
 
     def create_block(self):
         self.count+=1
@@ -126,8 +126,19 @@ class Pattern:
         self.BLOCKS.append(block)
         return block
 
-    def __repr__(self) -> str:
-        return self.name
+    def convert(self, string:str="") -> dict:
+        """
+        receive a string object / convert it back into an object
+        """        
+        block = {}
+        return block
+    
+    def revert(self, block:dict={}) -> str:
+        """
+        receive a block object
+        convert it back into a markdown string
+        """
+        return ""
 
 
 class TablePattern(Pattern):
@@ -159,7 +170,40 @@ class Manager:
         for pattern in Pattern.__subclasses__():
             inst = pattern()
             self.LOOKUP.update({str(inst): inst})
-
+    
+    def convert(self, string:str="") -> list:
+        """
+        receive a string
+        convert it into a list of block object
+        """
+        return ""
+    
+    def revert(self, blocks:list=[]) -> str:
+        """
+        receive a list of block objects
+        convert them into a string
+        """
+        return ""
+    
+    def convert_block(self, string:str="") -> str:
+        """
+        """
+        return ""
+    
+    def convert_inline(self, block:dict={}) -> str:
+        """
+        """
+        return ""
+    
+    def revert_block(self, block:dict={}) -> str:
+        """
+        """
+        return ""
+    
+    def revert_inline(self, block:dict={}) -> str:
+        """
+        """
+        return ""
 
 #print(code_pat.BANK)
 #Pattern()

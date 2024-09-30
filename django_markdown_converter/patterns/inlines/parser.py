@@ -25,15 +25,12 @@ R_CONTENT_LINK = r'(?P<content>(?P<title>.*?)\]\((?P<to>.*?))'
 # inline LINK
 R_EMAIL = r'(?P<content>\S+@\S+)'
 
-
-
-
-
 # [pattern, tag, type, props]
 # if we have a custom vue element, replace the tag with that element
 CASES_LIST = [
     [ ("<navlink ", r'(?P<content>(?P<props>.*?)\>(?P<text>.*?))', "</navlink>"), "navlink", ["props", "text"] ],
-    [ ("`", r'(?P<content>.*?)', "`"), "code", [] ],
+    [ ("``", r'(?P<content>.+?)', "``"), "samp", [] ],
+    [ ("`", r'(?P<content>[^`]+?)', "`"), "code", [] ],
     #[ ("`", r'(?P<content>[^`]+?)', "`"), [] ],
     [ ("<", R_EMAIL, ">"), "email", [] ],
     [ ("<", R_CONTENT_RAWLINK, ">"),  "rawlink", [] ],
@@ -46,7 +43,6 @@ CASES_LIST = [
     [ ("~~", R_CONTENT, "~~"), "del", [] ],
     [ ("--", R_CONTENT, "--"), "del", [] ],
     [ ("==", R_CONTENT, "=="), "mark", [] ],
-    [ ("``", R_CONTENT, "``"), "samp", [] ],
     [ (":", R_CONTENT_EMOJI, ":"), "emoji", [] ],
     [ ("_", R_CONTENT_NO_WSPACE, "_"),  "em", [] ],
     [ ("*", r"(?P<content>[^*]+?)", "*"),  "em", [] ],
@@ -54,7 +50,7 @@ CASES_LIST = [
     #[ ("![", R_CONTENT_INLINE_IMAGE, ")"), "image", ["props", "src"] ],
     [ ("[^", R_CONTENT_FOOTNOTE, "]"), "footnote", [] ],
     [ ("[", R_CONTENT_LINK,")"),  "link", ["to", "title"] ],
-    [ ("^", R_CONTENT_NO_WSPACE, "^"), "sup", [] ],
+    [ ("^", r"(?P<content>[^\^]+?)", "^"), "sup", [] ],
     [ ("~", r"(?P<content>[^~]+?)", "~"), "sub", [] ],
     [ ("$", R_CONTENT_NO_WSPACE, "$"),  "math", [] ],
 ]
@@ -182,21 +178,84 @@ CASES = build_patterns(CASES_LIST)
 def inline_block_parser(block:dict={}, counter=0) -> dict:
     if isinstance(block["data"], dict):
         return
-    
     block["data"] = convert_text(CASES, block["data"], [])
     counter+=1
-
     if isinstance(block["data"], list) and len(block["data"]):
         for _ in block["data"]:
             inline_block_parser(_, counter)
 
-
-
-def inline_parser(lines:str="") -> list:
+def convert_inline(lines:str="") -> list:
     pblock = {"data": lines}
     inline_block_parser(pblock)
-    
-    
     return pblock["data"]
 
+"""
+reversion
 
+if we were to extend this to use props, we could have the second argument 
+be a dict so we pass in data as x and then y is the props object 
+link = lambda x,y: f"[{y['title']}]({x})"
+"""
+
+INLINE_TAG_LOOKUP = {
+    ## symetrical
+    "text": lambda x: f"{x}",
+    "email": lambda x: f"<{x}>",
+    "code": lambda x: f"`{x}`",
+    "strong": lambda x: f"**{x}**",
+    "em": lambda x: f"_{x}_",
+    "del": lambda x: f"--{x}--",
+    "mark": lambda x: f"=={x}==",
+    "samp": lambda x: f"``{x}``",
+    "emoji": lambda x: f":{x}:",
+    "sup": lambda x: f"^{x}^",
+    "sub": lambda x: f"~{x}~",
+    "math": lambda x: f"${x}$",
+    ## not
+    "footnote": lambda x: f"[^{x}]",
+    "link": lambda x: f"[{x.get('title', '')}]({x.get('to', '')})",
+}
+
+INLINE_TAG_KEYS = {
+    ## symetrical
+    "text": None,
+    "email": None,
+    "code": None,
+    "strong": None,
+    "em": None,
+    "del": None,
+    "mark": None,
+    "samp": None,
+    "emoji": None,
+    "sup": None,
+    "sub": None,
+    "math": None,
+    ## not
+    "footnote": None,
+    "link": {"to": "", "title": ""},
+}
+
+def loop_recursion(subblocks:list=[]) -> str:
+    fragments = []
+    for subblock in subblocks:
+        if isinstance(subblock["data"], str):
+            fragments.append(INLINE_TAG_LOOKUP[subblock["tag"]](subblock["data"]))
+        elif isinstance(subblock["data"], dict):
+            if subblock["data"].keys() == INLINE_TAG_KEYS[subblock["tag"]].keys():
+                fragments.append(INLINE_TAG_LOOKUP[subblock["tag"]](subblock["data"]))
+        else:
+            subblock["data"] = loop_recursion(subblock["data"])
+            fragments.append(INLINE_TAG_LOOKUP[subblock["tag"]](subblock["data"]))
+    return "".join(fragments)
+
+#def revert_inline(subblocks:list=[]) -> str:
+def revert_inline(subblocks:list=[]) -> str:
+    """
+    receive a list of blocks, revert them to string. 
+    """
+    if isinstance(subblocks, str):
+        return subblocks
+    else:
+        p = [loop_recursion(subblocks)]
+        #p.append("\n")
+        return "".join(p)

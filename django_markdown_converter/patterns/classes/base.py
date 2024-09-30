@@ -72,6 +72,7 @@ class BasePattern:
     
     @classmethod
     def InitialiseClasses(cls) -> None:
+        """collect the subclasses and initialise them"""
         for _ in cls.__subclasses__():
             _()
     
