@@ -60,3 +60,41 @@ attrs = ""
 #if props:
 #    attrs = " ".join(list(map(generate_attrs, props)))
 # %%
+block = {
+    "type": "svg",
+    "props": {
+        "title": "generic title",
+        "alt": "generic alt text",
+        "height": "100",
+    },
+    "data": "content"
+}
+props = block.get("props", {})
+props = " ".join(list(map(lambda prop: f'{prop[0]}="{prop[1]}"', props.items())))
+print(props)
+
+# %%
+block = {
+    "type": "svg",
+    "data": "content"
+}
+block = {
+}
+
+print(block.items())
+print(block.keys())
+print(block.values())
+items = block.items()
+
+if not items:
+    print("no items")
+# %%
+block = {
+}
+
+items = block.items()
+if not items:
+    print("")
+joined_items = " ".join([f'{prop[0]}="{prop[1]}"' for prop in items])
+print(f" {joined_items} ")
+# %%

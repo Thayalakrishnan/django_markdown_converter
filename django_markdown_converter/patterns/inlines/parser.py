@@ -1,29 +1,18 @@
 import re
 from typing import Pattern
+from django_markdown_converter.helpers.processors import convert_props, revert_props
 
 # everything inbetween
-R_CONTENT = r'(?P<content>.*?)'
 R_BEFORE = lambda pat: f'(?P<before>.*?)(?P<left>{re.escape(pat)})'
 R_AFTER = lambda pat: f'(?P<right>{re.escape(pat)})(?P<after>.*)'
 
-R_CONTENT_ONE_OR_MORE = r'(?P<content>.+?)'
-
+# everything inbetween
+R_CONTENT = r'(?P<content>.*?)'
 # everything inbetween except whitespace
 R_CONTENT_NO_WSPACE = r'(?P<content>\S+)'
 
-R_CONTENT_RAWLINK = r'(?P<content>https\S+)'
-R_CONTENT_EMOJI = r'(?P<content>\S+)'
-R_CONTENT_FOOTNOTE = r'(?P<content>\d+?)'
-
-# inline image
-R_CONTENT_INLINE_IMAGE = r'(?P<content>(?P<alt>.*?)\]\((?P<src>.*?))'
-R_CONTENT_INLINE_IMAGE = r'(?P<content>(?P<props>.*?)\]\((?P<src>.*?))'
-
 # inline LINK
 R_CONTENT_LINK = r'(?P<content>(?P<title>[^\]]*?)\]\((?P<to>[^\)]*?))'
-
-# inline LINK
-R_EMAIL = r'(?P<content>\S+@\S+)'
 
 # [pattern, tag, type, props]
 # if we have a custom vue element, replace the tag with that element
@@ -32,8 +21,8 @@ CASES_LIST = [
     [ ("``", r'(?P<content>.+?)', "``"), "samp", [] ],
     [ ("`", r'(?P<content>[^`]+?)', "`"), "code", [] ],
     #[ ("`", r'(?P<content>[^`]+?)', "`"), [] ],
-    [ ("<", R_EMAIL, ">"), "email", [] ],
-    [ ("<", R_CONTENT_RAWLINK, ">"),  "rawlink", [] ],
+    [ ("<", r'(?P<content>\S+@\S+)', ">"), "email", [] ],
+    [ ("<", r'(?P<content>https\S+)', ">"),  "rawlink", [] ],
     [ ("**", R_CONTENT_NO_WSPACE, "**"), "strong", [] ],
     [ ("__", R_CONTENT_NO_WSPACE, "__"), "strong", [] ],
     [ ("**", r"(?P<content>.*?)", "**"), "strong", [] ],
@@ -43,18 +32,16 @@ CASES_LIST = [
     [ ("~~", R_CONTENT, "~~"), "del", [] ],
     [ ("--", R_CONTENT, "--"), "del", [] ],
     [ ("==", R_CONTENT, "=="), "mark", [] ],
-    [ (":", R_CONTENT_EMOJI, ":"), "emoji", [] ],
+    [ (":", r'(?P<content>\S+)', ":"), "emoji", [] ],
     [ ("_", R_CONTENT_NO_WSPACE, "_"),  "em", [] ],
     [ ("*", r"(?P<content>[^*]+?)", "*"),  "em", [] ],
     [ ("_", r"(?P<content>[^_]+?)", "_"),  "em", [] ],
-    #[ ("![", R_CONTENT_INLINE_IMAGE, ")"), "image", ["props", "src"] ],
     [ ("[^", r'(?P<content>\d+?)', "]"), "footnote", [] ],
     [ ("[", R_CONTENT_LINK,")"),  "link", ["to", "title"] ],
     [ ("^", r"(?P<content>[^\^]+?)", "^"), "sup", [] ],
     [ ("~", r"(?P<content>[^~]+?)", "~"), "sub", [] ],
     [ ("$", R_CONTENT_NO_WSPACE, "$"),  "math", [] ],
 ]
-
 
 class Pattern:
     """
@@ -126,6 +113,12 @@ def find_boundary(cases:list=[], line:str=""):
 
     return (cur_match, cur_boundary)
 
+def process_inline_props(rawprops:str=""):
+    if "=" in rawprops:
+        processed_props = convert_props(rawprops)
+        if processed_props:
+            return processed_props
+    return {"data": rawprops}
 
 def convert_text(cases:list=[], line:str="", level:list=[]):
     """loop over the lines for testing"""
@@ -135,12 +128,6 @@ def convert_text(cases:list=[], line:str="", level:list=[]):
     """if we have matched a valid boundary, extract it, if not return"""
     if boundary:
         before, middle, after = match.group("before"), match.group("content"), match.group("after")
-        
-        print(f"match  | {boundary.tag}--------------------------------#")
-        print(f"before | {before}")
-        print(f"middle | {middle}")
-        print(f" after | {after}")
-        
         if len(before):
             level.append({"tag": "text", "data": before})
         if len(middle):
@@ -150,17 +137,9 @@ def convert_text(cases:list=[], line:str="", level:list=[]):
                     if prop == "props":
                         # if the props is props, then we have a series of key value pairs
                         # we should be able to split them into their individual properties
-                        rawprop = match.group(prop)
-                        if "=" in rawprop:
-                            props = rawprop.strip().split(" ")
-                            for attr in props:
-                                k,v = attr.split("=")
-                                props[k] = v.strip("'\"")
-                        else:
-                            props["data"] = rawprop
+                        props.update(process_inline_props(match.group(prop)))
                     else:
                         props[prop] = match.group(prop)
-                #level.append({"tag": boundary.tag, "props": props, "data": middle})
                 level.append({"tag": boundary.tag, "data": props})
             else:
                 level.append({"tag": boundary.tag, "data": middle})
@@ -170,14 +149,11 @@ def convert_text(cases:list=[], line:str="", level:list=[]):
         if len(level):
             if len(line):
                 level.append({"tag": "text", "data": line})
-                #level.append(line)
             else:
                 return line
             return level
-        #print(f"tiny line: {line}")
         return line
     return level
-
 
 CASES = build_patterns(CASES_LIST)
 

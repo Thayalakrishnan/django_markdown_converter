@@ -1,5 +1,6 @@
 from django_markdown_converter.helpers.utility import ReadSourceFromFile, WriteToMDFile, WriteJSONToFile
-from django_markdown_converter.patterns.classes.base import BasePattern, process_input_content
+from django_markdown_converter.helpers.processors import process_input_content
+from django_markdown_converter.patterns.classes.base import BasePattern
 
 
 """
@@ -31,7 +32,7 @@ md = "\n".join(root)
 """
 
 #WriteToMDFile(write_to_file, md)
-#yeet = process_props(' id="small-table" caption="small table of values" ')
+#yeet = convert_props(' id="small-table" caption="small table of values" ')
 #WriteJSONToFile(write_to_json_file, json_root)
 WriteJSONToFile(write_to_json_file_nu, json_root_nu)
 

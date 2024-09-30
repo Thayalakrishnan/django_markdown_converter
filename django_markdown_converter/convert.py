@@ -1,4 +1,4 @@
-from django_markdown_converter.patterns.classes.base import BasePattern, process_input_content
+from django_markdown_converter.patterns.classes.base import BasePattern
 
 
 def Convert(source:str="") -> list:

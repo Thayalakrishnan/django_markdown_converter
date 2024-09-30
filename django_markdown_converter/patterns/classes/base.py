@@ -1,35 +1,5 @@
 import re
-
-def process_input_content(content:str="")-> str:
-    """
-    transform the content by replacing multiple newline characters
-    with a single newline character. 
-    """
-    # create and compile pattern
-    NEWLINE_REPLACE_RAW = r'^\n{2,}'
-    NEWLINE_REPLACE_PATTERN = re.compile(NEWLINE_REPLACE_RAW, re.MULTILINE | re.DOTALL)
-    
-    # replace the newlines
-    processed_content = content.strip("\n ")
-    processed_content = re.sub(NEWLINE_REPLACE_PATTERN, "\n", processed_content)
-    
-    # add new lines at the end for matcing purposes
-    processed_content = processed_content + "\n\n"
-    return processed_content
-
-
-def process_props(props:str="")-> dict:
-    """
-    receive a string that represents key value pairs
-    return them as a dict
-    """
-    PATTERN_RAW = r'(\S*?)\=(\".*?\")|(\S*?)\=(\'.*?\')'
-    PATTERN_RAW = r'(\S*?)\=(?P<open>[\"\'])(.*?)(?P=open)'
-    props = props.strip()
-    vals = re.findall(PATTERN_RAW, props, re.MULTILINE | re.DOTALL)
-    vals = [(_[0], _[2]) for _ in vals]
-    return dict(vals)
-
+from django_markdown_converter.helpers.processors import convert_props, process_input_content
 
 BLOCK_PATTERN_RAW = r'(?P<block>^(?:```.*?```.*?)|(?:.*?))(?:^\{(?P<props>.*?)\} *?$\n)?^\n' ## works
 
@@ -89,13 +59,13 @@ class BasePattern:
             if self.match.group(p):
                 self.block["props"].update({p: self.match.group(p).strip()})
             if p == "attrs":
-                attrs = process_props(self.match.group("attrs"))
+                attrs = convert_props(self.match.group("attrs"))
                 self.block["props"].update(attrs)
                 del self.block["props"]["attrs"]
 
     def get_props(self, props:str="") -> dict:
         if props:
-            return process_props(props)
+            return convert_props(props)
         return {}
     
     def get_match(self, content):

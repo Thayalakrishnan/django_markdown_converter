@@ -187,10 +187,6 @@ INLINE_BLOCK_DATA_BIG = [
         "tag": "code",
         "data": "output"
     },
-    #{
-    #    "tag": "text",
-    #    "data": "."
-    #},
     {
         "tag": "text",
         "data": ". Here's a "
