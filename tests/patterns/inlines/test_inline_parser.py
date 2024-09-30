@@ -187,25 +187,25 @@ INLINE_BLOCK_DATA_BIG = [
         "tag": "code",
         "data": "output"
     },
+    #{
+    #    "tag": "text",
+    #    "data": "."
+    #},
     {
         "tag": "text",
-        "data": "."
+        "data": ". Here's a "
     },
-    #{
-    #    "tag": "text",
-    #    "data": ". Here's a "
-    #},
-    #{
-    #    "tag": "link",
-    #    "data": {
-    #        "to": "www.markdownguide.org",
-    #        "title": "link to Markdown documentation"
-    #    }
-    #},
-    #{
-    #    "tag": "text",
-    #    "data": ". This is some math "
-    #},
+    {
+        "tag": "link",
+        "data": {
+            "to": "www.markdownguide.org",
+            "title": "link to Markdown documentation"
+        }
+    },
+    {
+        "tag": "text",
+        "data": ". This is some math "
+    },
 ]
 
 
@@ -215,7 +215,7 @@ INLINE_MD_DATA_BIG = [
     "==This part is highlighted== which makes it stand out from other content like `inline code` and _italicised words_.",
     "We can even make sure that some content ^is above^ and some ~is below~ and some is simply --deleted--.",
     "This is some math $y=mx+b$ and this is an :emoji: along with some `output`.",
-    #"Here's a [link to Markdown documentation](www.markdownguide.org).",
+    "Here's a [link to Markdown documentation](www.markdownguide.org).",
 ]
 
 INLINE_MD_DATA_BIG = " ".join(INLINE_MD_DATA_BIG)
