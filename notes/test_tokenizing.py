@@ -41,19 +41,20 @@ TOKENS = [
 ]
 
 TOKENS = [
-    ("samp", "``"),
-    ("code", "`"),
-    ("strong", "**", "__"),
-    ("em", "*", "_"),
-    ("del", "~~", "--"),
-    ("mark", "=="),
-    ("emoji", ":"),
-    ("sup", "^"),
-    ("sub", "~"),
-    ("math", "$"),
-    ("link", "<", ">"),
-    ("footnote", "[^", "]"),
-    ("link", "[", ")")
+    ("samp", ("``",)),
+    ("strong", ("\*\*", "__",)),
+    ("del", ("~~", "--",)),
+    ("mark", ("==",)),
+    ("em", ("\*", "_",)),
+    ("code", ("`",)),
+    ("sup", ("\^",)),
+    ("sub", ("~",)),
+    ("math", ("\$",)),
+    ("emoji", ("\:",)),
+    ("footnote", ("(?:\[\^)(\d+?)(?:\])",)),
+    ("text", (".",)),
+    #("link", ("\<", "\>",)),
+    #("link", ("\[", "\)",)),
 ]
 
 """
@@ -72,17 +73,28 @@ TOKENS = [
 (?P<footnote>(?:\[\^)|(?:\]))|
 (?P<link2>(?:\[)|(?:\)))|
 
-(?P<tick>`{1,2})|(?P<asterisk>*{1,3})|(?P<underscore>_{1,3})|(?P<tilde>~{1,2})|(?P<dash>-{1,2})|(?P<assign>={1,2})|(?P<colon>:{1})|(?P<caret>^{1})|(?P<dollar>${1})|(?P<less><{1})
-
-
-(?P<samp>``)|(?P<strong>(?:\*\*)|(?:__))|(?P<del>(?:~~)|(?:--))|(?P<mark>==)|(?P<em>(?:\*)|(?:_))|(?P<code>`)|(?P<sup>\^)|(?P<sub>~)|(?P<math>\$)|(?P<emoji>\:)|
 (?P<footnote>(?:\[\^)|(?:\]))|(?P<link2>(?:\[)|(?:\)))|(?P<samp>``)|(?P<strong>(?:\*\*)|(?:__))|(?P<del>(?:~~)|(?:--))|(?P<mark>==)|(?P<em>(?:\*)|(?:_))|(?P<code>`)|(?P<sup>\^)|(?P<sub>~)|(?P<math>\$)|(?P<emoji>\:)|(?P<link>(?:\<)|(?:\>))
 """
+
+def create_patterns_for_tokenizer(tokens:list=[]) -> str:
+    pattern_list = []
+    for label, pats in tokens:
+        if len(pats) > 1:
+            patterns = "|".join([f"(?:{_})" for _ in pats])
+        else:
+            patterns = f"{pats[0]}"
+        labelled_pattern = f"(?P<{label}>{patterns})"
+        pattern_list.append(labelled_pattern)
+    return "|".join(pattern_list)
 
 
 #%%
 import re
 
+"""
+we can solve a lot of heart ache by having a check function for each pattern 
+to ensure that we can look ahead in the same string and determine an end point
+"""
 
 def md_string_tokenizer(pattern, source):
     matches = pattern.finditer(source)
@@ -91,14 +103,23 @@ def md_string_tokenizer(pattern, source):
     for match in matches:
         token = match.lastgroup
         content = match.group(token)
+        
         if token == "text":
             current_text_group.append(content)
+        #elif token == "footnote":
+        #    yield ("text", "".join(current_text_group))
+        #    yield ("footnote", content)
         else:
+            
             if len(current_text_group):
+                # if we are holding some text, we should release it all now
+                # this will be all the text from the last token to the curren 
+                # token
                 yield ("text", "".join(current_text_group))
                 current_text_group = []
+            # yield the current token
             yield (token, content)
-    
+    ## yield any remaining text
     yield ("text", "".join(current_text_group))
     
 
@@ -113,12 +134,15 @@ def create_tracker_from_tokenizer(tokenizer):
 def parse_inline_tokens(tokens, tracker):
     depth = 0
     object_stack = []
+    bank = []
     root = {"type": "root", "data": []}
     current_object = root
 
     for token, value in tokens:
         
-        if token != "text":
+        if token == "footnote":
+            current_object["data"].append({"type": token, "data": value})
+        elif token != "text":
             # flip the switch
             tracker[token] = not tracker[token]
             
@@ -149,6 +173,12 @@ def parse_inline_tokens(tokens, tracker):
                 
         else:
             current_object["data"].append({"depth": depth, "type": token, "data": value})
+    # we need to check that we have returned to a depth of zero. 
+    # if we have not, whatever is preventing it needs to be removed
+    if depth:
+        root_object = object_stack.pop()
+        previous_object = root_object["data"].pop()
+        root_object["data"].extend(previous_object["data"])
     return root["data"]
 
 # %%
@@ -174,19 +204,13 @@ This item has some inline markup like _italics_ and **bold** text.
 Even deeper nesting: _Italicized_ **bold** list item with `code` inline. 
 Another item with **nested** inline **markup**. 
 This list item uses some ``inline sample codee`` and ends with _**italicized and bold**_ text. 
-To write code, you can use backticks for `inline code`, like this."""
+To write code, you can use backticks for `inline code`, like this. 
+Random footnote[^1] near the end."""
 
 #MD = "***Markdown Example** with* but we could keep going and going *till there is another one* italizczed. "
+#MD = "This is some **markdown *where we have* double *nested italics * which** might be confusing"
 
-MD = "This is some **markdown *where we have* double *nested italics * which** might be confusing"
-
-TOKENIZER_LIST = "(?P<samp>``)|(?P<strong>(?:\*\*)|(?:__))|(?P<del>(?:~~)|(?:--))|(?P<mark>==)|(?P<em>(?:\*)|(?:_))|(?P<code>`)|(?P<sup>\^)|(?P<sub>~)|(?P<math>\$)|(?P<emoji>\:)"
-TOKENIZER_LIST = "(?P<tick>`{1,2})|(?P<asterisk>\*{1,2})|(?P<underscore>_{1,3})|(?P<tilde>~{1,2})|(?P<dash>-{1,2})|(?P<assign>={1,2})|(?P<colon>:{1})|(?P<caret>\^{1})|(?P<dollar>\${1})|(?P<less><{1})|(?P<text>\w+)"
-TOKENIZER_LIST = "(?P<asterisk2>\*{2})|(?P<asterisk1>\*{1})|(?P<text>\w+)"
-TOKENIZER_LIST = "(?P<samp>``)|(?P<strong>(?:\*\*)|(?:__))|(?P<del>(?:~~)|(?:--))|(?P<mark>==)|(?P<em>(?:\*)|(?:_))|(?P<code>`)|(?P<sup>\^)|(?P<sub>~)|(?P<math>\$)|(?P<emoji>\:)|(?P<text> ?\w+ ?)"
-TOKENIZER_LIST = "(?P<samp>``)|(?P<strong>(?:\*\*)|(?:__))|(?P<del>(?:~~)|(?:--))|(?P<mark>==)|(?P<em>(?:\*)|(?:_))|(?P<code>`)|(?P<sup>\^)|(?P<sub>~)|(?P<math>\$)|(?P<emoji>\:)|(?P<text>.| )"
-TOKENIZER_LIST = "(?P<samp>``)|(?P<strong>(?:\*\*)|(?:__))|(?P<del>(?:~~)|(?:--))|(?P<mark>==)|(?P<em>(?:\*)|(?:_))|(?P<code>`)|(?P<sup>\^)|(?P<sub>~)|(?P<math>\$)|(?P<emoji>\:)|(?P<text>.)"
-
+TOKENIZER_LIST = create_patterns_for_tokenizer(TOKENS)
 TOKENIZER = re.compile(TOKENIZER_LIST)
 
 BTRACKER = {
