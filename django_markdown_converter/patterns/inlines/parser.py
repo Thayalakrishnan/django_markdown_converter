@@ -218,6 +218,13 @@ INLINE_TAG_KEYS = {
 }
 
 def loop_recursion(subblocks:list=[]) -> str:
+    """
+    when we try to flatten inline elements, we know that the 'data' key has three forms
+    - list: when there are nested elements, 
+    - string: the final form and holds the text
+    - dict: when the inline content is not of the classic form and requires extra parsing to return the correct data
+    
+    """
     fragments = []
     for subblock in subblocks:
         if isinstance(subblock["data"], str):

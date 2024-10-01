@@ -26,6 +26,13 @@ from typing import Union, List
 - an alternate way to structure the patterns so that we dont have to do an extraction
 (?:\*\*(?P<strong>.+?)\*\*)|
 (?:\*(?P<em>.[^*]+?)\*)
+
+this example of nesting works but might be way too complex for our needs, especially if 
+we do every single permutation
+(?:\*\*(?P<strong_em>.*?\*.*?\*.*?)\*\*)|(?:\*(?P<em_strong>.*?\*\*.*?\*\*.*?)\*)|(?:\*\*(?P<strong>.+?)\*\*)|(?:\*(?P<em>.[^*]+?)\*)
+
+the algo might simply be, hit all the patterns that can have nested markdown in them
+then we do the non nested ones last. 
 """
 
 """
