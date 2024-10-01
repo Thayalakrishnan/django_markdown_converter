@@ -234,21 +234,18 @@ mdtokens = md_string_tokenizer(TOKENIZER, MD)
 
 
 
-
-        
-    
-    #pass
-# %%
-
 BTRACKER = {
     "asterisk2": False,
     "asterisk1": False,
     #"text": False,
 }
 
-BTEXT = {
-    "asterisk2": "",
-    "asterisk1": "",
+BACCUMULATOR = {
+    "asterisk2": [],
+    "asterisk1": [],
+}
+DEPTHTRACKER = {
+    0: []
 }
 
 
@@ -256,27 +253,90 @@ vals = [('asterisk2', '**'), ('asterisk1', '*'), ('text', 'Markdown Example'), (
 text_stack = []
 nesting_stack = []
 depth = 0
+
 for token, value in vals:
     
     if token != "text":
+        # flip the switch
         BTRACKER[token] = not BTRACKER[token]
         
+        # if the token is open we 
         if BTRACKER[token]:
             depth+=1
+            DEPTHTRACKER[depth] = []
             print(f"token {token} open | depth {depth}")
         else:
-            depth-=1
             """
             when we close group , we need to gather all the objects in the 
             stack and nest them within the new object
             """
             print(f"token {token} closed | depth {depth}")
-            if depth:
-                pass
-            else:
-                nesting_stack.append({"type": token, "data": text_stack.pop()})
+            nesting_stack.append({"depth": depth, "type": token, "data": "".join(DEPTHTRACKER[depth])})
+            depth-=1
             
     else:
-        text_stack.append(value)
+        if depth:
+            DEPTHTRACKER[depth].append(value)
+        else:
+            nesting_stack.append({"depth": depth, "type": token, "data": value})
         #print(value)
+
+print(DEPTHTRACKER)
+for _ in nesting_stack:
+    print(_)
+    
+    
+    
+#%%
+
+vals = [('asterisk2', '**'), ('asterisk1', '*'), ('text', 'Markdown Example'), ('asterisk2', '**'), ('text', 'with'), ('asterisk1', '*'), ('text', 'but we could keep going and going'), ('asterisk1', '*'), ('text', 'till there is another one'), ('asterisk1', '*')]
+text_stack = []
+nesting_stack = []
+depth = 0
+
+object_stack = []
+current_object = {"type": "", "data": None}
+
+root = {"type": "root", "data": []}
+current_object = root
+
+for token, value in vals:
+    
+    if token != "text":
+        # flip the switch
+        BTRACKER[token] = not BTRACKER[token]
+        
+        # if the token is open
+        if BTRACKER[token]:
+            depth+=1
+            DEPTHTRACKER[depth] = []
+            print(f"token {token} open | depth {depth}")
+            # create a new object
+            new_object = {"type": "", "data": []}
+            # add the new object as a child to the current object
+            current_object["data"].append(new_object)
+            # add the current object to the stack
+            object_stack.append(current_object)
+            # assign the new object as the current object
+            current_object = new_object
+        else:
+            # if the token is closed
+            print(f"token {token} closed | depth {depth}")
+            if depth:
+                if len(object_stack):
+                    current_object["type"] = token
+                    if len(current_object["data"]) == 1:
+                        current_object["data"] = current_object["data"].pop()
+                    current_object = object_stack.pop()
+            depth-=1
+            
+    else:
+        if depth:
+            current_object["data"].append({"depth": depth, "type": token, "data": value})
+        else:
+            root["data"].append({"depth": depth, "type": token, "data": value})
+
+print(root)
+for _ in nesting_stack:
+    print(_)
 # %%
