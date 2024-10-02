@@ -49,8 +49,12 @@ TOKENS = [
     ("code", ("`",)),
     ("sup", ("\^",)),
     ("sub", ("~",)),
-    ("math", ("\$",)),
-    ("emoji", ("\:",)),
+    
+    #("math", ("\$",)),
+    #("emoji", ("\:",)),
+    
+    ("math", ("(?:\$)([^\$]+?)(?:\$)",)),
+    ("emoji", ("(?:\:)(.+?)(?:\:)",)),
     ("footnote", ("(?:\[\^)(\d+?)(?:\])",)),
     ("text", (".",)),
     #("link", ("\<", "\>",)),
@@ -58,6 +62,9 @@ TOKENS = [
 ]
 
 """
+just added the footnote by doing the whole pattern
+this feels like a much better algo then we had before
+
 (?P<samp>``)|
 (?P<strong>(?:\*\*)|(?:__))|
 (?P<del>(?:~~)|(?:--))|
@@ -72,8 +79,6 @@ TOKENS = [
 (?P<link>(?:\<)|(?:\>))|
 (?P<footnote>(?:\[\^)|(?:\]))|
 (?P<link2>(?:\[)|(?:\)))|
-
-(?P<footnote>(?:\[\^)|(?:\]))|(?P<link2>(?:\[)|(?:\)))|(?P<samp>``)|(?P<strong>(?:\*\*)|(?:__))|(?P<del>(?:~~)|(?:--))|(?P<mark>==)|(?P<em>(?:\*)|(?:_))|(?P<code>`)|(?P<sup>\^)|(?P<sub>~)|(?P<math>\$)|(?P<emoji>\:)|(?P<link>(?:\<)|(?:\>))
 """
 
 def create_patterns_for_tokenizer(tokens:list=[]) -> str:
@@ -140,9 +145,9 @@ def parse_inline_tokens(tokens, tracker):
 
     for token, value in tokens:
         
-        if token == "footnote":
-            current_object["data"].append({"type": token, "data": value})
-        elif token != "text":
+        #if token == "footnote":
+        #    current_object["data"].append({"type": token, "data": value})
+        if token not in ["text", "footnote", "emoji", "math"]:
             # flip the switch
             tracker[token] = not tracker[token]
             
@@ -151,7 +156,7 @@ def parse_inline_tokens(tokens, tracker):
                 # new open token, increase the depth
                 depth+=1
                 # create a new object
-                new_object = {"type": "", "token": token, "data": []}
+                new_object = {"type": "", "data": []}
                 # add the new object as a child to the current object
                 current_object["data"].append(new_object)
                 # add the current object to the stack
@@ -163,23 +168,70 @@ def parse_inline_tokens(tokens, tracker):
                 if depth:
                     if len(object_stack):
                         current_object["type"] = token
-                        current_object["token"] = token
                         # if there is only one child element, just make that one child
                         # equal to it
                         if len(current_object["data"]) == 1:
-                            current_object["data"] = current_object["data"].pop()
+                            single_child = current_object["data"].pop()
+                            if single_child["type"] == "text":
+                                current_object["data"] = single_child["data"]
+                            else:
+                                current_object["data"] = single_child
                         current_object = object_stack.pop()
                 depth-=1
-                
         else:
-            current_object["data"].append({"depth": depth, "type": token, "data": value})
+            current_object["data"].append({"type": token, "data": value})
     # we need to check that we have returned to a depth of zero. 
     # if we have not, whatever is preventing it needs to be removed
-    if depth:
-        root_object = object_stack.pop()
-        previous_object = root_object["data"].pop()
-        root_object["data"].extend(previous_object["data"])
+    #if depth:
+    #    root_object = object_stack.pop()
+    #    previous_object = root_object["data"].pop()
+    #    root_object["data"].extend(previous_object["data"])
     return root["data"]
+
+
+# %%
+def parse_inline_tokens(tokens, tracker):
+    depth = 0
+    object_stack = []
+    bank = []
+    root = ("root", [])
+    current_object = root
+
+    for token, value in tokens:
+        
+        if token not in ["text", "footnote", "emoji", "math"]:
+            # flip the switch
+            tracker[token] = not tracker[token]
+            # if the token is open
+            if tracker[token]:
+                # new open token, increase the depth
+                depth+=1
+                # create a new object
+                new_object = ["", []]
+                # add the new object as a child to the current object
+                current_object[1].append(new_object)
+                # add the current object to the stack
+                object_stack.append(current_object)
+                # assign the new object as the current object
+                current_object = new_object
+            else:
+                # if the token is closed
+                if depth:
+                    if len(object_stack):
+                        current_object[0] = token
+                        # if there is only one child element, just make that one child
+                        # equal to it
+                        if len(current_object[1]) == 1:
+                            single_child = current_object[1].pop()
+                            if single_child[0] == "text":
+                                current_object[1] = single_child[1]
+                            else:
+                                current_object[1] = single_child
+                        current_object = object_stack.pop()
+                depth-=1
+        else:
+            current_object[1].append([token, value])
+    return root[1]
 
 # %%
 import re
@@ -197,15 +249,21 @@ Another item with **nested** inline **markup**.
 This list item uses some `inline code` and ends with _**italicized and bold**_ text.
 To write code, you can use backticks for `inline code`, like this."""
 
-MD = """**Markdown Example** with _**Inline Markup**_. 
-This is a **bold** statement, and this is an _italicized_ one. 
-You can even combine them to make text _**both italic and bold**_. 
-This item has some inline markup like _italics_ and **bold** text. 
-Even deeper nesting: _Italicized_ **bold** list item with `code` inline. 
-Another item with **nested** inline **markup**. 
-This list item uses some ``inline sample codee`` and ends with _**italicized and bold**_ text. 
-To write code, you can use backticks for `inline code`, like this. 
-Random footnote[^1] near the end."""
+MD = """Before **middle content** after. 
+Before __middle content__ after. 
+Before _middle content_ after. 
+Before *middle content* after. 
+Before ^middle content^ after. 
+Before ~middle content~ after. 
+Before ~~middle content~~ after. 
+Before ==middle content== after. 
+Before --middle content-- after. 
+Before :middle_content: after. 
+Before `middleContent` after. 
+Before ``middleContent`` after. 
+Before [link to Markdown documentation](https://www.markdownguide.org) after. 
+Before <https://www.markdownguide.org> after. 
+Before [^1] after. """
 
 #MD = "***Markdown Example** with* but we could keep going and going *till there is another one* italizczed. "
 #MD = "This is some **markdown *where we have* double *nested italics * which** might be confusing"
