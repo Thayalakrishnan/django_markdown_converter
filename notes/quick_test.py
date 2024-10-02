@@ -37,42 +37,43 @@ using re.Scanner
 
 MD = "***Markdown Example** with* nesting and `inline code` and more *nested italics* at the end."
 
-MD = """**Markdown Example** with _**Inline Markup**_. 
-This is a **bold** statement, and this is an _italicized_ one. 
-You can even combine them to make text _**both italic and bold**_. 
-This item has some inline markup like _italics_ and **bold** text. 
-Even deeper nesting: _Italicized_ **bold** list item with `code` inline. 
-Another item with **nested** inline **markup**. 
-This list item uses some ``inline sample codee`` and ends with _**italicized and bold**_ text. 
-To write code, you can use backticks for `inline code`, like this. 
+MD = """**Markdown Example** with _**Inline Markup**_.
+This is a **bold** statement, and this is an _italicized_ one.
+You can even combine them to make text _**both italic and bold**_.
+This item has some inline markup like _italics_ and **bold** text.
+Even deeper nesting: _Italicized_ **bold** list item with `code` inline.
+Another item with **nested** inline **markup**.
+This list item uses some ``inline sample codee`` and ends with _**italicized and bold**_ text.
+To write code, you can use backticks for `inline code`, like this.
 This is some **double nested _italicised markdown_ where we nest multiple `different` times** in one line.
 Random footnote[^1] near the end."""
 
 
 # %%
-import re
+import re, json
 
 MD_LIST = [
-    "Before **middle content** after.",
-    "Before __middle content__ after.",
-    "Before _middle content_ after.",
-    "Before *middle content* after.",
-    "Before ^middle content^ after.",
-    "Before ~middle content~ after.",
-    "Before ~~middle content~~ after.",
-    "Before --middle content-- after.",
-    "Before ==middle content== after.",
-    "Before ``middleContent`` after.",
-    "Before :middle_content: after.",
-    "Before `middleContent` after.",
-    "Before <https://www.markdownguide.org> after.",
-    "Before [^1] after.",
-    "Before [link to Markdown documentation](https://www.markdownguide.org) after.",
+    "Before 01 **middle content** after 01.",
+    "Before 02 __middle content__ after 02.",
+    "Before 03 _middle content_ after 03.",
+    "Before 04 *middle content* after 04.",
+    "Before 05 ^middle content^ after 05.",
+    "Before 06 ~middle content~ after 06.",
+    "Before 07 ~~middle content~~ after 07.",
+    "Before 08 --middle content-- after 08.",
+    "Before 09 ==middle content== after 09.",
+    "Before 10 ``middleContent`` after 10.",
+    "Before 11 :middle_content: after 11.",
+    "Before 12 `middleContent` after 12.",
+    "Before 13 <https://www.markdownguide.org> after 13.",
+    "Before 14 [^1] after 14.",
+    "Before 15 [link to Markdown documentation](https://www.markdownguide.org) after 15.",
+    "Before 16 <navlink>middle content</navlink> after 16.",
 ]
-
 
 class ScannerGenerator(re.Scanner):
     def scan(self, string):
+        text_group = []
         match = self.scanner.scanner(string).match
         i = 0
         while True:
@@ -88,56 +89,109 @@ class ScannerGenerator(re.Scanner):
                 break
             action = self.lexicon[m.lastindex-1][1]
             if callable(action):
+                #print(action)
                 self.match = m
-                action = action(self, m.group())
-            if action is not None:
-                yield action
-            # set i to j so we know 
+                token, value  = action(m.group())
+                if token == "text":
+                    text_group.append(value)
+                else:
+                    yield ["text", "".join(text_group)]
+                    text_group = []
+                    yield [token, value]
+            # set i to j so we know
             # we are moving along the string
             i = j
-        yield ['text', string[i:]]
-    
+        text_group.append(string[i:])
+        yield ["text", "".join(text_group)]
 
 scanner = ScannerGenerator([
-    (r"\*\*", lambda s,t: ["strong", t]),
-    (r"__", lambda s,t: ["strong", t]),
-    (r"\~\~", lambda s,t: ["del", t]),
-    (r"\=\=", lambda s,t: ["mark", t]),
-    (r"\-\-", lambda s,t: ["del", t]),
-    (r"``.+?``", lambda s,t: ["samp", t[2:-2]]),
-    (r"\^(?=[^\^])", lambda s,t: ["sup", t]),
-    (r"\~(?=[^\~])", lambda s,t: ["sub", t]),
-    (r"\`.+?\`", lambda s,t: ["code", t[1:-1]]),
-    (r"\*", lambda s,t: ["em", t]),
-    (r"_", lambda s,t: ["em", t]),
+    (r"(?:\*\*)|(?:__)", lambda t: ["strong", t]),
+    #(r"\*\*", lambda t: ["strong1", t]),
+    #(r"__", lambda t: ["strong2", t]),
     
-    (r"\$.*?\$", lambda s,t: ["math", t]),
-    (r"\:.*?\:", lambda s,t: ["emoji", t[1:-1]]),
-    (r"\[\^\d+\]", lambda s,t: ["footnote", t[2:-1]]),
-    (r"\[.*?\]\([^ ]+?\)", lambda s,t: ["link", t]),
-    (r"\<[^ ]+?\>", lambda s,t: ["rawlink", t[1:-1]]),
-    (r"\<\s+[^ ]+?\>", lambda s,t: ["html", t[1:-1]]),
+    (r"(?:\~\~)|(?:\-\-)", lambda t: ["del", t]),
+    #(r"\~\~", lambda t: ["del1", t]),
+    #(r"\-\-", lambda t: ["del2", t]),
     
-    (r"[a-zA-Z0-9]+", lambda s,t: ["text", t]),
-    #(r"\w+", lambda s,t: ["text", t]),
-    (r"\s+", lambda s,t: ["text", t]),
-    (r".+?", lambda s,t: ["text", t]),
+    (r"\=\=", lambda t: ["mark", t]),
+    (r"``.+?``", lambda t: ["samp", t[2:-2]]),
+    (r"\^(?=[^\^])", lambda t: ["sup", t]),
+    (r"\~(?=[^\~])", lambda t: ["sub", t]),
+    (r"\`.+?\`", lambda t: ["code", t[1:-1]]),
+    
+    (r"(?:\*)|(?:_)", lambda t: ["em", t]),
+    #(r"\*", lambda t: ["em1", t]),
+    #(r"_", lambda t: ["em2", t]),
+
+    (r"\$.*?\$", lambda t: ["math", t]),
+    (r"\:.*?\:", lambda t: ["emoji", t[1:-1]]),
+    (r"\[\^\d+\]", lambda t: ["footnote", t[2:-1]]),
+    (r"\[.*?\]\([^ ]+?\)", lambda t: ["link", t]),
+    
+    (r"\<(\S+)[^\>\<]*?\>.*?\<\/\1\>", lambda t: ["html", t]),
+    (r"\<[^ ]+?\>", lambda t: ["rawlink", t[1:-1]]),
+
+    #(r"\w+", lambda t: ["text", t]),
+    (r"[a-zA-Z0-9]+", lambda t: ["text", t]),
+    (r"\s+", lambda t: ["text", t]),
+    (r".+?", lambda t: ["text", t]),
 ])
 
 
-#for _ in MD_LIST:
-#    
-#    tokens, remainder = scanner.scan(_)
-#    
-#    for _ in tokens:
-#        if _[0] != "text":
-#            print(_)
-#    print(remainder)
+
+
+# %%
+def parse_inline_tokens(tokens):
+    depth = 0
+    tracker = {}
+    object_stack = []
+    bank = []
+    root = ("root", [])
+    current_object = root
+
+    for token, value in tokens:
+        
+        if token not in ["text", "footnote", "emoji", "math", "link","html", "rawlink"]:
+            if token not in tracker:
+                tracker[token] = False
+            # flip the switch
+            tracker[token] = not tracker[token]
+            # if the token is open
+            if tracker[token]:
+                # new open token, increase the depth
+                depth+=1
+                # create a new object
+                new_object = ["", []]
+                # add the new object as a child to the current object
+                current_object[1].append(new_object)
+                # add the current object to the stack
+                object_stack.append(current_object)
+                # assign the new object as the current object
+                current_object = new_object
+            else:
+                # if the token is closed
+                if depth:
+                    if len(object_stack):
+                        current_object[0] = token
+                        # if there is only one child element, just make that one child
+                        # equal to it
+                        if len(current_object[1]) == 1:
+                            single_child = current_object[1].pop()
+                            if single_child[0] == "text":
+                                current_object[1] = single_child[1]
+                            else:
+                                current_object[1] = single_child
+                        current_object = object_stack.pop()
+                depth-=1
+        else:
+            current_object[1].append([token, value])
+    return root[1]
 
 
 MD = " ".join(MD_LIST)
 tokens = scanner.scan(MD)
-for _ in tokens:
-    print(_)
-
+for token,value in tokens:
+    print(f"{token} | {value}")
+#converted = parse_inline_tokens(tokens)
+#print(json.dumps(converted, indent=4))
 # %%

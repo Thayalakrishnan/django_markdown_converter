@@ -111,11 +111,7 @@ def md_string_tokenizer(pattern, source):
         
         if token == "text":
             current_text_group.append(content)
-        #elif token == "footnote":
-        #    yield ("text", "".join(current_text_group))
-        #    yield ("footnote", content)
         else:
-            
             if len(current_text_group):
                 # if we are holding some text, we should release it all now
                 # this will be all the text from the last token to the curren 
@@ -190,9 +186,13 @@ def parse_inline_tokens(tokens, tracker):
 
 
 # %%
-def parse_inline_tokens(tokens, tracker):
+"""
+this is in tuple mode
+"""
+def parse_inline_tokens(tokens):
     depth = 0
     object_stack = []
+    tracker = {}
     bank = []
     root = ("root", [])
     current_object = root
@@ -200,6 +200,9 @@ def parse_inline_tokens(tokens, tracker):
     for token, value in tokens:
         
         if token not in ["text", "footnote", "emoji", "math"]:
+            # add token if not in tracker yet
+            if token not in tracker:
+                tracker[token] = False
             # flip the switch
             tracker[token] = not tracker[token]
             # if the token is open
@@ -279,7 +282,7 @@ BTRACKER = {
 
 mdtokens = md_string_tokenizer(TOKENIZER, MD)    
 BTRACKER = create_tracker_from_tokenizer(TOKENIZER)
-converted = parse_inline_tokens(mdtokens, BTRACKER)
+converted = parse_inline_tokens(mdtokens)
 
 #print(converted)
 print(json.dumps(converted, indent=4))
