@@ -97,6 +97,14 @@ def check_merge_parent(parent, bank):
         else:
             parent[1] = only_child
 
+def parent_to_grandparent(stack):
+    current_parent = stack.pop()
+    previous_child = current_parent[1].pop()
+    current_parent[1].extend(previous_child[1])
+    current_parent[1] = merge_adjacent_like_elements(current_parent[1])
+    return current_parent
+
+
 def parse_inline_tokens(tokens):
     depth = 0
     tracker = {}
@@ -110,7 +118,7 @@ def parse_inline_tokens(tokens):
     KEY_DATA = 1
     
     for token, value, nestable in tokens:
-        print(f"{token}-------------------------------")
+        #print(f"{token}-------------------------------")
         
         
         if not nestable:
@@ -145,24 +153,18 @@ def parse_inline_tokens(tokens):
                         #current_parent[KEY_TOKEN] = token
                         # if there is only one child element, just make that one child equal to it
                         check_merge_parent(current_parent, bank)
-                        #if len(current_parent[KEY_DATA]) == 1:
-                        #    single_child = current_parent[KEY_DATA].pop()
-                        #    if single_child[KEY_TOKEN] == "text":
-                        #        current_parent[KEY_DATA] = single_child[KEY_DATA]
-                        #        bank.pop()
-                        #    else:
-                        #        current_parent[KEY_DATA] = single_child
-                        # update current parent
                         current_parent = object_stack.pop()
                         depth-=1
                     else:
                         # if the expected token does not equal the currrent token
                         # we need to change levels. 
                         while token != expected_token:
-                            current_parent = object_stack.pop()
-                            previous_child = current_parent[KEY_DATA].pop()
-                            current_parent[KEY_DATA].extend(previous_child[KEY_DATA])
-                            current_parent[KEY_DATA] = merge_adjacent_like_elements(current_parent[KEY_DATA])
+                            
+                            #current_parent = object_stack.pop()
+                            #previous_child = current_parent[KEY_DATA].pop()
+                            #current_parent[KEY_DATA].extend(previous_child[KEY_DATA])
+                            #current_parent[KEY_DATA] = merge_adjacent_like_elements(current_parent[KEY_DATA])
+                            current_parent = parent_to_grandparent(object_stack)
                             check_merge_parent(current_parent, bank)
                             expected_token = token_stack.pop()
                             depth-=1
@@ -171,27 +173,31 @@ def parse_inline_tokens(tokens):
                         depth-=1    
                 #depth-=1
                 
-        print(json.dumps(root[KEY_DATA], indent=4))
+        #print(json.dumps(root[KEY_DATA], indent=4))
         
     # before merging 
-    print("Before merging-------------------------------")
-    print(json.dumps(root[KEY_DATA], indent=4))
+    #print("Before merging-------------------------------")
+    #print(json.dumps(root[KEY_DATA], indent=4))
     
     # so if we still have depth
     # that means we havent closed one of our boundaries
     while depth:
         if len(object_stack):
             # grab the previous parent
-            previous_parent = object_stack.pop()
-            # remove the previous child from the previous parents list
-            #print(previous_child)
-            previous_child = previous_parent[KEY_DATA].pop()
-            #print(f"depth: {depth}")
-            #print(json.dumps(previous_child, indent=4))
-            if len(previous_child[KEY_DATA]) > 1:
-                previous_child[KEY_DATA] = merge_adjacent_like_elements(previous_child[KEY_DATA])
-            # take the list from teh previous child and merge it with the previous parents
-            previous_parent[KEY_DATA].extend(previous_child[KEY_DATA])
+            #previous_parent = object_stack.pop()
+            ## remove the previous child from the previous parents list
+            ##print(previous_child)
+            #previous_child = previous_parent[KEY_DATA].pop()
+            ##print(f"depth: {depth}")
+            ##print(json.dumps(previous_child, indent=4))
+            ##if len(previous_child[KEY_DATA]) > 1:
+            ##    previous_child[KEY_DATA] = merge_adjacent_like_elements(previous_child[KEY_DATA])
+            ## take the list from teh previous child and merge it with the previous parents
+            #previous_parent[KEY_DATA].extend(previous_child[KEY_DATA])
+            #previous_parent[KEY_DATA] = merge_adjacent_like_elements(previous_parent[KEY_DATA])
+            
+            previous_parent = parent_to_grandparent(object_stack)
+            
         depth-=1
         #break
     root[KEY_DATA] = merge_adjacent_like_elements(root[KEY_DATA])
@@ -199,8 +205,8 @@ def parse_inline_tokens(tokens):
     # we can make edits here that will reflect in our final tree
     bank = [_ for _ in bank if isinstance(_[KEY_DATA], str) and _[KEY_TOKEN] != "merged"]
     
-    print("After merging-------------------------------")
-    print(json.dumps(root[KEY_DATA], indent=4))
+    #print("After merging-------------------------------")
+    #print(json.dumps(root[KEY_DATA], indent=4))
     
     return root[KEY_DATA]
 
@@ -265,7 +271,7 @@ MD_LIST = [
 ]
 MD = " ".join(MD_LIST)
 
-MD = """Before 01 **middle `nested stuff content** after 01."""
+#MD = """Before 01 **middle `nested stuff content** after 01."""
 
 tokens = scanner.scan(MD)
 #for token,value, nestable in tokens:
