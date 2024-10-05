@@ -1,7 +1,13 @@
+## structural cases
+
+### only formating context preset
+
+**formatted content**
+
+
+
+
 ## Basic Cases:
-*italic*
-**bold**
-***bold and italic***
 
 ##  Nested Cases:
 ### Italic within Bold:

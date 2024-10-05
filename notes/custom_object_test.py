@@ -1,6 +1,24 @@
 # %%
 import re, json
 
+class SubFormat:
+    __slots__ = ['type', 'data']
+    
+    def __init__(self, formattype, data:list=[]):
+        self.type = formattype
+        self.data = []
+        if data:
+            self.data = data
+    
+    def add_child(self, child):
+        self.data.append(child)
+        
+    def add_children(self, children):
+        self.data.extend(children)
+        
+    def remove_last_child(self):
+        return self.data.pop()
+
 class ScannerGenerator(re.Scanner):
     def scan(self, string):
         text_group = []
@@ -67,41 +85,44 @@ scanner = ScannerGenerator([
 
 # %%
 
-def merge_adjacent_like_elements(o_parent:list=[]) -> list:
+def merge_adjacent_like_elements(current_parent):
     """
     loop over the elements and any elements which are adjacent and the same type should 
     be merged
     """
+    parent = current_parent.data
+    
     new_parent = []
-    current_child = o_parent[0]
-    for next_child in o_parent[1:]:
+    current_child = parent[0]
+    
+    for next_child in parent[1:]:
         # to merge adjacent values, they need to have the same token type, and they both must bold string values
-        if current_child[0] == next_child[0] and isinstance(current_child[1], str) and isinstance(next_child[1], str) :
-            current_child[1] = current_child[1] + next_child[1]
-            next_child[0] = "merged"
+        if current_child.type == next_child.type and isinstance(current_child.type, str) and isinstance(next_child.type, str) :
+            current_child.data = current_child.data + next_child.data
+            next_child.type = "merged"
         else:
             # only swap children if they do not match
             new_parent.append(current_child)
             current_child = next_child
+            
     # add the final child 
     new_parent.append(current_child)
-    return new_parent
+    current_parent.data = new_parent
 
 
-def check_merge_parent(parent, bank):
+def check_merge_parent(parent):
     if len(parent[1]) == 1:
         only_child = parent[1].pop()
         if only_child[0] == "text":
             parent[1] = only_child[1]
-            bank.pop()
         else:
             parent[1] = only_child
 
 def parent_to_grandparent(stack):
     current_parent = stack.pop()
-    previous_child = current_parent[1].pop()
-    current_parent[1].extend(previous_child[1])
-    current_parent[1] = merge_adjacent_like_elements(current_parent[1])
+    previous_child = current_parent.remove_last_child()
+    current_parent.add_children(previous_child.data)
+    current_parent[1] = merge_adjacent_like_elements(current_parent)
     return current_parent
 
 def child_to_parent(stack):
@@ -115,8 +136,7 @@ def child_to_parent(stack):
 def parse_inline_tokens(tokens):
     tracker = {}
     object_stack = []
-    bank = []
-    root = ["root", []]
+    root = SubFormat("root", [])
     current_parent = root
     
     KEY_TOKEN = 0
@@ -127,9 +147,8 @@ def parse_inline_tokens(tokens):
         if not nestable:
             if token == "text" and not len(value):
                 continue
-            new_child = [token, value]
-            bank.append(new_child)
-            current_parent[KEY_DATA].append(new_child)
+            new_child = SubFormat(token, value)
+            current_parent.add_child(new_child)
         else:
             if token not in tracker:
                 tracker[token] = False
@@ -138,10 +157,9 @@ def parse_inline_tokens(tokens):
             # if the token is open
             if tracker[token]:
                 # new open token, create a new object
-                new_parent = [token, []]
-                bank.append(new_parent)
+                new_parent = SubFormat(token)
                 # add the new object as a child to the current object
-                current_parent[KEY_DATA].append(new_parent)
+                current_parent.add_child(new_parent)
                 # add the current object to the stack
                 object_stack.append(current_parent)
                 # assign the new object as the current object
@@ -150,40 +168,26 @@ def parse_inline_tokens(tokens):
                 # if the token is closed
                 # when we close a formatting context, we need change parents
                 if len(object_stack):
-                    if token == current_parent[0]:
+                    if token == current_parent.type:
                         # if there is only one child element, just make that one child equal to it
-                        check_merge_parent(current_parent, bank)
+                        check_merge_parent(current_parent)
                     else:
                         # if the expected token does not equal the currrent token
                         # we need to change levels. 
-                        while token != current_parent[0]:
+                        while token != current_parent.type:
                             current_parent = parent_to_grandparent(object_stack)
-                            check_merge_parent(current_parent, bank)
+                            check_merge_parent(current_parent)
                             
                     current_parent = object_stack.pop()
-        #print(json.dumps(root[KEY_DATA], indent=4))
-        
-    # before merging 
-    #print("Before merging-------------------------------")
-    #print(json.dumps(root[KEY_DATA], indent=4))
-    
     # so if we still have depth that means we havent closed one of our boundaries
     while len(object_stack):
-        #if len(object_stack):
         parent_to_grandparent(object_stack)
-    root[KEY_DATA] = merge_adjacent_like_elements(root[KEY_DATA])
+    root.data = merge_adjacent_like_elements(root.data)
     
-    # we can make edits here that will reflect in our final tree
-    bank = [_ for _ in bank if isinstance(_[KEY_DATA], str) and _[KEY_TOKEN] != "merged"]
-    
-    return root[KEY_DATA]
+    return root.data
 
 # %%
-"""
-18:21 03/10/2024
-the bug we have right now is that we cant have mismatched nested tags. 
-tags that are opened inside of other tags need to be closed before the other tags can be
-"""
+
 
 
 MD_TEST_CASES = [
@@ -221,22 +225,18 @@ MD_TEST_CASES = [
 ]
 
 
-for index, case in enumerate(MD_TEST_CASES):
-    md, solution = case
-    tokens = scanner.scan(md)
-    answer = parse_inline_tokens(tokens)
-    #answer = list(filter(lambda x: x[0] != "text", answer))
-    if solution != answer:
-        print(f"case {index} failed")
-        print("solution")
-        print(solution)
-        print("answer")
-        print(answer)
+#for index, case in enumerate(MD_TEST_CASES):
+#    md, solution = case
+#    tokens = scanner.scan(md)
+#    answer = parse_inline_tokens(tokens)
+#    #answer = list(filter(lambda x: x[0] != "text", answer))
+#    if solution != answer:
+#        print(f"case {index} failed")
+#        print("solution")
+#        print(solution)
+#        print("answer")
+#        print(answer)
         
-print("done ------------------------------")
-
-
-#%%
 
 
 MD = """**Markdown Example** with _**Inline Markup**_. 
@@ -248,68 +248,4 @@ tokens = scanner.scan(MD)
 ret = parse_inline_tokens(tokens)
 print(json.dumps(ret, indent=4))
 print(ret)
-
-
-
-# %%
-def create_bank(mybank:list=[], tree:list={}) -> list:
-    for _ in tree:
-        if isinstance(_[1], str):
-           mybank.append(_) 
-        else:
-            create_bank(mybank, _[1])
-    return mybank
-
-converted = [
-    ['strong', 'Markdown Example'], 
-    ['text', ' with '], 
-    ['em', 
-        ['strong', 'Inline Markup']
-    ], 
-    ['text', '. This '], 
-    ['strong', 
-        ['em', 
-            ['mark', 
-                ['code', 'inline code']
-            ]
-        ]
-    ], 
-    ['text', ' and ends with '], 
-    ['em', 
-        ['strong', 'italicized and bold']
-    ], 
-    ['text', ' text. Some '], 
-    ['strong', 
-        [
-            ['text', 'super '], 
-            ['em', 
-                [
-                    ['text', 'nested '], 
-                    ['mark', 
-                        [
-                            ['text', 'deep content '], 
-                            ['code', 'right here']
-                        ]
-                    ], 
-                    ['text', ' right now']
-                ]
-            ], 
-            ['text', ' duper']
-        ]
-    ], 
-    ['text', ' yeet. Going '], 
-    ['del', 
-        [
-            ['text', 'in '], 
-            ['em', 'and in'], 
-            ['text', ' and out '], 
-            ['em', 'and then in again'], 
-            ['text', ' and then out']
-        ]
-    ], 
-    ['text', ' yeet.']
-]
-new_bank = create_bank([], converted)
-print(new_bank)
-
-# %%
+print("done ------------------------------")
