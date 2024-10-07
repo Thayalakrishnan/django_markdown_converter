@@ -1,23 +1,23 @@
 # %%
 import re, json
 
-class SubFormat:
-    __slots__ = ['type', 'data']
+class Parent:
+    __slots__ = ['type', 'children']
     
-    def __init__(self, formattype, data:list=[]):
+    def __init__(self, formattype, children:list=[]):
         self.type = formattype
-        self.data = []
-        if data:
-            self.data = data
+        self.children = []
+        if children:
+            self.children = children
     
     def add_child(self, child):
-        self.data.append(child)
+        self.children.append(child)
         
     def add_children(self, children):
-        self.data.extend(children)
+        self.children.extend(children)
         
     def remove_last_child(self):
-        return self.data.pop()
+        return self.children.pop()
 
 class ScannerGenerator(re.Scanner):
     def scan(self, string):
@@ -85,20 +85,20 @@ scanner = ScannerGenerator([
 
 # %%
 
-def merge_adjacent_like_elements(current_parent):
+
+def loop_and_merge_adjacent_like_elements(current_parent):
     """
     loop over the elements and any elements which are adjacent and the same type should 
     be merged
     """
-    parent = current_parent.data
-    
+    children = current_parent.children
     new_parent = []
-    current_child = parent[0]
+    current_child = children[0]
     
-    for next_child in parent[1:]:
+    for next_child in children[1:]:
         # to merge adjacent values, they need to have the same token type, and they both must bold string values
-        if current_child.type == next_child.type and isinstance(current_child.type, str) and isinstance(next_child.type, str) :
-            current_child.data = current_child.data + next_child.data
+        if current_child.type == next_child.type and isinstance(current_child.children, str) and isinstance(next_child.children, str) :
+            current_child.children = current_child.children + next_child.children
             next_child.type = "merged"
         else:
             # only swap children if they do not match
@@ -107,47 +107,47 @@ def merge_adjacent_like_elements(current_parent):
             
     # add the final child 
     new_parent.append(current_child)
-    current_parent.data = new_parent
-
+    current_parent.children = new_parent
 
 def check_merge_parent(parent):
-    if len(parent[1]) == 1:
-        only_child = parent[1].pop()
-        if only_child[0] == "text":
-            parent[1] = only_child[1]
+    """
+    the parent normally has a bunch of kids
+    however, if a parent has only one child, that child should
+    be equal to the children property. 
+    """
+    if len(parent.children) == 1:
+        child = parent.remove_last_child()
+        if child.type == "text":
+            parent.children = child.children
         else:
-            parent[1] = only_child
+            parent.children = child
 
 def parent_to_grandparent(stack):
     current_parent = stack.pop()
     previous_child = current_parent.remove_last_child()
-    current_parent.add_children(previous_child.data)
-    current_parent[1] = merge_adjacent_like_elements(current_parent)
+    current_parent.add_children(previous_child.children)
+    current_parent[1] = loop_and_merge_adjacent_like_elements(current_parent)
     return current_parent
 
 def child_to_parent(stack):
     current_parent = stack.pop()
     previous_child = current_parent[1].pop()
     current_parent[1].extend(previous_child[1])
-    current_parent[1] = merge_adjacent_like_elements(current_parent[1])
+    current_parent[1] = loop_and_merge_adjacent_like_elements(current_parent[1])
     return current_parent
-
 
 def parse_inline_tokens(tokens):
     tracker = {}
     object_stack = []
-    root = SubFormat("root", [])
+    root = Parent("root", [])
     current_parent = root
-    
-    KEY_TOKEN = 0
-    KEY_DATA = 1
     
     for token, value, nestable in tokens:
         #print(f"{token}-------------------------------")
         if not nestable:
             if token == "text" and not len(value):
                 continue
-            new_child = SubFormat(token, value)
+            new_child = Parent(token, value)
             current_parent.add_child(new_child)
         else:
             if token not in tracker:
@@ -157,7 +157,7 @@ def parse_inline_tokens(tokens):
             # if the token is open
             if tracker[token]:
                 # new open token, create a new object
-                new_parent = SubFormat(token)
+                new_parent = Parent(token)
                 # add the new object as a child to the current object
                 current_parent.add_child(new_parent)
                 # add the current object to the stack
@@ -182,9 +182,9 @@ def parse_inline_tokens(tokens):
     # so if we still have depth that means we havent closed one of our boundaries
     while len(object_stack):
         parent_to_grandparent(object_stack)
-    root.data = merge_adjacent_like_elements(root.data)
+    root.children = loop_and_merge_adjacent_like_elements(root.children)
     
-    return root.data
+    return root.children
 
 # %%
 
