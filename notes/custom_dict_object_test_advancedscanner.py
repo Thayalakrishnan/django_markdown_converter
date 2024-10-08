@@ -73,7 +73,17 @@ class Person:
 
 class ScannerGenerator(re.Scanner):
     def scan(self, string):
-        text_group = []
+        tracker = {
+            "strong": False,
+            "del": False,
+            "mark": False,
+            "sup": False,
+            "sub": False,
+            "em": False,
+            "samp": False,
+            "code": False,
+        }
+        text_group = ""
         match = self.scanner.scanner(string).match
         i = 0
         while True:
@@ -93,17 +103,20 @@ class ScannerGenerator(re.Scanner):
                 self.match = m
                 ret  = action(m.group())
                 if ret[0] == "text":
-                    text_group.append(ret[1])
+                    text_group+=ret[1]
                 else:
                     if len(text_group):
-                        yield ["text", "".join(text_group), False]
-                    text_group = []
+                        yield ["text", text_group, False, False]
+                    text_group = ""
+                    if ret[2]:
+                        tracker[ret[0]] = not tracker[ret[0]]
+                        ret[3] = tracker[ret[0]]
                     yield ret
             # set i to j so we know
             # we are moving along the string
             i = j
-        text_group.append(string[i:])
-        yield ["text", "".join(text_group), False]
+        text_group+=string[i:]
+        yield ["text", text_group, False, False]
 
 """
 the lambda receive the value of the token
@@ -111,28 +124,28 @@ the lambda should return, in order
 label, token value, if the token can be nested
 """
 scanner = ScannerGenerator([
-    (r"(?:\*\*)|(?:__)", lambda t: ["strong", t, True]),
-    (r"(?:\~\~)|(?:\-\-)", lambda t: ["del", t, True]),
-    (r"\=\=", lambda t: ["mark", t, True]),
-    (r"\^(?=[^\^])", lambda t: ["sup", t, True]),
-    (r"\~(?=[^\~])", lambda t: ["sub", t, True]),
-    (r"(?:\*)|(?:_)", lambda t: ["em", t, True]),
-    (r"``", lambda t: ["samp", t, True]),
-    (r"`", lambda t: ["code", t, True]),
+    (r"(?:\*\*)|(?:__)", lambda t: ["strong", t, True, False]),
+    (r"(?:\~\~)|(?:\-\-)", lambda t: ["del", t, True, False]),
+    (r"\=\=", lambda t: ["mark", t, True, False]),
+    (r"\^(?=[^\^])", lambda t: ["sup", t, True, False]),
+    (r"\~(?=[^\~])", lambda t: ["sub", t, True, False]),
+    (r"(?:\*)|(?:_)", lambda t: ["em", t, True, False]),
+    (r"``", lambda t: ["samp", t, True, False]),
+    (r"`", lambda t: ["code", t, True, False]),
     
-    #(r"``.+?``", lambda t: ["samp", t[2:-2], False]),
-    #(r"\`.+?\`", lambda t: ["code", t[1:-1], False]),
-    (r"\$.*?\$", lambda t: ["math", t, False]),
-    (r"\:.*?\:", lambda t: ["emoji", t[1:-1], False]),
-    (r"\[\^\d+\]", lambda t: ["footnote", t[2:-1], False]),
-    (r"\[.*?\]\([^ ]+?\)", lambda t: ["link", t, False]),
+    #(r"``.+?``", lambda t: ["samp", t[2:-2], False, False]),
+    #(r"\`.+?\`", lambda t: ["code", t[1:-1], False, False]),
+    (r"\$.*?\$", lambda t: ["math", t, False, False]),
+    (r"\:.*?\:", lambda t: ["emoji", t[1:-1], False, False]),
+    (r"\[\^\d+\]", lambda t: ["footnote", t[2:-1], False, False]),
+    (r"\[.*?\]\([^ ]+?\)", lambda t: ["link", t, False, False]),
     
-    (r"\<(\S+)[^\>\<]*?\>.*?\<\/\1\>", lambda t: ["html", t, False]),
-    (r"\<[^ ]+?\>", lambda t: ["rawlink", t[1:-1], False]),
-    #(r"\w+", lambda t: ["text", t, True]),
-    (r"[a-zA-Z0-9]+", lambda t: ["text", t, False]),
-    (r"\s+", lambda t: ["text", t, False]),
-    (r".+?", lambda t: ["text", t, False]),
+    (r"\<(\S+)[^\>\<]*?\>.*?\<\/\1\>", lambda t: ["html", t, False, False]),
+    (r"\<[^ ]+?\>", lambda t: ["rawlink", t[1:-1], False, False]),
+    #(r"\w+", lambda t: ["text", t, True, False]),
+    (r"[a-zA-Z0-9]+", lambda t: ["text", t, False, False]),
+    (r"\s+", lambda t: ["text", t, False, False]),
+    (r".+?", lambda t: ["text", t, False, False]),
 ])
 
 # %%
@@ -160,33 +173,27 @@ def initialise_new_parent(stack:list=[], parent:Person=None, token:str="text"):
 
 
 def parse_inline_tokens(tokens):
-    tracker = []
     object_stack = []
     root = Person("root", [])
     current_parent = root
     
-    for token, value, nestable in tokens:
-        #print(f"{token}-------------------------------")
+    for token, value, nestable, isopen in tokens:
         if not nestable:
             if token == "text" and not len(value):
                 continue
             new_child = Person(token, value, current_parent)
             current_parent.add_child(new_child)
         else:
-            if token not in tracker:
+            if isopen:
                 # assign the new object as the current object
                 current_parent = initialise_new_parent(object_stack, current_parent, token)
-                tracker.append(token)
             else:
                 # if the token is closed
                 # when we close a formatting context, we need change parents
                 if len(object_stack):
                     while token != current_parent.token:
                         current_parent = move_children_from_parent_to_grandparent(object_stack)
-                        tracker.pop()
-                            
                     current_parent = object_stack.pop()
-                    tracker.pop()
     # so if we still have depth that means we havent closed one of our boundaries
     while len(object_stack):
         move_children_from_parent_to_grandparent(object_stack)
@@ -283,12 +290,4 @@ tv2 = TokenValue("yeet", ", this is the end")
 tv1 + tv2
 print(tv1.value)
             
-# %%
-list1 = [1,2,3,4,5]
-list2 = [6,7,8,9,10]
-
-list3 = list1 + list2
-print(list1)
-print(list2)
-print(list3)
 # %%
