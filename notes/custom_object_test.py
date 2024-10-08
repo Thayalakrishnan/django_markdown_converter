@@ -50,39 +50,7 @@ class Parent:
         # if the children are a list
         else:
             return [self.type, self.children.get_representation()]    
-        
-    #def get_representation(self):
-    #    # if the children is a string
-    #    if isinstance(self.children, str):
-    #        return [self.type, self.children]
-    #    # if the children are a list
-    #    elif isinstance(self.children, list):
-    #        if len(self.children) == 1:
-    #            self.children = self.children.pop()
-    #            return [self.type, self.children.get_representation()]
-    #        else:
-    #            return [self.type, [_.get_representation() for _ in self.children]]
-    #    else:
-    #        return [self.type, self.children.get_representation()]    
 
-class ParentStack:
-    __slots__ = ['data', 'tracker']
-    
-    def __init__(self):
-        self.data = []
-        self.tracker = []
-    
-    def add_to_stack(self, x:Parent):
-        self.tracker.append(x.type)
-        self.data.append(x)
-        
-    def remove_from_stack(self) -> Parent:
-        self.tracker.pop()
-        return self.data.pop()
-    
-    def check_in(self, key:str="") -> bool:
-        return key in self.tracker
-    
 
 class ScannerGenerator(re.Scanner):
     def scan(self, string):
@@ -223,18 +191,10 @@ def parse_inline_tokens(tokens):
                 # if the token is closed
                 # when we close a formatting context, we need change parents
                 if len(object_stack):
-                    # close the formatting context if the token matches
-                    if token == current_parent.type:
-                        # if there is only one child element, just make that one child equal to it
+                    while token != current_parent.type:
+                        current_parent = parent_to_grandparent(object_stack)
+                        tracker.pop()
                         #check_merge_parent(current_parent)
-                        pass
-                    else:
-                        # if the expected token does not equal the currrent token
-                        # we need to change levels. 
-                        while token != current_parent.type:
-                            current_parent = parent_to_grandparent(object_stack)
-                            tracker.pop()
-                            #check_merge_parent(current_parent)
                             
                     current_parent = object_stack.pop()
                     tracker.pop()
@@ -303,14 +263,15 @@ for index, case in enumerate(MD_TEST_CASES):
         print(answer)
 
 #
-#MD = """**Markdown Example** with _**Inline Markup**_. 
-#This **_==`inline code`==_** and ends with _**italicized and bold**_ text. 
-#Some __super *nested ==deep content `right here`== right now* duper__ yeet. 
-#Going ~~in *and in* and out *and then in again* and then out~~ yeet."""
-#
-#tokens = scanner.scan(MD)
-#ret = parse_inline_tokens(tokens)
+MD = """**Markdown Example** with _**Inline Markup**_. 
+This **_==`inline code`==_** and ends with _**italicized and bold**_ text. 
+Some __super *nested ==deep content `right here`== right now* duper__ yeet. 
+Going ~~in *and in* and out *and then in again* and then out~~ yeet."""
+
+tokens = scanner.scan(MD)
+ret = parse_inline_tokens(tokens)
 #print(json.dumps(ret, indent=4, default=custom_json_encoder))
+print(json.dumps(ret, indent=4))
 print("done ------------------------------")
 
 # %%
