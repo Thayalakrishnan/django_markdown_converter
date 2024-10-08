@@ -2,14 +2,24 @@
 import re, json
 
 class Person:
-    __slots__ = ['token', 'children', 'parent']
+    __slots__ = ['token', 'children', 'parent', ]
     
-    def __init__(self, token:str="", children:list=[]):
+    def __init__(self, token:str="", children:list=[], parent=None):
         self.token = token
         self.children = []
+        self.parent = parent
+        
         if children:
             self.children = children
             
+    @property
+    def first_child(self):
+        return self.children[0]
+    
+    @property
+    def last_child(self):
+        return self.children[-1]
+    
     @property
     def has_single_child(self):
         return len(self.children) == 1
@@ -18,15 +28,20 @@ class Person:
     def has_children(self):
         return isinstance(self.children, list) and len(self.children)
     
+    @property
+    def has_content(self):
+        return isinstance(self.children, str)
+    
     def add_child(self, child):
+        child.parent = self
+        
         if self.has_children:
-            last_child = self.children[-1]
             # merge kids if they are the same token
-            if last_child.token == child.token and isinstance(last_child.children, str) and isinstance(child.children, str) :
-                last_child.children = last_child.children + child.children
+            if self.last_child.token == child.token and self.last_child.has_content and child.has_content:
+                self.last_child.children = self.last_child.children + child.children
+                del child
                 return
         self.children.append(child)
-        return
                 
     def add_children(self, children:list=[]):
         for child in children:
@@ -36,11 +51,16 @@ class Person:
         return self.children.pop()
 
     def get_representation(self):
+        """
+        get the representation of the parent
+        """
+        # if the children is a list
         if self.has_children:
+            # if there is only only child
             if self.has_single_child:
-                if self.children[0].token == "text":
-                    return [self.token, self.children[0].children]
-                return [self.token, self.children[0].get_representation()]
+                if self.first_child.token == "text":
+                    return [self.token, self.first_child.children]
+                return [self.token, self.first_child.get_representation()]
             else:
                 return [self.token, [_.get_representation() for _ in self.children]]
         # if the children is a string
@@ -49,6 +69,27 @@ class Person:
         # if the children are a list
         else:
             return [self.token, self.children.get_representation()]    
+        
+    def get_representation_dict(self):
+        """
+        get the representation of the parent
+        """
+        # if the children is a list
+        if self.has_children:
+            # if there is only only child
+            if self.has_single_child:
+                if self.first_child.token == "text":
+                    return {"type": self.token, "data": self.first_child.children}
+                return {"type": self.token, "data": self.first_child.get_representation_dict()}
+            # if there are multiple children
+            else:
+                return {"type": self.token, "data": [_.get_representation_dict() for _ in self.children]}
+        # if the children is a string
+        elif self.has_content:
+            return {"type": self.token, "data": self.children}
+        # if we are not sure
+        else:
+            return {"type": self.token, "data": self.children.get_representation_dict()}
 
 
 class ScannerGenerator(re.Scanner):
@@ -116,16 +157,22 @@ scanner = ScannerGenerator([
 ])
 
 # %%
-
-def parent_to_grandparent(stack):
+def move_children_from_parent_to_grandparent(stack:list=[]) -> Person:
+    """
+    move all the children from the current parent
+    to the grandparent
+    """
     current_parent = stack.pop()
     previous_child = current_parent.remove_last_child()
     current_parent.add_children(previous_child.children)
     return current_parent
 
-def initialise_new_parent(stack, parent, token):
+def initialise_new_parent(stack:list=[], parent:Person=None, token:str="text"):
+    """
+    create a new parent and make the current parent 
+    """
     # new open token, create a new object
-    new_parent = Person(token)
+    new_parent = Person(token=token, parent=parent)
     # add the new object as a child to the current object
     parent.add_child(new_parent)
     # add the current object to the stack
@@ -144,7 +191,7 @@ def parse_inline_tokens(tokens):
         if not nestable:
             if token == "text" and not len(value):
                 continue
-            new_child = Person(token, value)
+            new_child = Person(token, value, current_parent)
             current_parent.add_child(new_child)
         else:
             if token not in tracker:
@@ -156,16 +203,17 @@ def parse_inline_tokens(tokens):
                 # when we close a formatting context, we need change parents
                 if len(object_stack):
                     while token != current_parent.token:
-                        current_parent = parent_to_grandparent(object_stack)
+                        current_parent = move_children_from_parent_to_grandparent(object_stack)
                         tracker.pop()
                             
                     current_parent = object_stack.pop()
                     tracker.pop()
     # so if we still have depth that means we havent closed one of our boundaries
     while len(object_stack):
-        parent_to_grandparent(object_stack)
+        move_children_from_parent_to_grandparent(object_stack)
         
-    return root.get_representation()[1]
+    #return root.get_representation()[1]
+    return root.get_representation_dict()
 
 # %%
 
@@ -204,9 +252,10 @@ MD_TEST_CASES = [
 ]
 
 def custom_json_encoder(obj):
+    #print(json.dumps(ret, indent=4, default=custom_json_encoder))
     if isinstance(obj, Person):
         return obj.to_dict()
-    raise TypeError(f"Object of token {token(obj).__name__} is not JSON serializable")
+    raise TypeError(f"Object of token {type(obj).__name__} is not JSON serializable")
 
 
 
@@ -231,7 +280,6 @@ Going ~~in *and in* and out *and then in again* and then out~~ yeet."""
 
 tokens = scanner.scan(MD)
 ret = parse_inline_tokens(tokens)
-#print(json.dumps(ret, indent=4, default=custom_json_encoder))
 print(json.dumps(ret, indent=4))
 print("done ------------------------------")
 
