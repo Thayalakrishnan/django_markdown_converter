@@ -2,26 +2,86 @@
 import re, json
 
 class Parent:
-    __slots__ = ['type', 'open', 'children']
+    __slots__ = ['type', 'children']
     
     def __init__(self, formattype, children:list=[]):
         self.type = formattype
-        self.open = False
         self.children = []
         if children:
             self.children = children
+            
+    @property
+    def has_children(self):
+        return isinstance(self.children, list) and len(self.children)
     
     def to_dict(self):
+        if isinstance(self.children, list) and len(self.children) == 1:
+            self.children = self.children.pop()
         return [self.type, self.children]
     
     def add_child(self, child):
+        if self.has_children:
+            last_child = self.children[-1]
+            # merge kids if they are the same type
+            if last_child.type == child.type and isinstance(last_child.children, str) and isinstance(child.children, str) :
+                last_child.children = last_child.children + child.children
+                return
         self.children.append(child)
-        
-    def add_children(self, children):
-        self.children.extend(children)
+        return
+                
+    def add_children(self, children:list=[]):
+        for child in children:
+            self.add_child(child)
         
     def remove_last_child(self):
         return self.children.pop()
+
+    def get_representation(self):
+        if self.has_children:
+            if len(self.children) == 1:
+                if self.children[0].type == "text":
+                    return [self.type, self.children[0].children]
+                return [self.type, self.children[0].get_representation()]
+            else:
+                return [self.type, [_.get_representation() for _ in self.children]]
+        # if the children is a string
+        elif isinstance(self.children, str):
+            return [self.type, self.children]
+        # if the children are a list
+        else:
+            return [self.type, self.children.get_representation()]    
+        
+    #def get_representation(self):
+    #    # if the children is a string
+    #    if isinstance(self.children, str):
+    #        return [self.type, self.children]
+    #    # if the children are a list
+    #    elif isinstance(self.children, list):
+    #        if len(self.children) == 1:
+    #            self.children = self.children.pop()
+    #            return [self.type, self.children.get_representation()]
+    #        else:
+    #            return [self.type, [_.get_representation() for _ in self.children]]
+    #    else:
+    #        return [self.type, self.children.get_representation()]    
+
+class ParentStack:
+    __slots__ = ['data', 'tracker']
+    
+    def __init__(self):
+        self.data = []
+        self.tracker = []
+    
+    def add_to_stack(self, x:Parent):
+        self.tracker.append(x.type)
+        self.data.append(x)
+        
+    def remove_from_stack(self) -> Parent:
+        self.tracker.pop()
+        return self.data.pop()
+    
+    def check_in(self, key:str="") -> bool:
+        return key in self.tracker
     
 
 class ScannerGenerator(re.Scanner):
@@ -89,8 +149,6 @@ scanner = ScannerGenerator([
 ])
 
 # %%
-
-
 def loop_and_merge_adjacent_like_elements(current_parent):
     """
     loop over the elements and any elements which are adjacent and the same type should 
@@ -131,7 +189,7 @@ def parent_to_grandparent(stack):
     current_parent = stack.pop()
     previous_child = current_parent.remove_last_child()
     current_parent.add_children(previous_child.children)
-    loop_and_merge_adjacent_like_elements(current_parent)
+    #loop_and_merge_adjacent_like_elements(current_parent)
     return current_parent
 
 def initialise_new_parent(stack, parent, token):
@@ -144,7 +202,7 @@ def initialise_new_parent(stack, parent, token):
     return new_parent
 
 def parse_inline_tokens(tokens):
-    tracker = {}
+    tracker = []
     object_stack = []
     root = Parent("root", [])
     current_parent = root
@@ -158,45 +216,41 @@ def parse_inline_tokens(tokens):
             current_parent.add_child(new_child)
         else:
             if token not in tracker:
-                tracker[token] = False
-            # flip the switch
-            tracker[token] = not tracker[token]
-            # if the token is open
-            if tracker[token]:
-                ## new open token, create a new object
-                #new_parent = Parent(token)
-                ## add the new object as a child to the current object
-                #current_parent.add_child(new_parent)
-                ## add the current object to the stack
-                #object_stack.append(current_parent)
                 # assign the new object as the current object
                 current_parent = initialise_new_parent(object_stack, current_parent, token)
+                tracker.append(token)
             else:
                 # if the token is closed
                 # when we close a formatting context, we need change parents
                 if len(object_stack):
+                    # close the formatting context if the token matches
                     if token == current_parent.type:
                         # if there is only one child element, just make that one child equal to it
-                        check_merge_parent(current_parent)
+                        #check_merge_parent(current_parent)
+                        pass
                     else:
                         # if the expected token does not equal the currrent token
                         # we need to change levels. 
                         while token != current_parent.type:
                             current_parent = parent_to_grandparent(object_stack)
-                            check_merge_parent(current_parent)
+                            tracker.pop()
+                            #check_merge_parent(current_parent)
                             
                     current_parent = object_stack.pop()
+                    tracker.pop()
     # so if we still have depth that means we havent closed one of our boundaries
     while len(object_stack):
         parent_to_grandparent(object_stack)
-    loop_and_merge_adjacent_like_elements(root)
-    return root.children
+        
+    #loop_and_merge_adjacent_like_elements(root)
+    #return root.children
+    return root.get_representation()[1]
 
 # %%
 
 MD_TEST_CASES = [
     ## regular
-    ("**formatted content**", [["strong", "formatted content"]]),
+    ("**formatted content**", ["strong", "formatted content"]),
     ("before **in between** after", [["text", "before "], ["strong", "in between"], ["text", " after"]]),
     ("before __in between__ after", [["text", "before "], ["strong", "in between"], ["text", " after"]]),
     ("before _in between_ after", [["text", "before "], ["em", "in between"], ["text", " after"]]),
@@ -225,7 +279,7 @@ MD_TEST_CASES = [
     ## irregular nesting
     ("before **in `nested content between** after", [["text", "before "], ["strong", "in nested content between"], ["text", " after"]]),
     ## edge cases
-    ("How about some **strong _emphasised --deleted ^super ==marked ~sub content as well", [["text", "How about some strong emphasised deleted super marked sub content as well"]]),
+    ("How about some **strong _emphasised --deleted ^super ==marked ~sub content as well", "How about some strong emphasised deleted super marked sub content as well"),
 ]
 
 def custom_json_encoder(obj):
@@ -234,14 +288,29 @@ def custom_json_encoder(obj):
     raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
 
 
-MD = """**Markdown Example** with _**Inline Markup**_. 
-This **_==`inline code`==_** and ends with _**italicized and bold**_ text. 
-Some __super *nested ==deep content `right here`== right now* duper__ yeet. 
-Going ~~in *and in* and out *and then in again* and then out~~ yeet."""
 
-tokens = scanner.scan(MD)
-ret = parse_inline_tokens(tokens)
-print(json.dumps(ret, indent=4, default=custom_json_encoder))
+for index, case in enumerate(MD_TEST_CASES):
+    md, solution = case
+    tokens = scanner.scan(md)
+    answer = parse_inline_tokens(tokens)
+    #answer = list(filter(lambda x: x[0] != "text", answer))
+    if solution != answer:
+        print(f"case {index} --------------------")
+        print(f"failed")
+        print("The Solution")
+        print(solution)
+        print("My Answer")
+        print(answer)
+
+#
+#MD = """**Markdown Example** with _**Inline Markup**_. 
+#This **_==`inline code`==_** and ends with _**italicized and bold**_ text. 
+#Some __super *nested ==deep content `right here`== right now* duper__ yeet. 
+#Going ~~in *and in* and out *and then in again* and then out~~ yeet."""
+#
+#tokens = scanner.scan(MD)
+#ret = parse_inline_tokens(tokens)
+#print(json.dumps(ret, indent=4, default=custom_json_encoder))
 print("done ------------------------------")
 
 # %%
