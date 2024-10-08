@@ -2,13 +2,17 @@
 import re, json
 
 class Parent:
-    __slots__ = ['type', 'children']
+    __slots__ = ['type', 'open', 'children']
     
     def __init__(self, formattype, children:list=[]):
         self.type = formattype
+        self.open = False
         self.children = []
         if children:
             self.children = children
+    
+    def to_dict(self):
+        return [self.type, self.children]
     
     def add_child(self, child):
         self.children.append(child)
@@ -18,6 +22,7 @@ class Parent:
         
     def remove_last_child(self):
         return self.children.pop()
+    
 
 class ScannerGenerator(re.Scanner):
     def scan(self, string):
@@ -126,15 +131,17 @@ def parent_to_grandparent(stack):
     current_parent = stack.pop()
     previous_child = current_parent.remove_last_child()
     current_parent.add_children(previous_child.children)
-    current_parent[1] = loop_and_merge_adjacent_like_elements(current_parent)
+    loop_and_merge_adjacent_like_elements(current_parent)
     return current_parent
 
-def child_to_parent(stack):
-    current_parent = stack.pop()
-    previous_child = current_parent[1].pop()
-    current_parent[1].extend(previous_child[1])
-    current_parent[1] = loop_and_merge_adjacent_like_elements(current_parent[1])
-    return current_parent
+def initialise_new_parent(stack, parent, token):
+    # new open token, create a new object
+    new_parent = Parent(token)
+    # add the new object as a child to the current object
+    parent.add_child(new_parent)
+    # add the current object to the stack
+    stack.append(parent)
+    return new_parent
 
 def parse_inline_tokens(tokens):
     tracker = {}
@@ -156,14 +163,14 @@ def parse_inline_tokens(tokens):
             tracker[token] = not tracker[token]
             # if the token is open
             if tracker[token]:
-                # new open token, create a new object
-                new_parent = Parent(token)
-                # add the new object as a child to the current object
-                current_parent.add_child(new_parent)
-                # add the current object to the stack
-                object_stack.append(current_parent)
+                ## new open token, create a new object
+                #new_parent = Parent(token)
+                ## add the new object as a child to the current object
+                #current_parent.add_child(new_parent)
+                ## add the current object to the stack
+                #object_stack.append(current_parent)
                 # assign the new object as the current object
-                current_parent = new_parent
+                current_parent = initialise_new_parent(object_stack, current_parent, token)
             else:
                 # if the token is closed
                 # when we close a formatting context, we need change parents
@@ -182,13 +189,10 @@ def parse_inline_tokens(tokens):
     # so if we still have depth that means we havent closed one of our boundaries
     while len(object_stack):
         parent_to_grandparent(object_stack)
-    root.children = loop_and_merge_adjacent_like_elements(root.children)
-    
+    loop_and_merge_adjacent_like_elements(root)
     return root.children
 
 # %%
-
-
 
 MD_TEST_CASES = [
     ## regular
@@ -224,19 +228,10 @@ MD_TEST_CASES = [
     ("How about some **strong _emphasised --deleted ^super ==marked ~sub content as well", [["text", "How about some strong emphasised deleted super marked sub content as well"]]),
 ]
 
-
-#for index, case in enumerate(MD_TEST_CASES):
-#    md, solution = case
-#    tokens = scanner.scan(md)
-#    answer = parse_inline_tokens(tokens)
-#    #answer = list(filter(lambda x: x[0] != "text", answer))
-#    if solution != answer:
-#        print(f"case {index} failed")
-#        print("solution")
-#        print(solution)
-#        print("answer")
-#        print(answer)
-        
+def custom_json_encoder(obj):
+    if isinstance(obj, Parent):
+        return obj.to_dict()
+    raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
 
 
 MD = """**Markdown Example** with _**Inline Markup**_. 
@@ -246,6 +241,7 @@ Going ~~in *and in* and out *and then in again* and then out~~ yeet."""
 
 tokens = scanner.scan(MD)
 ret = parse_inline_tokens(tokens)
-print(json.dumps(ret, indent=4))
-print(ret)
+print(json.dumps(ret, indent=4, default=custom_json_encoder))
 print("done ------------------------------")
+
+# %%
