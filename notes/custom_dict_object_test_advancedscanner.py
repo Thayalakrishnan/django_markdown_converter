@@ -34,7 +34,6 @@ class Person:
     
     def add_child(self, child):
         child.parent = self
-        
         if self.has_children:
             # merge kids if they are the same token
             if self.last_child.token == child.token and self.last_child.has_content and child.has_content:
@@ -133,8 +132,6 @@ scanner = ScannerGenerator([
     (r"``", lambda t: ["samp", t, True, False]),
     (r"`", lambda t: ["code", t, True, False]),
     
-    #(r"``.+?``", lambda t: ["samp", t[2:-2], False, False]),
-    #(r"\`.+?\`", lambda t: ["code", t[1:-1], False, False]),
     (r"\$.*?\$", lambda t: ["math", t, False, False]),
     (r"\:.*?\:", lambda t: ["emoji", t[1:-1], False, False]),
     (r"\[\^\d+\]", lambda t: ["footnote", t[2:-1], False, False]),
@@ -163,11 +160,8 @@ def initialise_new_parent(stack:list=[], parent:Person=None, token:str="text"):
     """
     create a new parent and make the current parent 
     """
-    # new open token, create a new object
     new_parent = Person(token=token, parent=parent)
-    # add the new object as a child to the current object
     parent.add_child(new_parent)
-    # add the current object to the stack
     stack.append(parent)
     return new_parent
 
