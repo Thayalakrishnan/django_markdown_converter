@@ -256,3 +256,27 @@ props:
 - attrs
 
 
+
+
+
+## inline
+
+CASES = [
+    ["code",      [("`", "`")]], # can nest
+    ["strong",    [("**", "**"), ("__", "__")]], # can nest
+    ["em",        [("*", "*"), ("_", "_")]], # can nest
+    ["del",       [("~~", "~~"), ("--", "--")]], # can nest
+    ["mark",      [("==", "==")]], # can nest
+    ["samp",      [("``", "``")]], # can nest
+    ["sup",       [("^", "^")]], # can nest
+    ["sub",       [("~", "~")]], # can nest
+    ["navlink",   [("<navlink ", "</navlink>")]], # can nest
+
+    ["text",      [("", "")]], # can nest
+
+    ["emoji",     [(":", ":")]], # cannot nest
+    ["math",      [("$", "$")]], # cannot nest
+    ["rawlink",   [("<", ">")]], # cannot nest
+    ["footnote",  [("[^", "]")]], # cannot nest
+    ["link",      [("[", ")")]], # cannot nest
+]
