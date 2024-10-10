@@ -51,12 +51,12 @@ class TokenizerClass:
     a token is made up of a pattern and its label
     """
     def __init__(self) -> None:
-        print(f"[proto][tokenizer][TokenizerClass][__init__]")
-        
+        #print(f"[proto][tokenizer][TokenizerClass][__init__]")
         self.tokenizer = None
         self.tokens = []
         self.tracker = {}
         
+        # adding tokens
         self.add_token(label="strong", pattern=r"(?:\*\*)|(?:__)", is_nestable=True)
         self.add_token(label="del", pattern=r"(?:\~\~)|(?:\-\-)", is_nestable=True)
         self.add_token(label="mark", pattern=r"\=\=", is_nestable=True)
@@ -74,7 +74,7 @@ class TokenizerClass:
         self.add_token(label="text", pattern=r"[a-zA-Z0-9]+", is_nestable=False)
         self.add_token(label="text", pattern=r"\s+", is_nestable=False)
         self.add_token(label="text", pattern=r".+?", is_nestable=False)
-        print(self.tracker)
+        # creating tokenizer
         self.create_tokenizer()
         
     def create_tokenizer(self):
@@ -94,7 +94,7 @@ class TokenizerClass:
             self.tracker[_] = False
         
     def tokenize(self, source):
-        print(f"[proto][tokenizer][TokenizerClass][tokenize]")
+        #print(f"[proto][tokenizer][TokenizerClass][tokenize]")
         self.reset_tracker()
         return self.tokenizer.scan(source, self.tracker)
 

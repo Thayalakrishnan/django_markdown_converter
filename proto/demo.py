@@ -33,26 +33,30 @@ MD_TEST_CASES = [
     ("before **in `nested content between** after", [["text", "before "], ["strong", "in nested content between"], ["text", " after"]]),
     ## edge cases
     ("How about some **strong _emphasised --deleted ^super ==marked ~sub content as well", "How about some strong emphasised deleted super marked sub content as well"),
+    ## long and complex
+    (
+        "**Markdown Example** with _**Inline Markup**_. This **_==`inline code`==_** and ends with _**italicized and bold**_ text. Some __super *nested ==deep content `right here`== right now* duper__ yeet. Going ~~in *and in* and out *and then in again* and then out~~ yeet.", 
+        [['strong', 'Markdown Example'],['text', ' with '],['em', ['strong', 'Inline Markup']],['text', '. This '],['strong', ['em', ['mark', ['code', 'inline code']]]],['text', ' and ends with '],['em', ['strong', 'italicized and bold']],['text', ' text. Some '],['strong', [['text', 'super '],['em', [['text', 'nested '],['mark', [['text', 'deep content '],['code', 'right here']]],['text', ' right now']]],['text', ' duper']]],['text', ' yeet. Going '],['del', [['text', 'in '],['em', 'and in'],['text', ' and out '],['em', 'and then in again'],['text', ' and then out']]],['text', ' yeet.']]
+    ),
 ]
 
 
 for index, case in enumerate(MD_TEST_CASES):
     md, solution = case
-    print(f"case {index} ---------- {md}")
+    #print(f"case {index} ---------- {md}")
     answer = parse(md)
     if solution != answer:
+        print(f"case {index:{3}} ❌ ---------- {md!r}")
         print(f"failed")
         print("The Solution")
         print(solution)
         print("My Answer")
         print(answer)
+    else:
+        print(f"case {index:{3}} ✔️ ---------- {md!r}")
 
 #
-#MD = """**Markdown Example** with _**Inline Markup**_. 
-#This **_==`inline code`==_** and ends with _**italicized and bold**_ text. 
-#Some __super *nested ==deep content `right here`== right now* duper__ yeet. 
-#Going ~~in *and in* and out *and then in again* and then out~~ yeet."""
-#
+#MD = """**Markdown Example** with _**Inline Markup**_. This **_==`inline code`==_** and ends with _**italicized and bold**_ text. Some __super *nested ==deep content `right here`== right now* duper__ yeet. Going ~~in *and in* and out *and then in again* and then out~~ yeet."""
 #ret = parse(MD)
 #print(json.dumps(ret, indent=4))
 #print("done ------------------------------")

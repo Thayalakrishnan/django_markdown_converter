@@ -2,7 +2,7 @@ from proto.person import Person
 from proto.tokenizer import Tokenizer
 
 def move_children_from_parent_to_grandparent(stack:list=[]) -> Person:
-    print(f"[proto][parser][move_children_from_parent_to_grandparent]")
+    #print(f"[proto][parser][move_children_from_parent_to_grandparent]")
     """
     move all the children from the current parent
     to the grandparent
@@ -16,7 +16,7 @@ def initialise_new_parent(stack:list=[], parent:Person=None, token:str="text"):
     """
     create a new parent and make the current parent 
     """
-    print(f"[proto][parser][initialise_new_parent]")
+    #print(f"[proto][parser][initialise_new_parent]")
     new_parent = Person(token=token, parent=parent)
     parent.add_child(new_parent)
     stack.append(parent)
@@ -24,7 +24,7 @@ def initialise_new_parent(stack:list=[], parent:Person=None, token:str="text"):
 
 
 def parse_inline_tokens(tokens):
-    print(f"[proto][parser][parse_inline_tokens]")
+    #print(f"[proto][parser][parse_inline_tokens]")
     object_stack = []
     root = Person("root", [])
     current_parent = root
@@ -55,7 +55,7 @@ def parse_inline_tokens(tokens):
 
 
 def parse(source:str="")-> list:
-    print(f"[proto][parser][parse]")
+    #print(f"[proto][parser][parse]")
     tokens = Tokenizer.tokenize(source)
     ret = parse_inline_tokens(tokens)
     return ret[1]
