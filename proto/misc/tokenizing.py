@@ -69,35 +69,19 @@ class NestingToken(TokenValue):
 def add_token(a, b, stack):
     if a < b:
         # nest the other in us
-        #print("nesting")
-        a.nest(b)
-        if isinstance(b, LinearToken):
-            #print("nesting linear")
-            return a
-        else:
-            #print("nesting nesting")
+        if isinstance(b, NestingToken):
+            a.nest(b)
             stack.append(a)
             return b
     elif a > b:
         # nest us in the other
-        #print("de-nesting")
-        a = stack.pop()
-        return add_token(a, b, stack)
+        return add_token(stack.pop(), b, stack)
     elif a == b:
-        #print("equals")
         # if they are the same type, we can close and de-nest
-        if type(a) == type(b):
-            #print("equals closing")
+        if isinstance(b, NestingToken):
             return stack.pop()
-        else:
-            #print("equals adding")
-            ##print("equals")
-            a.nest(b)
-            return a
-    else:
-        #print("other")
-        a.nest(b)
-        return a
+    a.nest(b)
+    return a
 
 
 mystack = []
