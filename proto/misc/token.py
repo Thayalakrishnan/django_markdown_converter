@@ -1,9 +1,9 @@
 #%%
 
 class TokenValue:
+    STACK = []
     """
     base token class
-    
     cases:
     - need to iknow if the value i sopen or closed
     - need to know if the value is encased so that we can sum them 
@@ -15,13 +15,15 @@ class TokenValue:
         self.name = name
         self.depth = depth
         self.value = value
+
     
     def __repr__(self):
         #return f"{self.name}"
         return f"{self.value}"
     
     def __eq__(self, other):
-        return self.name == other.name and type(self.value) == type(other.value) 
+        #return self.name == other.name and type(self.value) == type(other.value) 
+        return type(self) == type(other) and self.name == other.name
     
     def __gt__(self, other):
         return self.depth > other.depth
@@ -31,9 +33,57 @@ class TokenValue:
 
 
 """
-linear tokens do not nest and contain all the infor right there
-nesting tokens contain their own stack
+linear tokens: do not nest and contain all the infor right there
+nesting tokens: contain their own stack
+root token: contains everything
+- linear1 + linear2 = linear1 + linear2 <nothing>
+- linear1 + linear1 = linear1.value += linear1.value
 """
+class NestingToken(TokenValue):
+    """
+    nesting token
+    - nesting1 + linear1 = nesting1.root.append(linear1) | current_root.root.append(linear1) 
+    - nesting1 + nesting2 = stack.append(nesting1) -> current_root = nesting2
+    - nesting1[O] + nesting1[C] = current_root = stack.pop() -> new root
+    - nesting1[O] + nesting2[O] + nesting1[C] = <error> stack.pop() -> nesting1.extend(nesting2.root)
+    """
+    TRACKER = {}
+    __slots__ = ['name', 'depth', 'value', 'root', 'stack', 'base', 'parent', 'is_open']
+    
+    def __init__(self, name:str="", depth:int=0, value:str=""):
+        super().__init__(name, depth, value)
+        self.root = []
+        self.base = self.root
+        if name not in self.TRACKER:
+            self.TRACKER[name] = False
+        self.TRACKER[name] = not self.TRACKER[name]
+        self.is_open = self.TRACKER[name]
+        self.parent = self
+    
+    def __add__(self, other):
+        if self < other:
+            # nest the other in us
+            print("nesting")
+            self.STACK.append((self.root, self.depth))
+            new_root = [other]
+            self.root.append(new_root)
+            self.root = new_root
+            self.depth = other.depth
+            return self
+        elif self > other:
+            # nest us in the other
+            print("de-nesting")
+            self.root, self.depth = self.STACK.pop()
+            return self + other
+        elif self == other:
+            print("equals")
+            self.root.append(other)
+            return self + other
+        else:
+            print("other")
+            self.root.append(other)
+            #del other
+            return self
 
 class RootValue(TokenValue):
     """
@@ -44,7 +94,7 @@ class RootValue(TokenValue):
     
     def __init__(self):
         super().__init__(name="root", depth=0, value="")
-        self.stack = []
+        #self.STACK = []
         self.root = []
         self.base = self.root
     
@@ -52,7 +102,7 @@ class RootValue(TokenValue):
         if self < other:
             # nest the other in us
             print("nesting")
-            self.stack.append((self.root, self.depth))
+            self.STACK.append((self.root, self.depth))
             new_root = [other]
             self.root.append(new_root)
             self.root = new_root
@@ -61,7 +111,7 @@ class RootValue(TokenValue):
         elif self > other:
             # nest us in the other
             print("de-nesting")
-            self.root, self.depth = self.stack.pop()
+            self.root, self.depth = self.STACK.pop()
             return self + other
         elif self == other:
             print("equals")
