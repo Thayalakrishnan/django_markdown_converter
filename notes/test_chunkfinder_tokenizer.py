@@ -19,11 +19,11 @@ class CustomScanner(re.Scanner):
             action = self.lexicon[m.lastindex-1][1]
             if callable(action):
                 self.match = m
-                ret  = action(m.group())
-                if ret[0] not in ['attrs', 'newline']:
+                token, value, is_block  = action(m.group())
+                if is_block:
                     counter+=1
-                    print(f"match {counter}: {ret[0]}")
-                yield ret
+                    print(f"match {counter}: {token}-----------------------")
+                yield (token, value)
                 
             i = j
         yield ["paragraph", string[i:]]
@@ -50,8 +50,8 @@ class TokenizerClass:
         self.add_token(label="attrs", pattern=r"^\{.*?\}.*?\n", is_block=False)
         
         self.add_token(label="heading", pattern=r"^\#{1,6} .*?\n", flags="m")
-        self.add_token(label="olist", pattern=r"(?:^\d+\. .*?\n)(?:^(?:\d+\.)? +?.*?\n)+", flags="m")
-        self.add_token(label="ulist", pattern=r"(?:^- .*?\n)(?:^-? +?.*?\n)+", flags="m")
+        self.add_token(label="olist", pattern=r"(?:^\d+\. .*?\n)(?:^(?:\d+\.)? +?.*?\n){0,}", flags="m")
+        self.add_token(label="ulist", pattern=r"(?:^- .*?\n)(?:^-? +?.*?\n){0,}", flags="m")
         self.add_token(label="blockquote", pattern=r"(?:^\>.*?\n)+", flags="m")
         self.add_token(label="dlist", pattern=r"^.*?\n(?:^\: .*?\n)+", flags="m")
         self.add_token(label="admonition", pattern=r"^\!{3}.*?\n(?: {4}.*?\n)+", flags="m")
@@ -64,15 +64,10 @@ class TokenizerClass:
         self.add_token(label="html", pattern=r"\<(\S+)[^\>\<]*?\>.*?\<\/\1\>")
         self.add_token(label="svg", pattern=r"<svg[^\>\<]*?\>.*?\<\/svg\>")
         
+        self.add_token(label="emptyline", pattern=r"^\n", is_block=False)
         self.add_token(label="newline", pattern=r"\n", is_block=False)
         self.add_token(label="paragraph", pattern=r"^.+?\n")
         self.add_token(label="none", pattern=r".", is_block=False)
-        
-        #self.add_token(label="misc", pattern=r".+?")
-        #self.add_token(label="word", pattern=r"\S+")
-        #self.add_token(label="between", pattern=r"^\n")
-        #self.add_token(label="whitespace", pattern=r"\s+")
-        
         
         # creating tokenizer
         self.create_tokenizer()
@@ -92,8 +87,6 @@ class TokenizerClass:
     def tokenize(self, source):
         self.reset_tracker()
         return self.tokenizer.scan(source)
-
-
 
 """
 loop over the content and spit out chunks
