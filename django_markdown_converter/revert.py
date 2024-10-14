@@ -8,9 +8,5 @@ def Revert(blocks:list=[]) -> str:
     converting the blocks into markdown
     return the blocks as the markdown string form
     """
-    strings = []
     bp = BasePattern()
-    for string in bp.block_reverter(blocks):
-        strings.append(string)
-    return "\n\n".join(strings) + "\n"
-
+    return bp.convert_json_to_md(blocks)

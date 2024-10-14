@@ -8,21 +8,19 @@ class TokenValue:
     - need to iknow if the value i sopen or closed
     - need to know if the value is encased so that we can sum them 
     """
-    #__slots__ = ['name', 'depth', 'value', 'index',]
-    __slots__ = ['name', 'depth', 'value',]
+    __slots__ = ['name', 'depth', 'value', 'nested', 'opening']
     
-    def __init__(self, name:str="", depth:int=0, value:str=""):
+    def __init__(self, name:str="", depth:int=0, value:str="", opening:bool=False):
         self.name = name
         self.depth = depth
         self.value = value
+        self.opening = opening
     
     def __repr__(self):
-        #return f"{self.name}"
-        return f"{self.value}"
+        return f"{self.name}"
+        #return f"{self.value}"
     
     def __eq__(self, other):
-        #return self.name == other.name and type(self.value) == type(other.value) 
-        #return type(self) == type(other) and self.name == other.name
         return self.depth == other.depth and type(self) == type(other) and self.name == other.name
     
     def __gt__(self, other):
@@ -37,9 +35,9 @@ class LinearToken(TokenValue):
     - linear1 + linear2 = linear1 + linear2 <nothing>
     - linear1 + linear1 = linear1.value += linear1.value
     """
-    __slots__ = ['name', 'depth', 'value', 'nested', 'base', 'opening']
     pass
-    
+
+
 class NestingToken(TokenValue):
     """
     nesting tokens: contain their own stack
@@ -48,12 +46,10 @@ class NestingToken(TokenValue):
     - nesting1[O] + nesting1[C] = current_root = stack.pop() -> new root
     - nesting1[O] + nesting2[O] + nesting1[C] = <error> stack.pop() -> nesting1.extend(nesting2.root)
     """
-    __slots__ = ['name', 'depth', 'value', 'nested', 'base', 'opening']
+    __slots__ = ['name', 'depth', 'value', 'opening', 'nested']
     
-    def __init__(self, name:str="", depth:int=0, value:str="", opening:bool=False):
-        super().__init__(name, depth, value)
-        self.opening = opening
-        self.base = self
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.nested = []
 
     def __eq__(self, other):
@@ -105,7 +101,6 @@ def print_tokens(tokens:list=[]):
             print_tokens(_.nested)
         else:
             print(_)
-
 
 print_tokens(tv0.nested)
 print("done")

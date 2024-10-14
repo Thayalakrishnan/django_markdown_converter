@@ -177,10 +177,22 @@ class BasePattern:
         cls.block_converter(root)
         return root["data"]
     
-    def block_reverter(self, blocklist:list=[]):
+    @classmethod
+    def block_reverter(cls, blocklist:list=[]):
         for block in blocklist:
-            string = self.BLOCK_LOOKUP[block["type"]].revert(block)
+            string = cls.BLOCK_LOOKUP[block["type"]].revert(block)
             yield string
+        
+    @classmethod
+    def convert_json_to_md(cls, blocks:list=[]) -> str:
+        """
+        take a block as input and convert its "data" key form md to blocks
+        """
+        strings = []
+        for string in cls.block_reverter(blocks):
+            strings.append(string)
+        return "\n\n".join(strings) + "\n"
+
 
 from django_markdown_converter.patterns.blocks import *
     
