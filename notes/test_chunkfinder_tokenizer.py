@@ -8,6 +8,7 @@ class CustomScanner(re.Scanner):
     def scan(self, string:str=""):
         match = self.scanner.scanner(string).match
         i = 0
+        counter = 0
         while True:
             m = match()
             if not m:
@@ -19,11 +20,11 @@ class CustomScanner(re.Scanner):
             if callable(action):
                 self.match = m
                 ret  = action(m.group())
-                if ret[0] == "heading":
-                    print(f"match: {ret[0]} | {ret[1].strip()}")
-                else:
-                    print(f"match: {ret[0]}")
+                if ret[0] not in ['attrs', 'newline']:
+                    counter+=1
+                    print(f"match {counter}: {ret[0]}")
                 yield ret
+                
             i = j
         yield ["paragraph", string[i:]]
 
@@ -44,61 +45,34 @@ class TokenizerClass:
         self.tracker = {}
         
         # adding tokens
-        #self.add_token(label="code", pattern=r"```.*?```.*?")
-        #self.add_token(label="meta", pattern=r"(?:\-\-\-)")
-        #self.add_token(label="olist", pattern=r"(?:- .*?)")
-        #self.add_token(label="ulist", pattern=r"(?:1. .*?)")
-        #self.add_token(label="table", pattern=r"(?:\| .*?)")
-        #self.add_token(label="blockquote", pattern=r"(?:\> .*?)")
-        #self.add_token(label="dlist", pattern=r"(?:\: .*?)")
-        #self.add_token(label="admonition", pattern=r"(?:\!\!\! .*?)")
-        #self.add_token(label="hr", pattern=r"(?:\-\-\- *?)")
-        #self.add_token(label="heading", pattern=r"(?:\#{0,6} .*?)")
-        #self.add_token(label="footnote", pattern=r"(?:\[\^\d+\]\:)")
-        #self.add_token(label="image", pattern=r"(?:\[.*?\]\([^ ]+?\))")
-        #self.add_token(label="paragraph", pattern=r".+?")
-        
         self.add_token(label="code", pattern=r"^```.*?^```\n")
         self.add_token(label="meta", pattern=r"^---.*?^---\n")
-        self.add_token(label="attrs", pattern=r"^\{.*?\}.*?\n")
+        self.add_token(label="attrs", pattern=r"^\{.*?\}.*?\n", is_block=False)
         
-        # (?:- .*?(?=\n^\n))
-        # ((?:^ *?- .*?\n)|(?:^ +?.*?\n))+
-        # (?:^(?:(?: *?- )|(?: +?)).*?\n)+
-        self.add_token(label="heading", pattern=r"\#{1,6} .*?\n", flags="m")
-        self.add_token(label="olist", pattern=r"(?:^1.*?\n)(?:^(?:(?: *?\d+. )|(?: +?)).*?\n)+", flags="m")
-        self.add_token(label="ulist", pattern=r"(?:^- .*?\n)(?:^(?:(?: *?- )|(?: +?)).*?\n)+", flags="m")
-        self.add_token(label="blockquote", pattern=r"^(?:\>.*?\n)+")
-        #self.add_token(label="dlist", pattern=r"\: ")
+        self.add_token(label="heading", pattern=r"^\#{1,6} .*?\n", flags="m")
+        self.add_token(label="olist", pattern=r"(?:^\d+\. .*?\n)(?:^(?:\d+\.)? +?.*?\n)+", flags="m")
+        self.add_token(label="ulist", pattern=r"(?:^- .*?\n)(?:^-? +?.*?\n)+", flags="m")
+        self.add_token(label="blockquote", pattern=r"(?:^\>.*?\n)+", flags="m")
+        self.add_token(label="dlist", pattern=r"^.*?\n(?:^\: .*?\n)+", flags="m")
         self.add_token(label="admonition", pattern=r"^\!{3}.*?\n(?: {4}.*?\n)+", flags="m")
-        self.add_token(label="hr", pattern=r"^\-{3}\n", flags="m")
-        self.add_token(label="hr", pattern=r"^\*{3}\n", flags="m")
-        #self.add_token(label="table", pattern=r"\|.*?\|")
-        #self.add_token(label="footnote", pattern=r"\[\^\d+\]\:")
-        #self.add_token(label="image", pattern=r"\[.*?\]\([^ ]+?\)")
-        #self.add_token(label="misc", pattern=r".+?")
+        self.add_token(label="hr", pattern=r"^[\-\*]{3}\n", flags="m")
+        self.add_token(label="table", pattern=r"(?:^\|.*?\|$\n)+", flags="m")
         
-        #self.add_token(label="between", pattern=r"^\n")
+        self.add_token(label="footnote", pattern=r"(?:\[\^\d+\]\:\n)(?:^ +?.*?\n)+", flags="m")
+        self.add_token(label="image", pattern=r"^\!\[.*?\]\(.*?\)\n", flags="m")
         
-        #pattern=r"(?ms:^```.*?^```\n)"
-        #pattern=r"(?ms)^```.*?^```\n"
-        #pattern=r"^```.*?"
+        self.add_token(label="html", pattern=r"\<(\S+)[^\>\<]*?\>.*?\<\/\1\>")
+        self.add_token(label="svg", pattern=r"<svg[^\>\<]*?\>.*?\<\/svg\>")
         
-        #self.add_token(
-        #    label="code", 
-        #    pattern=r"^```.*?"
-        #    #pattern=r"(?s)^```.*?^```\n"
-        #)
-        
-        
-        self.add_token(label="newline", pattern=r"\n")
+        self.add_token(label="newline", pattern=r"\n", is_block=False)
         self.add_token(label="paragraph", pattern=r"^.+?\n")
+        self.add_token(label="none", pattern=r".", is_block=False)
+        
+        #self.add_token(label="misc", pattern=r".+?")
         #self.add_token(label="word", pattern=r"\S+")
+        #self.add_token(label="between", pattern=r"^\n")
         #self.add_token(label="whitespace", pattern=r"\s+")
         
-        #self.add_token(label="html", pattern=r"(?:\<(\S+)[^\>\<]*?\>.*?\<\/\1\>)")
-        #self.add_token(label="paragraph", pattern=r"(?:\~\~)|(?:\-\-)")
-        #self.add_token(label="svg", pattern=r"[a-zA-Z0-9]+")
         
         # creating tokenizer
         self.create_tokenizer()
@@ -106,9 +80,9 @@ class TokenizerClass:
     def create_tokenizer(self):
         self.tokenizer = CustomScanner(self.tokens)
         
-    def add_token(self, label="text", pattern:str=r"", flags:str="ms"):
+    def add_token(self, label="text", pattern:str=r"", flags:str="ms", is_block:bool=True):
         #token = (f"{pattern}{self.PROPS_PATTERN}", lambda value: [label, value])
-        token = (f"(?{flags}:{pattern})", lambda value: [label, value])
+        token = (f"(?{flags}:{pattern})", lambda value: [label, value, is_block])
         self.tokens.append(token)
         
     def reset_tracker(self):
