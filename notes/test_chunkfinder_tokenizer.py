@@ -1,5 +1,6 @@
-from django_markdown_converter.helpers.utility import ReadSourceFromFile
+from django_markdown_converter.helpers.utility import ReadSourceFromFile, timer
 from django_markdown_converter.helpers.processors import process_input_content
+from django_markdown_converter.convert import Tokenize
 import re
 
 
@@ -22,8 +23,7 @@ class CustomScanner(re.Scanner):
                 token, value, is_block  = action(m.group())
                 if is_block:
                     counter+=1
-                    print(f"match {counter}: {token}-----------------------")
-                yield (token, value)
+                    yield (token, value, counter)
                 
             i = j
         yield ["paragraph", string[i:]]
@@ -99,25 +99,43 @@ json_root = []
 json_root_nu = []
 path_to_file = "notes/examples/post.md"
 raw_chunk = ReadSourceFromFile(path_to_file)
+raw_chunk = process_input_content(raw_chunk)
 
 print("processed -------------------------")
 
-
-#raw_chunk = """
-#
-#```python
-#
-#here is some code 
-#
-#```
-#
-#"""
-
-raw_chunk = process_input_content(raw_chunk)
-
 tk = TokenizerClass()
-tokens = tk.tokenize(raw_chunk)
+new_tokenizer = tk.tokenize(raw_chunk)
+old_tokenizer = Tokenize(raw_chunk)
 
-for _ in tokens:
-    #print(_[0])
-    pass
+
+
+#for new, old in zip(new_tokenizer, old_tokenizer):
+#    if new[0] != old[0]:
+#        print(f"new: {new[0]} | old: {old[0]}")
+#        print(f"new:")
+#        print(new[1])
+#        print(f"old:")
+#        print(old[1])
+
+
+@timer
+def run_old_tokenizer(content):
+    old_tokenizer = Tokenize(content)
+    for old in old_tokenizer:
+        #print(old[0])
+        pass
+    return
+
+
+@timer
+def run_new_tokenizer(content):
+    tk = TokenizerClass()
+    new_tokenizer = tk.tokenize(content)
+    for new in new_tokenizer:
+        #print(new[0])
+        pass
+    return
+
+
+run_new_tokenizer(raw_chunk)
+run_old_tokenizer(raw_chunk)

@@ -10,3 +10,9 @@ def Convert(source:str="") -> list:
     """
     bp = BasePattern()
     return bp.convert_md_to_json(source)
+
+def Tokenize(source:str="") -> list:
+    """
+    """
+    bp = BasePattern()
+    return bp.tokenize(source)

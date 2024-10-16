@@ -16,7 +16,7 @@ class BasePattern:
         self.can_process_nested_blocks = False
         
         if pattern_object:
-            print(f"initialising {name}")
+            #print(f"initialising {name}")
             self.addToLookup = pattern_object["addToLookup"]
             
             if self.addToLookup:
@@ -192,7 +192,18 @@ class BasePattern:
         for string in cls.block_reverter(blocks):
             strings.append(string)
         return "\n\n".join(strings) + "\n"
-
+    
+    @classmethod
+    def tokenize(cls, content:str=""):
+        chunks = cls.BLOCK_PATTERN.finditer(content)
+        for index, chunk in enumerate(chunks):
+            block = chunk.group("block")
+            props = chunk.group("props")
+            if block:
+                for pattern in cls.BLOCK_LIST:
+                    if pattern.check(block):
+                        yield pattern.name, block
+                        break
 
 from django_markdown_converter.patterns.blocks import *
     
