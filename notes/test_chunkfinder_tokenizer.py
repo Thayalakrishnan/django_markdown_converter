@@ -8,7 +8,6 @@ from functools import wraps
 
 import re
 
-
 class CustomScanner(re.Scanner):
     
     def scan(self, string:str=""):
@@ -104,12 +103,14 @@ class MegaTokenizerClass:
         self.tokenizer = None
         self.tokens = []
         self.not_blocks = []
+        self.blocks = []
         self.tracker = {}
         
         # adding tokens
         self.add_token(label="code", pattern=r"^```.*?^```\n")
         self.add_token(label="meta", pattern=r"^---.*?^---\n")
-        self.add_token(label="attrs", pattern=r"^\{.*?\}.*?\n", is_block=False)
+        #self.add_token(label="attrs", pattern=r"^\{.*?\}.*?\n", is_block=False)
+        self.add_token(label="attrs", pattern=r"^\{.*?\}.*?\n")
         
         self.add_token(label="heading", pattern=r"^\#{1,6} .*?\n", flags="m")
         self.add_token(label="olist", pattern=r"(?:^\d+\. .*?\n)(?:^(?:\d+\.)? +?.*?\n){0,}", flags="m")
@@ -136,7 +137,9 @@ class MegaTokenizerClass:
         
     def add_token(self, label="text", pattern:str=r"", flags:str="ms", is_block:bool=True):
         token = f"(?P<{label}>(?{flags}:{pattern}))"
-        if not is_block:
+        if is_block:
+            self.blocks.append(label)
+        else:
             self.not_blocks.append(label)
         self.tokens.append(token)
         
@@ -144,13 +147,16 @@ class MegaTokenizerClass:
         matches = self.tokenizer.finditer(source)
         for match in matches:
             token = match.lastgroup
+            #print(match.group("props"))
             if token not in self.not_blocks:
                 yield token
 
     def create_tokenizer(self):
         patterns = "|".join(self.tokens)
+        #joined_patterns = "|".join(self.tokens)
+        #patterns = f"(?:{joined_patterns})" + r'(?:^\{(?P<props>.*?)\} *?$\n)?'
+        #self.tokenizer = re.compile(patterns, re.MULTILINE | re.DOTALL)
         self.tokenizer = re.compile(patterns)
-
 """
 loop over the content and spit out chunks
 process the chunks
@@ -164,7 +170,6 @@ def get_source(path):
     #print("processed -------------------------")
     chunk = ReadSourceFromFile(path)
     return process_input_content(chunk)
-
 
 #@timer
 def run_tokenizer(tokenizer_class):
@@ -187,11 +192,9 @@ def old_class():
 def new_class():
     loop_tokenizer(TokenizerClass)
 
-
 @timer
 def mega_class():
     loop_tokenizer(MegaTokenizerClass)
-
 
 def loop_loop_tokenizer():
     funcies = [
@@ -206,30 +209,47 @@ def loop_loop_tokenizer():
             gc.collect()
         gc.collect()
         
-    #for i in range(5):
-    #    old_class()
-    #    gc.collect()
-    #gc.collect()
-    #
-    #for i in range(5):
-    #    mega_class()
-    #    gc.collect()
-    #gc.collect()
-    #print(gc.get_stats())
+#loop_loop_tokenizer()
 
+def buffered_generator(generator):
+    current_value = next(generator)
+    while True:
+        try:
+            next_value = next(generator)
+            yield current_value
+            current_value = next_value
+        except StopIteration:
+            yield current_value
+            break
+    yield False
 
-loop_loop_tokenizer()
-
-
-##@timer
-#def run_mega_tokenizer():
-#    source = get_source(PATH_TO_FILE)
-#    tk = TokenizerClass()
-#    tk.mega_tokenize(source)
-#    return
-#
-#run_mega_tokenizer()
-
+def lagging_generator():
+    source = get_source(PATH_TO_FILE)
+    mtk = MegaTokenizerClass()
+    token_generator = mtk.tokenize(source)
+    
+    tokens = buffered_generator(token_generator)
+    current_token = next(tokens)
+    
+    while True:
+        if current_token:
+            if current_token in mtk.blocks:
+                next_token = next(tokens)
+                if next_token: 
+                    if next_token == "attrs":
+                        yield current_token, next_token
+                        current_token = next(tokens)
+                    else:
+                        yield current_token, None
+                        current_token = next_token
+                else:
+                    yield current_token, None
+                    break
+            else:
+                current_token = next(tokens)
+        else:
+            # if current token is false, exist the looop
+            break
 
 #@timer
 def compare_tokenizer():
@@ -239,13 +259,26 @@ def compare_tokenizer():
     mtktokenizer = mtk.tokenize(source)
     
     tk = TokenizerClass()
-    tktokenizer = mtk.tokenize(source)
+    tktokenizer = tk.tokenize(source)
     
     for m,t in zip(mtktokenizer,tktokenizer):
         if m != t:
             print(f"mega: {m} | scanner: {t}")        
     return
 
+def test_mega():
+    m = lagging_generator()
+    for _ in m:
+        print(f"mega: {_}")
+    return
 
+print(f"buffered generator")
+test_mega()
 #compare_tokenizer()
-print(f"done")        
+
+#inline_gen = (i for i in range(10))
+#b_inline_gen = buffered_generator(inline_gen)
+#for j in b_inline_gen:
+#    print(j)    
+    
+print(f"done")
