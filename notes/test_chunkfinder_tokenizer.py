@@ -1,6 +1,11 @@
 from django_markdown_converter.helpers.utility import ReadSourceFromFile, timer
 from django_markdown_converter.helpers.processors import process_input_content
-from django_markdown_converter.convert import Tokenize
+from django_markdown_converter.patterns.classes.base import BasePattern
+#from django_markdown_converter.convert import Tokenize
+
+import time, json, gc
+from functools import wraps
+
 import re
 
 
@@ -23,7 +28,8 @@ class CustomScanner(re.Scanner):
                 token, value, is_block  = action(m.group())
                 if is_block:
                     counter+=1
-                    yield (token, value, counter)
+                    #yield (token, value, counter)
+                    yield token
                 
             i = j
         yield ["paragraph", string[i:]]
@@ -88,54 +94,158 @@ class TokenizerClass:
         self.reset_tracker()
         return self.tokenizer.scan(source)
 
+class MegaTokenizerClass:
+    """
+    a token is made up of a pattern and its label
+    """
+    PROPS_PATTERN = r'(?:^\{(?P<props>.*?)\} *?$\n)?^\n'
+    
+    def __init__(self) -> None:
+        self.tokenizer = None
+        self.tokens = []
+        self.not_blocks = []
+        self.tracker = {}
+        
+        # adding tokens
+        self.add_token(label="code", pattern=r"^```.*?^```\n")
+        self.add_token(label="meta", pattern=r"^---.*?^---\n")
+        self.add_token(label="attrs", pattern=r"^\{.*?\}.*?\n", is_block=False)
+        
+        self.add_token(label="heading", pattern=r"^\#{1,6} .*?\n", flags="m")
+        self.add_token(label="olist", pattern=r"(?:^\d+\. .*?\n)(?:^(?:\d+\.)? +?.*?\n){0,}", flags="m")
+        self.add_token(label="ulist", pattern=r"(?:^- .*?\n)(?:^-? +?.*?\n){0,}", flags="m")
+        self.add_token(label="blockquote", pattern=r"(?:^\>.*?\n)+", flags="m")
+        self.add_token(label="dlist", pattern=r"^.*?\n(?:^\: .*?\n)+", flags="m")
+        self.add_token(label="admonition", pattern=r"^\!{3}.*?\n(?: {4}.*?\n)+", flags="m")
+        self.add_token(label="hr", pattern=r"^[\-\*]{3}\n", flags="m")
+        self.add_token(label="table", pattern=r"(?:^\|.*?\|$\n)+", flags="m")
+        
+        self.add_token(label="footnote", pattern=r"(?:\[\^\d+\]\:\n)(?:^ +?.*?\n)+", flags="m")
+        self.add_token(label="image", pattern=r"^\!\[.*?\]\(.*?\)\n", flags="m")
+        
+        self.add_token(label="html", pattern=r"\<(\S+)[^\>\<]*?\>.*?\<\/\1\>")
+        self.add_token(label="svg", pattern=r"<svg[^\>\<]*?\>.*?\<\/svg\>")
+        
+        self.add_token(label="emptyline", pattern=r"^\n", is_block=False)
+        self.add_token(label="newline", pattern=r"\n", is_block=False)
+        self.add_token(label="paragraph", pattern=r"^.+?\n")
+        self.add_token(label="none", pattern=r".", is_block=False)
+        
+        # creating tokenizer
+        self.create_tokenizer()
+        
+    def add_token(self, label="text", pattern:str=r"", flags:str="ms", is_block:bool=True):
+        token = f"(?P<{label}>(?{flags}:{pattern}))"
+        if not is_block:
+            self.not_blocks.append(label)
+        self.tokens.append(token)
+        
+    def tokenize(self, source):
+        matches = self.tokenizer.finditer(source)
+        for match in matches:
+            token = match.lastgroup
+            if token not in self.not_blocks:
+                yield token
+
+    def create_tokenizer(self):
+        patterns = "|".join(self.tokens)
+        self.tokenizer = re.compile(patterns)
+
 """
 loop over the content and spit out chunks
 process the chunks
 create a big block tree
 parse the inline content
 """
-root = []
-json_root = []
-json_root_nu = []
-path_to_file = "notes/examples/post.md"
-raw_chunk = ReadSourceFromFile(path_to_file)
-raw_chunk = process_input_content(raw_chunk)
+PATH_TO_FILE = "notes/examples/post.md"
 
-print("processed -------------------------")
-
-tk = TokenizerClass()
-new_tokenizer = tk.tokenize(raw_chunk)
-old_tokenizer = Tokenize(raw_chunk)
+#@timer
+def get_source(path):
+    #print("processed -------------------------")
+    chunk = ReadSourceFromFile(path)
+    return process_input_content(chunk)
 
 
-
-#for new, old in zip(new_tokenizer, old_tokenizer):
-#    if new[0] != old[0]:
-#        print(f"new: {new[0]} | old: {old[0]}")
-#        print(f"new:")
-#        print(new[1])
-#        print(f"old:")
-#        print(old[1])
-
-
-@timer
-def run_old_tokenizer(content):
-    old_tokenizer = Tokenize(content)
-    for old in old_tokenizer:
-        #print(old[0])
+#@timer
+def run_tokenizer(tokenizer_class):
+    source = get_source(PATH_TO_FILE)
+    tk = tokenizer_class()
+    tokenizer = tk.tokenize(source)
+    for new in tokenizer:
         pass
     return
 
+def loop_tokenizer(tokenizer_class):
+    for i in range(100):
+        run_tokenizer(tokenizer_class)
 
 @timer
-def run_new_tokenizer(content):
+def old_class():
+    loop_tokenizer(BasePattern)
+
+@timer
+def new_class():
+    loop_tokenizer(TokenizerClass)
+
+
+@timer
+def mega_class():
+    loop_tokenizer(MegaTokenizerClass)
+
+
+def loop_loop_tokenizer():
+    funcies = [
+        mega_class,
+        new_class,
+        old_class,
+    ]
+    while len(funcies):
+        current = funcies.pop()
+        for i in range(5):
+            current()
+            gc.collect()
+        gc.collect()
+        
+    #for i in range(5):
+    #    old_class()
+    #    gc.collect()
+    #gc.collect()
+    #
+    #for i in range(5):
+    #    mega_class()
+    #    gc.collect()
+    #gc.collect()
+    #print(gc.get_stats())
+
+
+loop_loop_tokenizer()
+
+
+##@timer
+#def run_mega_tokenizer():
+#    source = get_source(PATH_TO_FILE)
+#    tk = TokenizerClass()
+#    tk.mega_tokenize(source)
+#    return
+#
+#run_mega_tokenizer()
+
+
+#@timer
+def compare_tokenizer():
+    source = get_source(PATH_TO_FILE)
+    
+    mtk = MegaTokenizerClass()
+    mtktokenizer = mtk.tokenize(source)
+    
     tk = TokenizerClass()
-    new_tokenizer = tk.tokenize(content)
-    for new in new_tokenizer:
-        #print(new[0])
-        pass
+    tktokenizer = mtk.tokenize(source)
+    
+    for m,t in zip(mtktokenizer,tktokenizer):
+        if m != t:
+            print(f"mega: {m} | scanner: {t}")        
     return
 
 
-run_new_tokenizer(raw_chunk)
-run_old_tokenizer(raw_chunk)
+#compare_tokenizer()
+print(f"done")        
