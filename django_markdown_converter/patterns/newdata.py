@@ -58,6 +58,7 @@ DLIST_PATTERN = {
     "type": "dlist",
     "check": r'^.+?$\n(?:\: .*$)',
     #"pattern": r'(?P<term>^.*?\n)(?P<definition>(?:^\: .*?\n)+)',
+    # prefix:  ": "
     "pattern": [
         ("term", r"^.*?\n"),
         ("definition", r"(?:^\: .*?\n)+"),
@@ -104,7 +105,7 @@ ADMONITION_PATTERN = {
     ],
     "flags": {
         "MULTILINE": True,
-        "DOTALL": True,
+        "DOTALL": False,
     },
     "hasNested": True,
     "hasInlineMarkup": False,
@@ -115,10 +116,19 @@ ADMONITION_PATTERN = {
 TABLE_PATTERN = {
     "type": "table",
     "check": r'(?:^\|.*?\|\s*?$\n?)+',
-    "pattern": r'(?P<header>^\|.*?\|\n)(?P<break>^\|.*?\|\n)(?P<body>(?:^\|.*?\|\n){1,})',
+    "pattern": r'(?P<header>^\|.*?\|\n)(?P<break>^\|.*?\|\n)(?P<body>(?:^\|.*?\|\n)+)',
+    "pattern": [
+        ("header", r"^\|.*?\|\n"),
+        ("break", r"^\|.*?\|\n"),
+        ("body", r"(?:^\|.*?\|\n)+"),
+        ("", r"?"),
+        ("title", r" \".+?\""),
+        ("", r"?\n"),
+        ("data", r"(?:^ {1,}.*?\n)+"),
+    ],
     "flags": {
         "MULTILINE": True,
-        "DOTALL": True,
+        "DOTALL": False,
     },
     "hasNested": False,
     "hasInlineMarkup": True,
@@ -128,11 +138,14 @@ TABLE_PATTERN = {
 
 HR_PATTERN = {
     "type": "hr",
-    "check": r'^(?:[\*\-]{3,}$)',
-    "pattern": r'^(?P<data>[\*\-]{3,})\s*(?:\n|$)',
+    #"pattern": r'(?P<data>^[\*\-]{3,})\n',
+    "pattern": [
+        ("data", r"^[\*\-]{3,}"),
+        ("", r"\n"),
+    ],
     "flags": {
         "MULTILINE": True,
-        "DOTALL": True,
+        "DOTALL": False,
     },
     "hasNested": False,
     "hasInlineMarkup": False,
@@ -142,11 +155,15 @@ HR_PATTERN = {
 
 HEADING_PATTERN = {
     "type": "heading",
-    "check": r'^\#+\s+.*?$',
-    "pattern": r'^(?P<level>\#{1,})\s+(?P<data>.*?)(?:$|\n)',
+    #"pattern": r'(?P<level>^\#{1,})(?P<data>.*?)\n',
+    "pattern": [
+        ("level", r"^\#{1,}"),
+        ("data", r".*?"),
+        ("", r"\n"),
+    ],
     "flags": {
         "MULTILINE": True,
-        "DOTALL": True,
+        "DOTALL": False,
     },
     "hasNested": False,
     "hasInlineMarkup": True,
@@ -156,8 +173,18 @@ HEADING_PATTERN = {
 
 IMAGE_PATTERN = {
     "type": "image",
-    "check": r'^!\[.*?\]\(.*?\)',
-    "pattern": r'^\!\[\s*(?P<alt>.*?)?\s*\]\((?P<data>\S*)\s*(?:\"(?P<title>.*?)\")?\)',
+    "check": r'^\!\[.*?\]\(.*?\)',
+    #"pattern": r'^\!\[\s*(?P<alt>.*?)?\s*\]\((?P<data>\S*)\s*(?:\"(?P<title>.*?)\")?\)',
+    "pattern": r'^\!\[(?P<alt>.*?)?\]\((?P<data>\S*)(?: *?\"(?P<title>.*?)\")?\)',
+    "pattern": [
+        ("", r"^\!\["),
+        ("alt", r".*?"),
+        ("", r"?\]\("),
+        ("data", r"\S*"),
+        ("", r"(?: *?\""),
+        ("title", r".*?"),
+        ("", r"\")?\)\n"),
+    ],
     "flags": {
         "MULTILINE": True,
         "DOTALL": True,
@@ -215,7 +242,8 @@ OLIST_PATTERN = {
 BLOCKQUOTE_PATTERN = {
     "type": "blockquote",
     "check": r'(?:^>.*$)+',
-    "pattern": r'(?<=^>).*(?:\n|$)',
+    #"pattern": r'(?<=^>).*(?:\n|$)',
+    "pattern": r'(?P<data>(?:^>.*?\n)+)',
     "flags": {
         "MULTILINE": True,
         "DOTALL": False,
@@ -223,7 +251,7 @@ BLOCKQUOTE_PATTERN = {
     "hasNested": True,
     "hasInlineMarkup": False,
     "props": [],
-    "data": [],
+    "data": ["data"],
 }
 
 PARAGRAPH_PATTERN = {
