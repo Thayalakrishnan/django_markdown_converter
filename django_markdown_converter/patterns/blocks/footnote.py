@@ -1,16 +1,16 @@
 from textwrap import dedent
 
-from django_markdown_converter.patterns.classes.base import BasePattern
+from django_markdown_converter.patterns.classes.base import Pattern
 from django_markdown_converter.patterns.data import FOOTNOTE_PATTERN
 
 
-class FootnotePattern(BasePattern):
+class FootnotePattern(Pattern):
     """
     props:
     - index
     """
     def __init__(self, *args, **kwargs) -> None:
-        super().__init__("footnote", FOOTNOTE_PATTERN, *args, **kwargs)
+        super().__init__(name="footnote", pattern_object=FOOTNOTE_PATTERN, *args, **kwargs)
             
     def get_data(self) -> dict:
         return dedent(self.match.group("data"))

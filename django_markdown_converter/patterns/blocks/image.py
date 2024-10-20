@@ -1,11 +1,11 @@
-from django_markdown_converter.patterns.classes.base import BasePattern
+from django_markdown_converter.patterns.classes.base import Pattern
 from django_markdown_converter.patterns.data import IMAGE_PATTERN
 
 
-class ImagePattern(BasePattern):
+class ImagePattern(Pattern):
     
     def __init__(self, *args, **kwargs) -> None:
-        super().__init__("image", IMAGE_PATTERN, *args, **kwargs)
+        super().__init__(name="image", pattern_object=IMAGE_PATTERN, *args, **kwargs)
 
     def revert(self, *args, **kwargs) -> str:
         create_image_lambda = lambda a, s, t: f"![{a}]({s} \"{t}\")" if len(t) else f"![{a}]({s})"

@@ -1,8 +1,8 @@
 from textwrap import dedent
-from django_markdown_converter.patterns.classes.base import BasePattern
+from django_markdown_converter.patterns.classes.base import Pattern
 from django_markdown_converter.patterns.data import ADMONITION_PATTERN
 
-class AdmonitionPattern(BasePattern):
+class AdmonitionPattern(Pattern):
     """
     props:
     - type
@@ -10,7 +10,7 @@ class AdmonitionPattern(BasePattern):
     """
     
     def __init__(self, *args, **kwargs) -> None:
-        super().__init__("admonition", ADMONITION_PATTERN, *args, **kwargs)
+        super().__init__(name="admonition", pattern_object=ADMONITION_PATTERN, *args, **kwargs)
 
     def get_data(self) -> dict:
         return dedent(self.match.group("data"))

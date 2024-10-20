@@ -1,5 +1,5 @@
 import re
-from django_markdown_converter.patterns.classes.base import BasePattern
+from django_markdown_converter.patterns.classes.base import Pattern
 from django_markdown_converter.patterns.data import META_PATTERN
 
 
@@ -20,12 +20,12 @@ def process_meta_values(content:str="")-> dict:
     return {}
 
 
-class MetaPattern(BasePattern):
+class MetaPattern(Pattern):
     """
     meta
     """
     def __init__(self, *args, **kwargs) -> None:
-        super().__init__("meta", META_PATTERN, *args, **kwargs)
+        super().__init__(name="meta", pattern_object=META_PATTERN, *args, **kwargs)
         
     def get_data(self) -> dict:
         data = self.match.group("data").strip()

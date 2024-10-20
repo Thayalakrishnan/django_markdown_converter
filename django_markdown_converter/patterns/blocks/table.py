@@ -1,16 +1,16 @@
-from django_markdown_converter.patterns.classes.base import BasePattern
+from django_markdown_converter.patterns.classes.base import Pattern
 from django_markdown_converter.patterns.inlines.parser import convert_inline
 from django_markdown_converter.patterns.data import TABLE_PATTERN
 
 
-class TablePattern(BasePattern):
+class TablePattern(Pattern):
     """
     props:
     - header
     - body
     """
     def __init__(self, *args, **kwargs) -> None:
-        super().__init__("table", TABLE_PATTERN, *args, **kwargs)
+        super().__init__(name="table", pattern_object=TABLE_PATTERN, *args, **kwargs)
             
     def get_data(self) -> dict:
         return {

@@ -1,14 +1,14 @@
-from django_markdown_converter.patterns.classes.base import BasePattern
+from django_markdown_converter.patterns.classes.base import Pattern
 from django_markdown_converter.patterns.data import DLIST_PATTERN
 
 
-class DListPattern(BasePattern):
+class DListPattern(Pattern):
     """
     props:
     - index
     """
     def __init__(self, *args, **kwargs) -> None:
-        super().__init__("dlist", DLIST_PATTERN, *args, **kwargs)
+        super().__init__(name="dlist", pattern_object=DLIST_PATTERN, *args, **kwargs)
         
     def get_data(self) -> dict:
         definition = self.match.group("definition").split("\n")

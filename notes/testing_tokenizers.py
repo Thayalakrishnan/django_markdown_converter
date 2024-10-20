@@ -2,7 +2,7 @@ import time, gc
 
 from notes.class_tokenizer import run_tokenizer
 from notes.class_megatokenizer import run_mega_tokenizer
-from notes.class_ogtokenizer import run_ogtokenizer
+from notes.class_ogtokenizer import run_ogtokenizer, run_new_ogtokenizer
 from notes.tools import get_source
 
 """
@@ -42,6 +42,7 @@ def loop_loop_tokenizer():
     outer_loops = 10
     
     funcies = [
+        run_new_ogtokenizer,
         run_ogtokenizer,
         run_tokenizer,
         run_mega_tokenizer,

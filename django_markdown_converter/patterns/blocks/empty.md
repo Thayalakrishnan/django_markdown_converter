@@ -1,5 +1,5 @@
 import re
-from django_markdown_converter.patterns.classes.base import BasePattern
+from django_markdown_converter.patterns.classes.base import Pattern
 
 
 EMPTY_PATTERN = {
@@ -14,7 +14,7 @@ EMPTY_PATTERN = {
     "data": ["data"],
 }
 
-class EmptyPattern(BasePattern):
+class EmptyPattern(Pattern):
     """
     """
     def __init__(self, *args, **kwargs) -> None:

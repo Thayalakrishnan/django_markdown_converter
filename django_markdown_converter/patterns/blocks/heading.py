@@ -1,13 +1,13 @@
-from django_markdown_converter.patterns.classes.base import BasePattern
+from django_markdown_converter.patterns.classes.base import Pattern
 from django_markdown_converter.patterns.data import HEADING_PATTERN
 
 
-class HeadingPattern(BasePattern):
+class HeadingPattern(Pattern):
     """
     heading
     """
     def __init__(self, *args, **kwargs) -> None:
-        super().__init__("heading", HEADING_PATTERN, *args, **kwargs)
+        super().__init__(name="heading", pattern_object=HEADING_PATTERN, *args, **kwargs)
         
     def update_props(self):
         super().update_props()

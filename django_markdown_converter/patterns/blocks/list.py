@@ -1,9 +1,9 @@
 import re
-from django_markdown_converter.patterns.classes.base import BasePattern
+from django_markdown_converter.patterns.classes.base import Pattern
 from django_markdown_converter.patterns.data import OLIST_PATTERN, ULIST_PATTERN
 
 
-class ListPattern(BasePattern):
+class ListPatternMixin:
     """
     olist, ulist
     """
@@ -211,19 +211,19 @@ def FormatList(lst):
       if "level" in _:
         del _["level"]
 
-        
-class OListPattern(ListPattern):
+
+class OListPattern(Pattern, ListPatternMixin):
     """
     olist
     """
     def __init__(self, *args, **kwargs) -> None:
-        super().__init__("olist", OLIST_PATTERN, *args, **kwargs)
+        super().__init__(name="olist", pattern_object=OLIST_PATTERN, *args, **kwargs)
 
 
-class UListPattern(ListPattern):
+class UListPattern(Pattern, ListPatternMixin):
     """
     ulist
     """
     def __init__(self, *args, **kwargs) -> None:
-        super().__init__("ulist", ULIST_PATTERN, *args, **kwargs)
+        super().__init__(name="ulist", pattern_object=ULIST_PATTERN, *args, **kwargs)
         

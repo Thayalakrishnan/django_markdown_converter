@@ -120,4 +120,4 @@ def run_mega_tokenizer_in_console(path):
     print(f"run_mega_tokenizer_in_console: done")
 
 
-run_mega_tokenizer_in_console(PATH_TO_FILE)
+#run_mega_tokenizer_in_console(PATH_TO_FILE)

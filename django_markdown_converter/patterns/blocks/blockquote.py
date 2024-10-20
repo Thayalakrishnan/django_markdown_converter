@@ -1,13 +1,13 @@
-from django_markdown_converter.patterns.classes.base import BasePattern
+from django_markdown_converter.patterns.classes.base import Pattern
 from django_markdown_converter.patterns.data import BLOCKQUOTE_PATTERN
 
 
-class BlockquotePattern(BasePattern):
+class BlockquotePattern(Pattern):
     """
     blockquote
     """
     def __init__(self, *args, **kwargs) -> None:
-        super().__init__("blockquote", BLOCKQUOTE_PATTERN, *args, **kwargs)
+        super().__init__(name="blockquote", pattern_object=BLOCKQUOTE_PATTERN, *args, **kwargs)
         
     def get_match(self, content):
         self.match = self.pattern.findall(content)

@@ -3,7 +3,7 @@ from pygments.lexers import get_lexer_by_name
 from pygments.token import STANDARD_TYPES
 from pygments.util import ClassNotFound
 
-from django_markdown_converter.patterns.classes.base import BasePattern
+from django_markdown_converter.patterns.classes.base import Pattern
 from django_markdown_converter.patterns.data import CODE_PATTERN
 
 
@@ -47,12 +47,12 @@ def format_code(source:str="", language:str=""):
     return lex_format(lex_ret)
 
 
-class CodePattern(BasePattern):
+class CodePattern(Pattern):
     """
     code
     """
     def __init__(self, *args, **kwargs) -> None:
-        super().__init__("code", CODE_PATTERN, *args, **kwargs)
+        super().__init__(name="code", pattern_object=CODE_PATTERN, *args, **kwargs)
             
     def get_data(self) -> dict:
         code = self.match.group("data").strip()

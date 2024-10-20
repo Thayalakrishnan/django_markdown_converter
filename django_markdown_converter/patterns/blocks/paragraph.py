@@ -1,12 +1,12 @@
-from django_markdown_converter.patterns.classes.base import BasePattern
+from django_markdown_converter.patterns.classes.base import Pattern
 from django_markdown_converter.patterns.inlines.parser import convert_inline, revert_inline
 from django_markdown_converter.patterns.data import PARAGRAPH_PATTERN
 
 
-class ParagraphPattern(BasePattern):
+class ParagraphPattern(Pattern):
     
     def __init__(self, *args, **kwargs) -> None:
-        super().__init__("paragraph", PARAGRAPH_PATTERN, *args, **kwargs)
+        super().__init__(name="paragraph", pattern_object=PARAGRAPH_PATTERN, *args, **kwargs)
         
     def convert(self, content:str="", props:str="", *args, **kwargs) -> dict:
         super().convert(content, props, *args, **kwargs)
