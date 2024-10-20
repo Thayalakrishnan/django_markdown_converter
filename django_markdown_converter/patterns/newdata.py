@@ -17,8 +17,12 @@ inside of a pblock
 
 META_PATTERN = {
     "type": "meta",
-    "check": r'^---.*?^---$',
-    "pattern": r'^(?:---\s*)(?:\n)(?P<data>.*?)(?:---\s*)(?:\n|$)',
+    "pattern": [
+        ("", r"^---*?\n"),
+        ("data", r".*?"),
+        ("", r"^---*?\n^"),
+        ("", r"\n|$"),
+    ],
     "flags": {
         "MULTILINE": True,
         "DOTALL": True,
@@ -32,10 +36,17 @@ META_PATTERN = {
 CODE_PATTERN = {
     "type": "code",
     "check": r'^```.*?^```$',
-    "pattern": r'(?:^```(?P<language>\S+)?\s*\n)(?P<data>(?:^.*?\n)+)(?:^```.*?(\n|$))',
+    #"pattern": r'(?:^```)(?P<language>\S+)?\n(?P<data>(?:^.*?\n)+?)(?:^```\n)',
+    "pattern": [
+        ("", r"^```"),
+        ("language", r"\S+"),
+        ("", r"?\n"),
+        ("data", r"(?:^.*?\n)+?"),
+        ("", r"^```\n"),
+    ],
     "flags": {
         "MULTILINE": True,
-        "DOTALL": True,
+        "DOTALL": False,
     },
     "hasNested": False,
     "hasInlineMarkup": False,
@@ -46,7 +57,11 @@ CODE_PATTERN = {
 DLIST_PATTERN = {
     "type": "dlist",
     "check": r'^.+?$\n(?:\: .*$)',
-    "pattern": r'(?P<term>^.*?\n)(?P<definition>(?:(?=^\: ).*?(?:\n|$))+)',
+    #"pattern": r'(?P<term>^.*?\n)(?P<definition>(?:^\: .*?\n)+)',
+    "pattern": [
+        ("term", r"^.*?\n"),
+        ("definition", r"(?:^\: .*?\n)+"),
+    ],
     "flags": {
         "MULTILINE": True,
         "DOTALL": False,
@@ -59,11 +74,16 @@ DLIST_PATTERN = {
 
 FOOTNOTE_PATTERN = {
     "type": "footnote",
-    "check": r'^\[\^\d+\]\:\n.*$',
-    "pattern": r'^\[\^(?P<index>.+?)\]:\s*\n(?P<data>(?: {4}.*(?:\n|$))+)',
+    #"pattern": r'^\[\^(?P<index>.+?)\]:\n(?P<data>(?: {1,}.*?\n)+)',
+    "pattern": [
+        ("", r"^\[\^"),
+        ("index", r".+?"),
+        ("", r"\]:\n"),
+        ("data", r"(?:^ {1,}.*?\n)+"),
+    ],
     "flags": {
         "MULTILINE": True,
-        "DOTALL": True,
+        "DOTALL": False,
     },
     "hasNested": True,
     "hasInlineMarkup": False,
@@ -73,8 +93,15 @@ FOOTNOTE_PATTERN = {
 
 ADMONITION_PATTERN = {
     "type": "admonition",
-    "check": r'(?:^!!!.*$)',
-    "pattern": r'(?:^!!!\s+(?P<type>\S+)?\s*(?:["\'](?P<title>[^"\']+?)["\'])?\s*\n)(?P<data>(?:^ {4}.*?(?:\n|$))+)',
+    #"pattern": r'(?:^!!!)(?P<type> \S+)?(?: \"(?P<title>.+?)\")?\n(?P<data>(?:^ {1,}.*?\n)+)',
+    "pattern": [
+        ("", r"^!!!"),
+        ("type", r" \S+"),
+        ("", r"?"),
+        ("title", r" \".+?\""),
+        ("", r"?\n"),
+        ("data", r"(?:^ {1,}.*?\n)+"),
+    ],
     "flags": {
         "MULTILINE": True,
         "DOTALL": True,
