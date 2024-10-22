@@ -21,7 +21,7 @@ META_PATTERN = {
         r"^---*?\n",
         ("data", r".*?"),
         r"^---*?\n^",
-        r"\n",
+        #r"\n",
     ],
     "flags": {
         "MULTILINE": True,
@@ -132,7 +132,7 @@ TABLE_PATTERN = {
         ("header", r"^\|.*?\|\n"),
         ("break", r"^\|.*?\|\n"),
         ("body", r"(?:^\|.*?\|\n)+"),
-        r"\n",
+        #r"\n",
     ],
     "flags": {
         "MULTILINE": True,
@@ -234,6 +234,31 @@ SVG_PATTERN = {
     "data": ["data"],
 }
 
+HTML_PATTERN = {
+    "type": "svg",
+    #"check": r'^<svg\s[^>]*>(?:.*?)</svg>',
+    #"pattern": r'^<(?P<htmltag>\S+)(?P<attrs>[^>]*)>(?P<data>.*?)</(?P=htmltag)>\n(?=^\n)',
+    #"pattern": r'^<\S+[^>]*>.*?</\S+>\n(?=^\n)',
+    "pattern": [
+        r"^<(?P<htmltag>\S+)",
+        ("attrs", r"[^>]*"),
+        r">",
+        ("data", r".*?"),
+        r"</(?P=htmltag)>\n",
+        r"(?=^\n)",
+    ],
+    "flags": {
+        "MULTILINE": True,
+        "DOTALL": True,
+    },
+    "attributes": {
+        "hasNested": False,
+        "hasInlineMarkup": False,
+    },
+    "props": ["attrs"],
+    "data": ["data"],
+}
+
 ULIST_PATTERN = {
     "type": "ulist",
     "check": r'(?:^ *- +.*$)+',
@@ -304,7 +329,7 @@ PARAGRAPH_PATTERN = {
     ],
     "flags": {
         "MULTILINE": True,
-        "DOTALL": True,
+        "DOTALL": False
     },
     "attributes": {
         "hasNested": False,
@@ -331,7 +356,6 @@ EMPTYLINE_PATTERN = {
     "data": [],
 }
 
-
 NEWLINE_PATTERN = {
     "type": "newline",
     "pattern": [
@@ -348,3 +372,42 @@ NEWLINE_PATTERN = {
     "props": [],
     "data": [],
 }
+
+NONE_PATTERN = {
+    "type": "none",
+    "pattern": [
+        r".",
+    ],
+    "flags": {
+        "MULTILINE": False,
+        "DOTALL": False,
+    },
+    "attributes": {
+        "hasNested": False,
+        "hasInlineMarkup": False,
+    },
+    "props": [],
+    "data": [],
+}
+
+
+
+PATTERNS = [
+    CODE_PATTERN,
+    META_PATTERN,
+    DLIST_PATTERN,
+    FOOTNOTE_PATTERN,
+    ADMONITION_PATTERN,
+    TABLE_PATTERN,
+    HR_PATTERN,
+    HEADING_PATTERN,
+    IMAGE_PATTERN,
+    SVG_PATTERN,
+    ULIST_PATTERN,
+    OLIST_PATTERN,
+    BLOCKQUOTE_PATTERN,
+    EMPTYLINE_PATTERN,
+    NEWLINE_PATTERN,
+    PARAGRAPH_PATTERN,
+    NONE_PATTERN,
+]
