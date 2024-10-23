@@ -212,11 +212,10 @@ class BasePattern:
 ## NEW SHIT
 ## NEW SHIT
 ## NEW SHIT
-                    
+
 class PatternManager:
     
     PRIVATE_BANK = []
-    
     BLOCK_LOOKUP = {}
     BLOCK_LIST = []
     
@@ -281,6 +280,12 @@ class PatternManager:
                 blocks.append(b)
         if len(blocks):
             block["data"] = blocks
+    
+    @classmethod
+    def block_reverter(cls, blocklist:list=[]):
+        for block in blocklist:
+            string = cls.BLOCK_LOOKUP[block["type"]].revert(block)
+            yield string
             
     @classmethod
     def convert_md_to_json(cls, md:str="") -> dict:
@@ -290,12 +295,6 @@ class PatternManager:
         root = {"type": "root", "data": md}
         cls.block_converter(root)
         return root["data"]
-    
-    @classmethod
-    def block_reverter(cls, blocklist:list=[]):
-        for block in blocklist:
-            string = cls.BLOCK_LOOKUP[block["type"]].revert(block)
-            yield string
         
     @classmethod
     def convert_json_to_md(cls, blocks:list=[]) -> str:

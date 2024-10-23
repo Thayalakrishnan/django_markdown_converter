@@ -21,7 +21,6 @@ META_PATTERN = {
         r"^---*?\n",
         ("data", r".*?"),
         r"^---*?\n^",
-        #r"\n",
     ],
     "flags": {
         "MULTILINE": True,
@@ -37,8 +36,6 @@ META_PATTERN = {
 
 CODE_PATTERN = {
     "type": "code",
-    #"check": r'^```.*?^```$',
-    #"pattern": r'(?:^```)(?P<language>\S+)?\n(?P<data>(?:^.*?\n)+?)(?:^```\n)',
     "pattern": [
         r"^```",
         ("language", r"\S+"),
@@ -60,8 +57,6 @@ CODE_PATTERN = {
 
 DLIST_PATTERN = {
     "type": "dlist",
-    #"check": r'^.+?$\n(?:\: .*$)',
-    #"pattern": r'(?P<term>^.*?\n)(?P<definition>(?:^\: .*?\n)+)',
     # prefix:  ": "
     "pattern": [
         ("term", r"^.*?\n"),
@@ -81,7 +76,6 @@ DLIST_PATTERN = {
 
 FOOTNOTE_PATTERN = {
     "type": "footnote",
-    #"pattern": r'^\[\^(?P<index>.+?)\]:\n(?P<data>(?: {1,}.*?\n)+)',
     "pattern": [
         r"^\[\^",
         ("index", r".+?"),
@@ -102,7 +96,6 @@ FOOTNOTE_PATTERN = {
 
 ADMONITION_PATTERN = {
     "type": "admonition",
-    #"pattern": r'(?:^!!!)(?P<type> \S+)?(?: \"(?P<title>.+?)\")?\n(?P<data>(?:^ {1,}.*?\n)+)',
     "pattern": [
         r"^!!!",
         ("type", r" \S+"),
@@ -110,7 +103,6 @@ ADMONITION_PATTERN = {
         ("title", r" \".+?\""),
         r"?\n",
         ("data", r"(?:^ {1,}.*?\n)+"),
-        #r"\n",
     ],
     "flags": {
         "MULTILINE": True,
@@ -126,13 +118,10 @@ ADMONITION_PATTERN = {
 
 TABLE_PATTERN = {
     "type": "table",
-    #"check": r'(?:^\|.*?\|\s*?$\n?)+',
-    #"pattern": r'(?P<header>^\|.*?\|\n)(?P<break>^\|.*?\|\n)(?P<body>(?:^\|.*?\|\n)+)',
     "pattern": [
         ("header", r"^\|.*?\|\n"),
         ("break", r"^\|.*?\|\n"),
         ("body", r"(?:^\|.*?\|\n)+"),
-        #r"\n",
     ],
     "flags": {
         "MULTILINE": True,
@@ -148,7 +137,6 @@ TABLE_PATTERN = {
 
 HR_PATTERN = {
     "type": "hr",
-    #"pattern": r'(?P<data>^[\*\-]{3,})\n',
     "pattern": [
         ("data", r"^[\*\-]{3,}\n"),
     ],
@@ -166,7 +154,6 @@ HR_PATTERN = {
 
 HEADING_PATTERN = {
     "type": "heading",
-    #"pattern": r'(?P<level>^\#{1,})(?P<data>.*?)\n',
     "pattern": [
         ("level", r"^\#{1,}"),
         ("data", r".*?"),
@@ -186,9 +173,6 @@ HEADING_PATTERN = {
 
 IMAGE_PATTERN = {
     "type": "image",
-    #"check": r'^\!\[.*?\]\(.*?\)',
-    #"pattern": r'^\!\[\s*(?P<alt>.*?)?\s*\]\((?P<data>\S*)\s*(?:\"(?P<title>.*?)\")?\)',
-    #"pattern": r'^\!\[(?P<alt>.*?)?\]\((?P<data>\S*)(?: *?\"(?P<title>.*?)\")?\)',
     "pattern": [
         r"^\!\[",
         ("alt", r".*?"),
@@ -212,9 +196,6 @@ IMAGE_PATTERN = {
 
 SVG_PATTERN = {
     "type": "svg",
-    #"check": r'^<svg\s[^>]*>(?:.*?)</svg>',
-    #"pattern": r'^<svg\s(?P<attrs>[^>]*)>(?P<data>.*?)</svg>',
-    #"pattern": r'^\<svg(?P<attrs>[^>]*)\>(?P<data>.*?)\<\/svg\>\n',
     "pattern": [
         r"^<svg",
         ("attrs", r"[^>]*"),
@@ -236,9 +217,6 @@ SVG_PATTERN = {
 
 HTML_PATTERN = {
     "type": "svg",
-    #"check": r'^<svg\s[^>]*>(?:.*?)</svg>',
-    #"pattern": r'^<(?P<htmltag>\S+)(?P<attrs>[^>]*)>(?P<data>.*?)</(?P=htmltag)>\n(?=^\n)',
-    #"pattern": r'^<\S+[^>]*>.*?</\S+>\n(?=^\n)',
     "pattern": [
         r"^<(?P<htmltag>\S+)",
         ("attrs", r"[^>]*"),
@@ -262,7 +240,6 @@ HTML_PATTERN = {
 ULIST_PATTERN = {
     "type": "ulist",
     "check": r'(?:^ *- +.*$)+',
-    #"pattern": r'(?P<list>(?P<item>^- .*\n(?:^ .*?\n)*)+)',
     "pattern": [
         ("item", r"^- .*\n(?:^ .*?\n)*"),
         r"+",
@@ -282,7 +259,6 @@ ULIST_PATTERN = {
 OLIST_PATTERN = {
     "type": "olist",
     "check": r'(?:^ *\d+\. +.*$)+',
-    #"pattern": r'(?P<list>(?P<item>^\d+\. .*\n(?:^ .*?\n)*)+)',
     "pattern": [
         ("item", r"^\d+\. .*\n(?:^ .*?\n)*"),
         r"+",
@@ -301,12 +277,8 @@ OLIST_PATTERN = {
 
 BLOCKQUOTE_PATTERN = {
     "type": "blockquote",
-    #"check": r'(?:^>.*$)+',
-    #"pattern": r'(?<=^>).*(?:\n|$)',
-    #"pattern": r'(?P<data>(?:^>.*?\n)+)',
     "pattern": [
         ("data", r"(?:^>.*?\n)+"),
-        #r"\n",
     ],
     "flags": {
         "MULTILINE": True,
@@ -322,8 +294,6 @@ BLOCKQUOTE_PATTERN = {
 
 PARAGRAPH_PATTERN = {
     "type": "paragraph",
-    #"check": r'.*',
-    #"pattern": r'(?P<data>.*)',
     "pattern": [
         ("data", r"^.+?\n"),
     ],
@@ -389,8 +359,6 @@ NONE_PATTERN = {
     "props": [],
     "data": [],
 }
-
-
 
 PATTERNS = [
     CODE_PATTERN,
