@@ -110,7 +110,7 @@ ADMONITION_PATTERN = {
         ("title", r" \".+?\""),
         r"?\n",
         ("data", r"(?:^ {1,}.*?\n)+"),
-        r"\n",
+        #r"\n",
     ],
     "flags": {
         "MULTILINE": True,
@@ -306,7 +306,7 @@ BLOCKQUOTE_PATTERN = {
     #"pattern": r'(?P<data>(?:^>.*?\n)+)',
     "pattern": [
         ("data", r"(?:^>.*?\n)+"),
-        r"\n",
+        #r"\n",
     ],
     "flags": {
         "MULTILINE": True,

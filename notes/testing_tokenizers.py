@@ -3,6 +3,8 @@ import time, gc
 from notes.class_tokenizer import run_tokenizer
 from notes.class_megatokenizer import run_mega_tokenizer
 from notes.class_ogtokenizer import run_ogtokenizer, run_new_ogtokenizer
+from notes.testing_newdata import run_new_mega_tokenizer_with_attrs
+
 from notes.tools import get_source
 
 """
@@ -12,6 +14,7 @@ is the quickest way to do things:
 - tokenizer: uses inbuild re.Scanner class
 - og: uses our old algorithm of using match.finditer to search for blocks and then using a loop to match blocks individually till we find the right one
 - mega: creates a pattern combining all the block patterns. then uses match.finditer to scan the source content. 
+- new mega with attrs: creates a pattern combining all the block patterns as well as attrs/props
 
 measured average run time for 10*1000 runs:
 - run_ogtokenizer: 0.659 ms
@@ -39,25 +42,26 @@ def loop_loop_tokenizer():
     source = get_source(PATH_TO_FILE)
     
     inner_loops = 100
-    outer_loops = 10
+    outer_loops = 100
     
     funcies = [
         run_new_ogtokenizer,
         run_ogtokenizer,
         run_tokenizer,
         run_mega_tokenizer,
+        run_new_mega_tokenizer_with_attrs,
     ]
     
-    for _ in funcies:
-        total_net_time = 0
-        
-        for i in range(outer_loops):
-            
-            total_net_time += loop_run_tokenizer(_, source, inner_loops)
+    loop_times = [0 for _ in funcies]
+    
+    for _ in range(outer_loops):
+        for index, funky in enumerate(funcies):
+            loop_times[index] += loop_run_tokenizer(funky, source, inner_loops)
             gc.collect()
-            
-        print(f"'{_.__name__}' average total {(total_net_time/outer_loops) * 1000:.3f} ms")
         gc.collect()
+        
+    for index, funky in enumerate(funcies):
+        print(f"'{funky.__name__}' average total {(loop_times[index]/outer_loops) * 1000:.3f} ms")
 
 
 loop_loop_tokenizer()
