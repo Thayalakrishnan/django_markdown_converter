@@ -71,9 +71,9 @@ def extract_block_and_attrs(groupdict:dict={}) -> dict:
     # process attributes
     processing = PATTERN_LOOKUP[group].get("processing", None)
     
-    if processing:
-        for process in processing.keys():
-            data[process] = processing[process](data[process])
+    #if processing:
+    for process in processing.keys():
+        data[process] = processing[process](data[process])
     
     #if groupdict["props"]:
     props = groupdict.get("props", {})
@@ -104,8 +104,12 @@ def run_new_mega_tokenizer_with_attrs_in_console():
     PATH_TO_FILE = "notes/examples/post.md"
     source = get_source(PATH_TO_FILE)
     tks = run_my_mega_tokenizer_with_attrs(source)
+    
+    content = []
     for _ in tks:
-        print(repr(_["data"]))
+        #print(repr(_["data"]))
+        if _["type"]=="olist":
+            print(repr(_["data"]["items"]))
     print(f"done")
     
 run_new_mega_tokenizer_with_attrs_in_console()

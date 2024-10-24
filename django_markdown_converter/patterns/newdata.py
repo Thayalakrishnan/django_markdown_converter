@@ -133,6 +133,7 @@ FOOTNOTE_PATTERN = {
     },
     "props": ["index"],
     "data": ["content"],
+    "processing": {},
 }
 
 """
@@ -181,6 +182,7 @@ TABLE_PATTERN = {
     },
     "props": [],
     "data": ["header", "content"],
+    "processing": {},
 }
 
 HR_PATTERN = {
@@ -198,6 +200,7 @@ HR_PATTERN = {
     },
     "props": [],
     "data": ["content"],
+    "processing": {},
 }
 
 HEADING_PATTERN = {
@@ -302,11 +305,16 @@ HTML_PATTERN = {
     },
 }
 
+def process_list(content):
+    pattern = re.compile(r"(?:^(?:\d{1,}|\-)+\. )(?P<item>.*\n(?:^ .*?\n)*)", re.MULTILINE)
+    items = pattern.findall(content)
+    items = [dedent(_) for _ in items]
+    return items
+
 ULIST_PATTERN = {
     "type": "ulist",
     "pattern": [
-        ("item", r"(?:^- .*\n(?:^ .*?\n)*)+"),
-        #r"+",
+        ("items", r"(?:^- .*\n(?:^ .*?\n)*)+"),
     ],
     "flags": {
         "MULTILINE": True,
@@ -316,18 +324,18 @@ ULIST_PATTERN = {
         "hasNested": True,
         "hasInlineMarkup": False,
     },
-    "props": ["item", "level", "marker", "content"],
+    "props": ["items", "level", "marker", "content"],
     "data": [],
     "processing": {
-        "item": lambda x: x,
+        "items": process_list,
     },
 }
+
 
 OLIST_PATTERN = {
     "type": "olist",
     "pattern": [
-        ("item", r"(?:^\d+\. .*\n(?:^ .*?\n)*)+"),
-        #r"+",
+        ("items", r"(?:^\d+\. .*\n(?:^ .*?\n)*)+"),
     ],
     "flags": {
         "MULTILINE": True,
@@ -337,10 +345,10 @@ OLIST_PATTERN = {
         "hasNested": False,
         "hasInlineMarkup": False,
     },
-    "props": ["item", "level", "marker", "content"],
+    "props": ["items", "level", "marker", "content"],
     "data": [],
     "processing": {
-        "item": lambda x: x,
+        "items": process_list,
     },
 }
 
@@ -399,6 +407,7 @@ EMPTYLINE_PATTERN = {
     },
     "props": [],
     "data": [],
+    "processing": {},
 }
 
 NEWLINE_PATTERN = {
@@ -416,6 +425,7 @@ NEWLINE_PATTERN = {
     },
     "props": [],
     "data": [],
+    "processing": {},
 }
 
 NONE_PATTERN = {
@@ -433,6 +443,7 @@ NONE_PATTERN = {
     },
     "props": [],
     "data": [],
+    "processing": {},
 }
 
 PATTERNS = [
