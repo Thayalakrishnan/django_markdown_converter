@@ -19,6 +19,7 @@ def create_block_pattern():
     
     built_patterns = []
     block_lookup = {}
+    pattern_lookup = {}
 
     for _ in PATTERNS:
         pattern_list = _["pattern"]
@@ -43,6 +44,7 @@ def create_block_pattern():
         pattern = "".join(pattern_parts_for_block_pattern)
         current_pattern = f"(?P<{label}>(?{flags}:{pattern}))"
         built_patterns.append(current_pattern)
+        pattern_lookup[label] = _
     
     #print(block_lookup)
     
@@ -50,30 +52,38 @@ def create_block_pattern():
     block_pattern = regex_group("|".join(built_patterns))
     block_pattern = re.compile(f"(?:{block_pattern})" + props_pattern)
     
-    return block_pattern, block_lookup
+    return block_pattern, block_lookup, pattern_lookup
 
 
-BLOCK_PATTERN, BLOCK_LOOKUP = create_block_pattern()
+BLOCK_PATTERN, BLOCK_LOOKUP, PATTERN_LOOKUP = create_block_pattern()
 
 
 def extract_block_and_attrs(groupdict:dict={}) -> dict:
-    block = {"type": None, "props": None, "data": None}
-    
     if groupdict["newline"]:
         return None
     
-    for k,v in groupdict.items():
-        if v:
-            block["type"] = k
-            block["data"] = v
-            block["data"] = BLOCK_LOOKUP[k].match(v).groupdict()
-            break
-        
-    if groupdict["props"]:
-        props = groupdict.get("props", None)
-        if props:
-            block["props"] = convert_props(props)
-    return block
+    group = next((key for key,value in groupdict.items() if value), None)
+    if not group:
+        return None
+    
+    data = BLOCK_LOOKUP[group].match(groupdict[group]).groupdict()
+    
+    # process attributes
+    processing = PATTERN_LOOKUP[group].get("processing", None)
+    
+    if processing:
+        for process in processing.keys():
+            data[process] = processing[process](data[process])
+    
+    #if groupdict["props"]:
+    props = groupdict.get("props", {})
+    if props:
+        props = convert_props(props)
+    return {
+        "type": group, 
+        "props": props, 
+        "data": data
+    }
 
 
 def run_new_mega_tokenizer_with_attrs(source:str=""):

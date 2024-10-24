@@ -1,4 +1,5 @@
 import re
+from textwrap import dedent
 
 """
 when we grab a paragraph, make sure to merge the lines so that there are non newline characters
@@ -15,11 +16,28 @@ inside of a pblock
 8 | data:
 """
 
+## lambdas
+LAMBDA_REMOVE_PREFIX = lambda x, amount: "\n".join([_[amount:] for _ in x.split("\n")])
+LAMBDA_REMOVE_PREFIX_2 = lambda x: LAMBDA_REMOVE_PREFIX(x, 2)
+
+def process_meta_values(content:str="")-> dict:
+    PATTERN_RAW = r'^(?P<key>.*?)(?:\:\s*)(?P<value>.*?)(?:\n|$)'
+    PATTERN = re.compile(PATTERN_RAW, re.MULTILINE | re.DOTALL)
+    kvps = PATTERN.findall(content)
+    if kvps:
+        return dict(kvps)
+    return {}
+
+
+"""
+- data is between the open and close
+- data is key value pairs that need to be processed
+"""
 META_PATTERN = {
     "type": "meta",
     "pattern": [
         r"^---*?\n",
-        ("data", r".*?"),
+        ("content", r".*?"),
         r"^---*?\n^",
     ],
     "flags": {
@@ -31,16 +49,24 @@ META_PATTERN = {
         "hasInlineMarkup": False,
     },
     "props": [],
-    "data": ["data"],
+    "data": ["content"],
+    "processing": {
+        "content": process_meta_values,
+    },
 }
 
+
+"""
+- data is between the open and close
+- data is code that needs to converted using Pygments
+"""
 CODE_PATTERN = {
     "type": "code",
     "pattern": [
         r"^```",
         ("language", r"\S+"),
         r"?\n",
-        ("data", r"(?:^.*?\n)+?"),
+        ("content", r"(?:^.*?\n)+?"),
         r"^```\n",
     ],
     "flags": {
@@ -52,9 +78,16 @@ CODE_PATTERN = {
         "hasInlineMarkup": False,
     },
     "props": ["language"],
-    "data": ["data"],
+    "data": ["content"],
+    "processing": {
+        "content": lambda x: x,
+    },
 }
 
+"""
+- data has a specific structure
+- has a prefix that needs to be removed
+"""
 DLIST_PATTERN = {
     "type": "dlist",
     # prefix:  ": "
@@ -71,16 +104,24 @@ DLIST_PATTERN = {
         "hasInlineMarkup": True,
     },
     "props": [],
-    "data": ["definition", "term"],
+    "data": ["term", "definition"],
+    "processing": {
+        "term": lambda x: x.strip(),
+        "definition": LAMBDA_REMOVE_PREFIX_2,
+    },
 }
 
+"""
+- data has a specific structure
+- has a prefix that needs to be removed
+"""
 FOOTNOTE_PATTERN = {
     "type": "footnote",
     "pattern": [
         r"^\[\^",
         ("index", r".+?"),
         r"\]:\n",
-        ("data", r"(?:^ {1,}.*?\n)+"),
+        ("content", r"(?:^ {1,}.*?\n)+"),
     ],
     "flags": {
         "MULTILINE": True,
@@ -91,9 +132,13 @@ FOOTNOTE_PATTERN = {
         "hasInlineMarkup": False,
     },
     "props": ["index"],
-    "data": ["data"],
+    "data": ["content"],
 }
 
+"""
+- data has a specific structure
+- has a prefix that needs to be removed
+"""
 ADMONITION_PATTERN = {
     "type": "admonition",
     "pattern": [
@@ -102,7 +147,7 @@ ADMONITION_PATTERN = {
         r"?",
         ("title", r" \".+?\""),
         r"?\n",
-        ("data", r"(?:^ {1,}.*?\n)+"),
+        ("content", r"(?:^ {1,}.*?\n)+"),
     ],
     "flags": {
         "MULTILINE": True,
@@ -113,7 +158,10 @@ ADMONITION_PATTERN = {
         "hasInlineMarkup": False,
     },
     "props": ["type", "title"],
-    "data": ["data"],
+    "data": ["content"],
+    "processing": {
+        "content": dedent,
+    },
 }
 
 TABLE_PATTERN = {
@@ -121,7 +169,7 @@ TABLE_PATTERN = {
     "pattern": [
         ("header", r"^\|.*?\|\n"),
         ("break", r"^\|.*?\|\n"),
-        ("body", r"(?:^\|.*?\|\n)+"),
+        ("content", r"(?:^\|.*?\|\n)+"),
     ],
     "flags": {
         "MULTILINE": True,
@@ -132,13 +180,13 @@ TABLE_PATTERN = {
         "hasInlineMarkup": True,
     },
     "props": [],
-    "data": ["header", "body"],
+    "data": ["header", "content"],
 }
 
 HR_PATTERN = {
     "type": "hr",
     "pattern": [
-        ("data", r"^[\*\-]{3,}\n"),
+        ("content", r"^[\*\-]{3,}\n"),
     ],
     "flags": {
         "MULTILINE": True,
@@ -149,14 +197,14 @@ HR_PATTERN = {
         "hasInlineMarkup": False,
     },
     "props": [],
-    "data": ["data"],
+    "data": ["content"],
 }
 
 HEADING_PATTERN = {
     "type": "heading",
     "pattern": [
         ("level", r"^\#{1,}"),
-        ("data", r".*?"),
+        ("content", r".*?"),
         r"\n",
     ],
     "flags": {
@@ -167,8 +215,12 @@ HEADING_PATTERN = {
         "hasNested": False,
         "hasInlineMarkup": True,
     },
-    "props": ["level", "data"],
-    "data": ["data"],
+    "props": ["level", "content"],
+    "data": ["content"],
+    "processing": {
+        "level": lambda x: len(x),
+        "content": lambda x: x.strip(),
+    },
 }
 
 IMAGE_PATTERN = {
@@ -177,7 +229,7 @@ IMAGE_PATTERN = {
         r"^\!\[",
         ("alt", r".*?"),
         r"?\]\(",
-        ("data", r"\S*"),
+        ("src", r"\S*"),
         r"(?: *?\"",
         ("title", r".*?"),
         r"\")?\)\n",
@@ -191,7 +243,12 @@ IMAGE_PATTERN = {
         "hasInlineMarkup": False,
     },
     "props": ["alt", "title"],
-    "data": ["data"],
+    "data": ["src"],
+    "processing": {
+        "alt": lambda x: x,
+        "title": lambda x: x,
+        "src": lambda x: x,
+    },
 }
 
 SVG_PATTERN = {
@@ -200,7 +257,7 @@ SVG_PATTERN = {
         r"^<svg",
         ("attrs", r"[^>]*"),
         r">",
-        ("data", r".*?"),
+        ("content", r".*?"),
         r"</svg>\n",
     ],
     "flags": {
@@ -213,6 +270,10 @@ SVG_PATTERN = {
     },
     "props": ["attrs"],
     "data": ["data"],
+    "processing": {
+        "attrs": lambda x: x,
+        "content": lambda x: x,
+    },
 }
 
 HTML_PATTERN = {
@@ -221,7 +282,7 @@ HTML_PATTERN = {
         r"^<(?P<htmltag>\S+)",
         ("attrs", r"[^>]*"),
         r">",
-        ("data", r".*?"),
+        ("content", r".*?"),
         r"</(?P=htmltag)>\n",
         r"(?=^\n)",
     ],
@@ -234,15 +295,18 @@ HTML_PATTERN = {
         "hasInlineMarkup": False,
     },
     "props": ["attrs"],
-    "data": ["data"],
+    "data": ["content"],
+    "processing": {
+        "attrs": lambda x: x,
+        "content": lambda x: x,
+    },
 }
 
 ULIST_PATTERN = {
     "type": "ulist",
-    "check": r'(?:^ *- +.*$)+',
     "pattern": [
-        ("item", r"^- .*\n(?:^ .*?\n)*"),
-        r"+",
+        ("item", r"(?:^- .*\n(?:^ .*?\n)*)+"),
+        #r"+",
     ],
     "flags": {
         "MULTILINE": True,
@@ -252,16 +316,18 @@ ULIST_PATTERN = {
         "hasNested": True,
         "hasInlineMarkup": False,
     },
-    "props": ["level", "marker", "content"],
+    "props": ["item", "level", "marker", "content"],
     "data": [],
+    "processing": {
+        "item": lambda x: x,
+    },
 }
 
 OLIST_PATTERN = {
     "type": "olist",
-    "check": r'(?:^ *\d+\. +.*$)+',
     "pattern": [
-        ("item", r"^\d+\. .*\n(?:^ .*?\n)*"),
-        r"+",
+        ("item", r"(?:^\d+\. .*\n(?:^ .*?\n)*)+"),
+        #r"+",
     ],
     "flags": {
         "MULTILINE": True,
@@ -271,14 +337,17 @@ OLIST_PATTERN = {
         "hasNested": False,
         "hasInlineMarkup": False,
     },
-    "props": ["level", "marker", "content"],
+    "props": ["item", "level", "marker", "content"],
     "data": [],
+    "processing": {
+        "item": lambda x: x,
+    },
 }
 
 BLOCKQUOTE_PATTERN = {
     "type": "blockquote",
     "pattern": [
-        ("data", r"(?:^>.*?\n)+"),
+        ("content", r"(?:^>.*?\n)+"),
     ],
     "flags": {
         "MULTILINE": True,
@@ -289,13 +358,16 @@ BLOCKQUOTE_PATTERN = {
         "hasInlineMarkup": False,
     },
     "props": [],
-    "data": ["data"],
+    "data": ["content"],
+    "processing": {
+        "content": LAMBDA_REMOVE_PREFIX_2,
+    },
 }
 
 PARAGRAPH_PATTERN = {
     "type": "paragraph",
     "pattern": [
-        ("data", r"^.+?\n"),
+        ("content", r"^.+?\n"),
     ],
     "flags": {
         "MULTILINE": True,
@@ -306,7 +378,10 @@ PARAGRAPH_PATTERN = {
         "hasInlineMarkup": True,
     },
     "props": [],
-    "data": ["data"],
+    "data": ["content"],
+    "processing": {
+        "content": lambda x: x,
+    },
 }
 
 EMPTYLINE_PATTERN = {
