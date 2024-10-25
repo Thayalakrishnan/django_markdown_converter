@@ -306,10 +306,23 @@ HTML_PATTERN = {
 }
 
 def process_list(content):
+    padding_multiline = " "*3
+    padding_indented = " "*4
     pattern = re.compile(r"(?:^(?:\d{1,}|\-)+\. )(?P<item>.*\n(?:^ .*?\n)*)", re.MULTILINE)
     items = pattern.findall(content)
-    items = [dedent(_) for _ in items]
-    return items
+    newitems = []
+    
+    for item in items:
+        lines = []
+        for line in item.splitlines():
+            if line.startswith(padding_indented):
+                line = line.removeprefix(padding_indented)
+            else:
+                line = line.removeprefix(padding_multiline)
+            lines.append(line)
+        lines = "\n".join(lines)
+        newitems.append({"type": "item", "data": lines})
+    return newitems
 
 ULIST_PATTERN = {
     "type": "ulist",

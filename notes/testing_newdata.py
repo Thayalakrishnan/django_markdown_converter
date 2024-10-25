@@ -46,7 +46,6 @@ def create_block_pattern():
         built_patterns.append(current_pattern)
         pattern_lookup[label] = _
     
-    #print(block_lookup)
     
     props_pattern = r"(?m:^\{ *?(?P<props>.*?) *?\}\n)?"
     block_pattern = regex_group("|".join(built_patterns))
@@ -108,8 +107,9 @@ def run_new_mega_tokenizer_with_attrs_in_console():
     content = []
     for _ in tks:
         #print(repr(_["data"]))
-        if _["type"]=="olist":
-            print(repr(_["data"]["items"]))
+        print(_)
+        #if _["type"]=="olist":
+        #    print(repr(_["data"]["items"]))
     print(f"done")
     
 run_new_mega_tokenizer_with_attrs_in_console()

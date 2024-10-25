@@ -150,10 +150,10 @@ def CreateCounter(dataset, position):
 4. Item 4
 { blocktype="o list" }
 
-1. Multiline Item 1, line 1.
-   Multiline Item 1, line 2.
+1. Item 1 line 1.
+   Item 1 line 2.
    
-   Multiline Item 1, line 3 after double line break.
+   Item 1 line 3 after double line break.
 2. Item 2
 3. Item 3
 4. Item 4
@@ -162,10 +162,10 @@ def CreateCounter(dataset, position):
 1. Item 1
 2. Item 2
 3. Item 3
-    1. Multiline Item 3, Subitem 1, line 1.
-       Multiline Item 3, Subitem 1, line 2.
+    1. Item 3 Subitem 1 line 1.
+       Item 3 Subitem 1 line 2.
        
-       Multiline Item 3, Subitem 1, line 3.
+       Item 3 Subitem 1 line 3.
     2. Indented Item 2
 4. Item 4
 { blocktype="o list" }
@@ -187,10 +187,10 @@ def CreateCounter(dataset, position):
 - Item 4
 { blocktype="u list" }
 
-- Multiline Item 1, line 1.
-  Multiline Item 1, line 2.
+- Item 1 line 1.
+  Item 1 line 2.
   
-  Multiline Item 1, line 3 after double line break
+  Item 1 line 3 after double line break
 - Item 2
 - Item 3
 - Item 4
@@ -199,10 +199,10 @@ def CreateCounter(dataset, position):
 - Item 1
 - Item 2
 - Item 3
-    - Multiline Item 3, Subitem 1, line 1.
-      Multiline Item 3, Subitem 1, line 2.
+    - Item 3 Subitem 1 line 1.
+      Item 3 Subitem 1 line 2.
       
-      Multiline Item 3, Subitem 1, line 3.
+      Item 3 Subitem 1 line 3.
     - Indented Item 2
 - Item 4
 { blocktype="u list" }
