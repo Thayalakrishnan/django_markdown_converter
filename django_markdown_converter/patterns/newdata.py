@@ -1,5 +1,7 @@
 import re
 from textwrap import dedent
+from django_markdown_converter.patterns.inlines.parser import convert_inline
+
 
 """
 when we grab a paragraph, make sure to merge the lines so that there are non newline characters
@@ -24,6 +26,14 @@ def process_meta_values(content:str="")-> dict:
     PATTERN_RAW = r'^(?P<key>.*?)(?:\:\s*)(?P<value>.*?)(?:\n|$)'
     PATTERN = re.compile(PATTERN_RAW, re.MULTILINE | re.DOTALL)
     kvps = PATTERN.findall(content)
+    if kvps:
+        return dict(kvps)
+    return {}
+
+def between_quotes(content:str="")-> dict:
+    PATTERN_RAW = r'(?:\")(.*?)(?:\")'
+    PATTERN = re.compile(PATTERN_RAW)
+    kvps = PATTERN.search(content)
     if kvps:
         return dict(kvps)
     return {}
@@ -59,6 +69,7 @@ META_PATTERN = {
 """
 - data is between the open and close
 - data is code that needs to converted using Pygments
+- we can post process our code blocks the same as our images
 """
 CODE_PATTERN = {
     "type": "code",
@@ -133,7 +144,10 @@ FOOTNOTE_PATTERN = {
     },
     "props": ["index"],
     "data": ["content"],
-    "processing": {},
+    "processing": {
+        "index": lambda x: int(x),
+        "content": dedent,
+    },
 }
 
 """
@@ -145,9 +159,9 @@ ADMONITION_PATTERN = {
     "pattern": [
         r"^!!!",
         ("type", r" \S+"),
-        r"?",
-        ("title", r" \".+?\""),
-        r"?\n",
+        r"?(?: \"",
+        ("title", r".+?"),
+        r"\")?\n",
         ("content", r"(?:^ {1,}.*?\n)+"),
     ],
     "flags": {
@@ -161,9 +175,21 @@ ADMONITION_PATTERN = {
     "props": ["type", "title"],
     "data": ["content"],
     "processing": {
+        "type": dedent,
+        "title": lambda x: x,
         "content": dedent,
     },
 }
+
+def get_row(line:str="") -> list:
+    """strip leading and trailing pipes,"""
+    line = line.strip("|\n ")
+    #return [convert_inline(_.strip()) for _ in line.split("|")]
+    return [_.strip() for _ in line.split("|")]
+    
+def get_rows(chunk:str="")-> list:
+    lines = chunk.split("\n")
+    return [get_row(line) for line in lines if len(line)]
 
 TABLE_PATTERN = {
     "type": "table",
@@ -182,7 +208,11 @@ TABLE_PATTERN = {
     },
     "props": [],
     "data": ["header", "content"],
-    "processing": {},
+    "processing": {
+        "header": get_row,
+        "break": get_row,
+        "content": get_rows,
+    },
 }
 
 HR_PATTERN = {
@@ -200,7 +230,9 @@ HR_PATTERN = {
     },
     "props": [],
     "data": ["content"],
-    "processing": {},
+    "processing": {
+        "content": lambda x: ""
+    },
 }
 
 HEADING_PATTERN = {
@@ -308,7 +340,7 @@ HTML_PATTERN = {
 def process_list(content):
     padding_multiline = " "*3
     padding_indented = " "*4
-    pattern = re.compile(r"(?:^(?:\d{1,}|\-)+\. )(?P<item>.*\n(?:^ .*?\n)*)", re.MULTILINE)
+    pattern = re.compile(r"(?:^(?:(?:\d{1,}\. )|(?:- ))+)(?P<item>.*\n(?:^ .*?\n)*)", re.MULTILINE)
     items = pattern.findall(content)
     newitems = []
     

@@ -86,14 +86,14 @@ def CreateCounter(dataset, position):
 | ----------- | ----------- |
 | Row 1 Column 1| Row 1 Column 2 |
 | Row 2 Column 1| Row 2 Column 2 |
-{ blocktype="table" id="small-table" caption="small table of values" }
+{ blocktype="table" id="small-table" caption="small table" }
 
 
 | Column 1 Title | Column 2 Title |
 | ----------- | ----------- |
 | `Row 1 Column 1` | Row 1 Column 2 |
 | Row 2 Column 1| Row 2 Column 2 |
-{ blocktype="table" id="small-table" caption="small table of values" }
+{ blocktype="table" id="small-table" caption="small table with inline markup" }
 
 ## Blockquote
 { blocktype="heading" }
