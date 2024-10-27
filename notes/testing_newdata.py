@@ -44,11 +44,6 @@ class PatternAttributes:
     def __init__(self, pattern_attrs:dict=""):
         self.nested = pattern_attrs.get("nested", False)
         self.inlineMarkup = pattern_attrs.get("inlineMarkup", False)
-        
-class PatternProcessing:
-    def __init__(self, pattern_attrs:dict=""):
-        self.nested = pattern_attrs.get("nested", False)
-        self.inlineMarkup = pattern_attrs.get("inlineMarkup", False)
     
 class Pattern:
     #BLOCK_PATTERN, BLOCK_LOOKUP, PATTERN_LOOKUP
@@ -103,13 +98,12 @@ class Pattern:
         props = self.get_props(groupdict)
         data = self.get_data(groupdict)
         
-        data = self.process_data(data)
+        self.process_data(data)
         return {
             "type": self.type,
             "props": props,
             "data": data,
         }
-
 
 def create_block_pattern():
     for _ in PATTERNS:
@@ -118,38 +112,13 @@ def create_block_pattern():
 
 BLOCK_PATTERN, BLOCK_LOOKUP, PATTERN_LOOKUP = create_block_pattern()
 
-def extract_props(groupdict:dict={}) -> dict:
-    props = groupdict.get("props", {})
-    if props:
-        props = convert_props(props)
-    return props
-
-
 def extract_block_and_attrs(groupdict:dict={}) -> dict:
     if groupdict["newline"]:
         return None
-    
     # find the group that matched
     group = next((key for key,value in groupdict.items() if value), None)
     if not group:
         return None
-    
-    data = BLOCK_LOOKUP[group].match(groupdict[group]).groupdict()
-    pattern = PATTERN_LOOKUP[group]
-    
-    # process attributes
-    attributes = pattern.get("attributes", {})
-    
-    processing = pattern.get("processing", {})
-    #if processing:
-    for key, process in processing.items():
-        data[key] = process(data[key])
-    
-    #return {
-    #    "type": group, 
-    #    "props": extract_props(groupdict), 
-    #    "data": data
-    #}
     
     return Pattern.PAT_INSTANCE_LOOKUP[group].convert(groupdict)
 
