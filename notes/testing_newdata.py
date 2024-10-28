@@ -46,20 +46,44 @@ class PatternAttributes:
         self.inlineMarkup = pattern_attrs.get("inlineMarkup", False)
         
 class Pattern:
-    def __init__(self, name:str="", pattern_list:list=[], flags:str=""):
+    def __init__(self, manager:str=None, name:str="", pattern_list:list=[], flags:str=""):
+        self.manager = manager
         self.name = name
-        self.pattern_list = pattern_list
-        self.flags = flags
         self.groups = [p[0] for p in pattern_list if isinstance(p, tuple)]
-        
         self.matching = create_pattern_for_matching(name, pattern_list, flags) 
         self.extracting = create_pattern_for_extracting(name, pattern_list, flags) 
+        
+    def get_props(self, groupdict:dict={}) -> dict:
+        props = groupdict.get("props", {})
+        if props:
+            props = convert_props(props)
+        return props
+    
+    def get_data(self, groupdict:dict={}) -> dict:
+        match = self.pattern_extract.match(groupdict[self.type])
+        if match:
+            return match.groupdict()
+        return {}
+    
+    def process_data(self, data:dict={}) -> dict:
+        for key, process in self.processing.items():
+            data[key] = process(data[key])
+    
+    def convert(self, groupdict:dict={}) -> dict:
+        props = self.get_props(groupdict)
+        data = self.get_data(groupdict)
+        self.process_data(data)
+        return {
+            "type": self.type,
+            "props": props,
+            "data": data,
+        }
 
         
 class PatternManager:
     PROPS_PATTERN = r"(?m:^\{ *?(?P<props>.*?) *?\}\n)?"
     BLOCK_PATTERN = []
-    INSTANCE_LOOKUP = {}
+    PATTERN_LOOKUP = {}
     
     def __init__(self, pattern_obj:dict=""):
         self.manager = None
@@ -75,7 +99,7 @@ class PatternManager:
         self.pattern_extract = create_pattern_for_extracting(name, pattern_list, flags) 
         
         self.BLOCK_PATTERN.append(pattern_match)
-        self.INSTANCE_LOOKUP[name] = self
+        self.PATTERN_LOOKUP[name] = self
         
     @classmethod
     def build_lookups(cls):
@@ -108,13 +132,6 @@ class PatternManager:
             "data": data,
         }
 
-#def create_block_pattern():
-#    for _ in PATTERNS:
-#        PatternManager(_)
-#    PatternManager.build_lookups()
-#create_block_pattern()
-
-
 def extract_block_and_attrs(groupdict:dict={}) -> dict:
     if groupdict["newline"]:
         return None
@@ -122,7 +139,7 @@ def extract_block_and_attrs(groupdict:dict={}) -> dict:
     group = next((key for key,value in groupdict.items() if value), None)
     if not group:
         return None
-    return PatternManager.INSTANCE_LOOKUP[group].convert(groupdict)
+    return PatternManager.PATTERN_LOOKUP[group].convert(groupdict)
 
 
 def run_my_mega_tokenizer_with_attrs(source:str=""):
