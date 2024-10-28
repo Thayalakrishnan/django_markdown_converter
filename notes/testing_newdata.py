@@ -2,7 +2,7 @@ import re
 from django_markdown_converter.patterns.newdata import PATTERNS
 from django_markdown_converter.helpers.processors import convert_props, process_input_content
 from notes.tools import get_source
-from typing import Callable
+
 
 def flag_setter(flags:dict={}):
     f = ""
@@ -44,23 +44,27 @@ class PatternAttributes:
     def __init__(self, pattern_attrs:dict=""):
         self.nested = pattern_attrs.get("nested", False)
         self.inlineMarkup = pattern_attrs.get("inlineMarkup", False)
-        
+
+
 class Pattern:
-    def __init__(self, manager:str=None, name:str="", pattern_list:list=[], flags:str=""):
+    def __init__(self, manager:str=None, name:str="", pattern_list:list=[], flags:str="", processing:dict={},attributes:PatternAttributes=None):
         self.manager = manager
         self.name = name
         self.groups = [p[0] for p in pattern_list if isinstance(p, tuple)]
         self.matching = create_pattern_for_matching(name, pattern_list, flags) 
-        self.extracting = create_pattern_for_extracting(name, pattern_list, flags) 
-        
-    def get_props(self, groupdict:dict={}) -> dict:
+        self.extracting = create_pattern_for_extracting(name, pattern_list, flags)
+        self.processing = processing
+        self.attributes = attributes
+
+    @staticmethod
+    def get_props(groupdict:dict={}) -> dict:
         props = groupdict.get("props", {})
         if props:
             props = convert_props(props)
         return props
     
     def get_data(self, groupdict:dict={}) -> dict:
-        match = self.pattern_extract.match(groupdict[self.type])
+        match = self.extracting.match(groupdict[self.name])
         if match:
             return match.groupdict()
         return {}
@@ -74,112 +78,95 @@ class Pattern:
         data = self.get_data(groupdict)
         self.process_data(data)
         return {
-            "type": self.type,
+            "name": self.name,
             "props": props,
             "data": data,
         }
 
-        
-class PatternManager:
-    PROPS_PATTERN = r"(?m:^\{ *?(?P<props>.*?) *?\}\n)?"
-    BLOCK_PATTERN = []
-    PATTERN_LOOKUP = {}
+class Manager:
     
-    def __init__(self, pattern_obj:dict=""):
-        self.manager = None
-        self.type = pattern_obj.get("type", {})
-        self.attributes = PatternAttributes(pattern_obj.get("attributes", {}))
-        self.processing = pattern_obj.get("processing", {})
+    def __init__(self, patterns:list=[]):
+        self.PROPS_PATTERN = r"(?m:^\{ *?(?P<props>.*?) *?\}\n)?"
+        self.BLOCK_PATTERN = []
+        self.PATTERN_LOOKUP = {}
+        self.BANK = []
         
-        name = pattern_obj.get("type", {})
+        for _ in patterns:
+            self.add_pattern(_)
+            
+        self.BLOCK_PATTERN = REGEX_GROUP("|".join(self.BLOCK_PATTERN))
+        self.BLOCK_PATTERN = re.compile(f"(?:{self.BLOCK_PATTERN})" + self.PROPS_PATTERN)
+    
+    def add_pattern(self, pattern_obj:dict={}):
+        name = pattern_obj.get("name", "")
+        attributes = PatternAttributes(pattern_obj.get("attributes", {}))
+        processing = pattern_obj.get("processing", {})
         flags = flag_setter(pattern_obj.get("flags", {}))
         pattern_list = pattern_obj.get("pattern", [])
-        
-        pattern_match = create_pattern_for_matching(name, pattern_list, flags) 
-        self.pattern_extract = create_pattern_for_extracting(name, pattern_list, flags) 
-        
-        self.BLOCK_PATTERN.append(pattern_match)
-        self.PATTERN_LOOKUP[name] = self
-        
-    @classmethod
-    def build_lookups(cls):
-        cls.BLOCK_PATTERN = REGEX_GROUP("|".join(cls.BLOCK_PATTERN))
-        cls.BLOCK_PATTERN = re.compile(f"(?:{cls.BLOCK_PATTERN})" + cls.PROPS_PATTERN)
+        pattern = Pattern(self, name, pattern_list, flags, processing, attributes) 
+        self.BLOCK_PATTERN.append(pattern.matching)
+        self.PATTERN_LOOKUP[name] = pattern
     
-    def get_props(self, groupdict:dict={}) -> dict:
-        props = groupdict.get("props", {})
-        if props:
-            props = convert_props(props)
-        return props
+    @staticmethod
+    def get_name(groupdict:dict={}) -> dict:
+        if groupdict["newline"]:
+            return ""
+        # find the group that matched
+        name = next((key for key,value in groupdict.items() if value), None)
+        if not name:
+            return ""
+        return name
     
-    def get_data(self, groupdict:dict={}) -> dict:
-        match = self.pattern_extract.match(groupdict[self.type])
-        if match:
-            return match.groupdict()
-        return {}
-    
-    def process_data(self, data:dict={}) -> dict:
-        for key, process in self.processing.items():
-            data[key] = process(data[key])
-    
-    def convert(self, groupdict:dict={}) -> dict:
-        props = self.get_props(groupdict)
-        data = self.get_data(groupdict)
-        self.process_data(data)
-        return {
-            "type": self.type,
-            "props": props,
-            "data": data,
-        }
+    def get_pattern(self, name:str="") -> Pattern:
+        return self.PATTERN_LOOKUP[name]
 
-def extract_block_and_attrs(groupdict:dict={}) -> dict:
-    if groupdict["newline"]:
-        return None
-    # find the group that matched
-    group = next((key for key,value in groupdict.items() if value), None)
-    if not group:
-        return None
-    return PatternManager.PATTERN_LOOKUP[group].convert(groupdict)
+    def get_block(self, name:str="", groupdict:dict={}) -> dict:
+        pattern = self.get_pattern(name)
+        block = pattern.convert(groupdict)
+        
+        return block
+    
+    def get_matches(self, source:str=""):
+        matches = self.BLOCK_PATTERN.finditer(source)
+        for match in matches:
+            groupdict = match.groupdict()
+            name = self.get_name(groupdict)
+            if name:
+                yield self.get_block(name, groupdict)
+    
+    def convert(self, source:str="") -> list:
+        blocks = []
+        matches = self.get_matches(source)
+        for _ in matches:
+            blocks.append(_)
+            
+        return blocks
+    
+    def tokenize(self, source:str=""):
+        matches = self.BLOCK_PATTERN.finditer(source)
+        for match in matches:
+            groupdict = match.groupdict()
+            name = self.get_name(groupdict)
+            if name:
+                yield name
 
 
-def run_my_mega_tokenizer_with_attrs(source:str=""):
-    
-    for _ in PATTERNS:
-        PatternManager(_)
-    PatternManager.build_lookups()
-    
-    #matches = re.finditer(PatternManager.BLOCK_PATTERN, source)
-    matches = PatternManager.BLOCK_PATTERN.finditer(source)
-    for _ in matches:
-        block = extract_block_and_attrs(_.groupdict())
-        if block:
-            yield block
 
 def run_new_mega_tokenizer_with_attrs_in_console():
     PATH_TO_FILE = "notes/examples/small/markdown.md"
     source = get_source(PATH_TO_FILE)
-    tks = run_my_mega_tokenizer_with_attrs(source)
-    
-    content = []
-    for _ in tks:
-        content.append(_)
-    print(content)
+    pm = Manager(PATTERNS)
+    converted = pm.convert(source)
+    print(converted)
     print(f"done")
     
+
 run_new_mega_tokenizer_with_attrs_in_console()
 
+PM = Manager(PATTERNS)
 
-
-
-
-
-
-
-
-
-#def run_new_mega_tokenizer_with_attrs(source:str=""):
-#    matches = re.finditer(PatternManager.BLOCK_PATTERN, source)
-#    for _ in matches:
-#        block = extract_block_and_attrs(_.groupdict())
-#        if block:
-#            yield block
+def run_new_mega_tokenizer_with_attrs(source:str=""):
+    #pm = Manager(PATTERNS)
+    tokens = PM.tokenize(source)
+    for _ in tokens:
+        yield _

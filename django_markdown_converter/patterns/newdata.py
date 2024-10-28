@@ -44,7 +44,7 @@ def between_quotes(content:str="")-> dict:
 - data is key value pairs that need to be processed
 """
 META_PATTERN = {
-    "type": "meta",
+    "name": "meta",
     "pattern": [
         r"^---*?\n",
         ("content", r".*?"),
@@ -72,7 +72,7 @@ META_PATTERN = {
 - we can post process our code blocks the same as our images
 """
 CODE_PATTERN = {
-    "type": "code",
+    "name": "code",
     "pattern": [
         r"^```",
         ("language", r"\S+"),
@@ -100,7 +100,7 @@ CODE_PATTERN = {
 - has a prefix that needs to be removed
 """
 DLIST_PATTERN = {
-    "type": "dlist",
+    "name": "dlist",
     # prefix:  ": "
     "pattern": [
         ("term", r"^.*?\n"),
@@ -127,7 +127,7 @@ DLIST_PATTERN = {
 - has a prefix that needs to be removed
 """
 FOOTNOTE_PATTERN = {
-    "type": "footnote",
+    "name": "footnote",
     "pattern": [
         r"^\[\^",
         ("index", r".+?"),
@@ -155,7 +155,7 @@ FOOTNOTE_PATTERN = {
 - has a prefix that needs to be removed
 """
 ADMONITION_PATTERN = {
-    "type": "admonition",
+    "name": "admonition",
     "pattern": [
         r"^!!!",
         ("type", r" \S+"),
@@ -192,7 +192,7 @@ def get_rows(chunk:str="")-> list:
     return [get_row(line) for line in lines if len(line)]
 
 TABLE_PATTERN = {
-    "type": "table",
+    "name": "table",
     "pattern": [
         ("header", r"^\|.*?\|\n"),
         ("break", r"^\|.*?\|\n"),
@@ -216,7 +216,7 @@ TABLE_PATTERN = {
 }
 
 HR_PATTERN = {
-    "type": "hr",
+    "name": "hr",
     "pattern": [
         ("content", r"^[\*\-]{3,}\n"),
     ],
@@ -236,7 +236,7 @@ HR_PATTERN = {
 }
 
 HEADING_PATTERN = {
-    "type": "heading",
+    "name": "heading",
     "pattern": [
         ("level", r"^\#{1,}"),
         ("content", r".*?"),
@@ -259,7 +259,7 @@ HEADING_PATTERN = {
 }
 
 IMAGE_PATTERN = {
-    "type": "image",
+    "name": "image",
     "pattern": [
         r"^\!\[",
         ("alt", r".*?"),
@@ -287,7 +287,7 @@ IMAGE_PATTERN = {
 }
 
 SVG_PATTERN = {
-    "type": "svg",
+    "name": "svg",
     "pattern": [
         r"^<svg",
         ("attrs", r"[^>]*"),
@@ -312,7 +312,7 @@ SVG_PATTERN = {
 }
 
 HTML_PATTERN = {
-    "type": "svg",
+    "name": "svg",
     "pattern": [
         r"^<(?P<htmltag>\S+)",
         ("attrs", r"[^>]*"),
@@ -353,11 +353,11 @@ def process_list(content):
                 line = line.removeprefix(padding_multiline)
             lines.append(line)
         lines = "\n".join(lines)
-        newitems.append({"type": "item", "data": lines})
+        newitems.append({"name": "item", "data": lines})
     return newitems
 
 ULIST_PATTERN = {
-    "type": "ulist",
+    "name": "ulist",
     "pattern": [
         ("items", r"(?:^- .*\n(?:^ .*?\n)*)+"),
     ],
@@ -378,7 +378,7 @@ ULIST_PATTERN = {
 
 
 OLIST_PATTERN = {
-    "type": "olist",
+    "name": "olist",
     "pattern": [
         ("items", r"(?:^\d+\. .*\n(?:^ .*?\n)*)+"),
     ],
@@ -398,7 +398,7 @@ OLIST_PATTERN = {
 }
 
 BLOCKQUOTE_PATTERN = {
-    "type": "blockquote",
+    "name": "blockquote",
     "pattern": [
         ("content", r"(?:^>.*?\n)+"),
     ],
@@ -418,7 +418,7 @@ BLOCKQUOTE_PATTERN = {
 }
 
 PARAGRAPH_PATTERN = {
-    "type": "paragraph",
+    "name": "paragraph",
     "pattern": [
         ("content", r"^.+?\n"),
     ],
@@ -438,7 +438,7 @@ PARAGRAPH_PATTERN = {
 }
 
 EMPTYLINE_PATTERN = {
-    "type": "emptyline",
+    "name": "emptyline",
     "pattern": [
         r"^\n",
     ],
@@ -456,7 +456,7 @@ EMPTYLINE_PATTERN = {
 }
 
 NEWLINE_PATTERN = {
-    "type": "newline",
+    "name": "newline",
     "pattern": [
         r"\n",
     ],
@@ -474,7 +474,7 @@ NEWLINE_PATTERN = {
 }
 
 NONE_PATTERN = {
-    "type": "none",
+    "name": "none",
     "pattern": [
         r".",
     ],
