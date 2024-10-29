@@ -43,18 +43,27 @@ def create_pattern_for_extracting(name:str="", pattern_list:list=[], flags:str="
 class PatternAttributes:
     def __init__(self, pattern_attrs:dict=""):
         self.nested = pattern_attrs.get("nested", False)
-        self.inlineMarkup = pattern_attrs.get("inlineMarkup", False)
+        self.inlinemarkup = pattern_attrs.get("inlinemarkup", False)
 
 
 class Pattern:
-    def __init__(self, manager:str=None, name:str="", pattern_list:list=[], flags:str="", processing:dict={},attributes:PatternAttributes=None):
+    NESTED_BANK = []
+    
+    def __init__(self, manager:str=None, pattern_obj:dict={}):
         self.manager = manager
-        self.name = name
+        self.name = pattern_obj.get("name", "")
+        self.processing = pattern_obj.get("processing", {})
+        self.data_key = pattern_obj.get("data", "content")
+        self.attributes = PatternAttributes(pattern_obj.get("attributes", {}))
+        self.flags = flag_setter(pattern_obj.get("flags", {}))
+        
+        self.BANK = []
+        
+        pattern_list = pattern_obj.get("pattern", [])
+        
         self.groups = [p[0] for p in pattern_list if isinstance(p, tuple)]
-        self.matching = create_pattern_for_matching(name, pattern_list, flags) 
-        self.extracting = create_pattern_for_extracting(name, pattern_list, flags)
-        self.processing = processing
-        self.attributes = attributes
+        self.matching = create_pattern_for_matching(self.name, pattern_list, self.flags) 
+        self.extracting = create_pattern_for_extracting(self.name, pattern_list, self.flags)
 
     @staticmethod
     def get_props(groupdict:dict={}) -> dict:
@@ -73,15 +82,34 @@ class Pattern:
         for key, process in self.processing.items():
             data[key] = process(data[key])
     
-    def convert(self, groupdict:dict={}) -> dict:
+    def get_block(self, groupdict:dict={}) -> dict:
         props = self.get_props(groupdict)
-        data = self.get_data(groupdict)
-        self.process_data(data)
-        return {
+        #data = self.get_data(groupdict)
+        ret = self.get_data(groupdict)
+        
+        self.process_data(ret)
+        
+        data = ret.pop(self.data_key)
+        
+        if ret:
+            if props:
+                ret.update(props)
+        
+        block = {
             "name": self.name,
-            "props": props,
+            "props": ret,
             "data": data,
         }
+        return block
+    
+    def convert(self, groupdict:dict={}) -> dict:
+        block = self.get_block(groupdict)
+        self.BANK.append(block)
+        if self.attributes.nested:
+            self.NESTED_BANK.append(block)
+            block["data"] = self.manager.nested_convert(block["data"])
+        return block
+
 
 class Manager:
     
@@ -98,18 +126,15 @@ class Manager:
         self.BLOCK_PATTERN = re.compile(f"(?:{self.BLOCK_PATTERN})" + self.PROPS_PATTERN)
     
     def add_pattern(self, pattern_obj:dict={}):
-        name = pattern_obj.get("name", "")
-        attributes = PatternAttributes(pattern_obj.get("attributes", {}))
-        processing = pattern_obj.get("processing", {})
-        flags = flag_setter(pattern_obj.get("flags", {}))
-        pattern_list = pattern_obj.get("pattern", [])
-        pattern = Pattern(self, name, pattern_list, flags, processing, attributes) 
+        pattern = Pattern(self, pattern_obj) 
         self.BLOCK_PATTERN.append(pattern.matching)
-        self.PATTERN_LOOKUP[name] = pattern
+        self.PATTERN_LOOKUP[pattern.name] = pattern
     
     @staticmethod
     def get_name(groupdict:dict={}) -> dict:
         if groupdict["newline"]:
+            return ""
+        if groupdict["none"]:
             return ""
         # find the group that matched
         name = next((key for key,value in groupdict.items() if value), None)
@@ -123,7 +148,7 @@ class Manager:
     def get_block(self, name:str="", groupdict:dict={}) -> dict:
         pattern = self.get_pattern(name)
         block = pattern.convert(groupdict)
-        
+        self.BANK.append(block)
         return block
     
     def get_matches(self, source:str=""):
@@ -134,13 +159,22 @@ class Manager:
             if name:
                 yield self.get_block(name, groupdict)
     
+    def nested_convert(self, source) -> list:
+        if isinstance(source, list):
+            for item in source:
+                item["data"] = self.nested_convert(item["data"])
+            return source
+        elif isinstance(source, str):
+            return self.convert(source)
+    
     def convert(self, source:str="") -> list:
         blocks = []
         matches = self.get_matches(source)
         for _ in matches:
             blocks.append(_)
-            
-        return blocks
+        if len(blocks):
+            return blocks
+        return source
     
     def tokenize(self, source:str=""):
         matches = self.BLOCK_PATTERN.finditer(source)
@@ -149,24 +183,32 @@ class Manager:
             name = self.get_name(groupdict)
             if name:
                 yield name
-
+                
+    def loop_over_nested_blocks(self):
+        for _ in Pattern.NESTED_BANK:
+            print(_)
 
 
 def run_new_mega_tokenizer_with_attrs_in_console():
     PATH_TO_FILE = "notes/examples/small/markdown.md"
+    PATH_TO_FILE = "notes/examples/list/markdown.md"
     source = get_source(PATH_TO_FILE)
     pm = Manager(PATTERNS)
     converted = pm.convert(source)
     print(converted)
+    print("NESTED --------------------------------------")
+    pm.loop_over_nested_blocks()
     print(f"done")
     
 
+
 run_new_mega_tokenizer_with_attrs_in_console()
 
-PM = Manager(PATTERNS)
 
-def run_new_mega_tokenizer_with_attrs(source:str=""):
-    #pm = Manager(PATTERNS)
-    tokens = PM.tokenize(source)
-    for _ in tokens:
-        yield _
+#PM = Manager(PATTERNS)
+#
+#def run_new_mega_tokenizer_with_attrs(source:str=""):
+#    #pm = Manager(PATTERNS)
+#    tokens = PM.tokenize(source)
+#    for _ in tokens:
+#        yield _

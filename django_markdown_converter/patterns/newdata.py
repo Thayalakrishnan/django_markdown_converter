@@ -55,11 +55,11 @@ META_PATTERN = {
         "DOTALL": True,
     },
     "attributes": {
-        "hasNested": False,
-        "hasInlineMarkup": False,
+        "nested": False,
+        "inlinemarkup": False,
     },
     "props": [],
-    "data": ["content"],
+    "data": "content",
     "processing": {
         "content": process_meta_values,
     },
@@ -85,11 +85,11 @@ CODE_PATTERN = {
         "DOTALL": False,
     },
     "attributes": {
-        "hasNested": False,
-        "hasInlineMarkup": False,
+        "nested": False,
+        "inlinemarkup": False,
     },
     "props": ["language"],
-    "data": ["content"],
+    "data": "content",
     "processing": {
         "content": lambda x: x,
     },
@@ -99,26 +99,43 @@ CODE_PATTERN = {
 - data has a specific structure
 - has a prefix that needs to be removed
 """
+def process_dlist(source):
+    pattern = re.compile(r"(?P<term>^.*?\n)(?P<definition>(?:^\: .*?\n)+)", re.MULTILINE)
+    match = pattern.match(source)
+    groupdict = match.groupdict()
+    term = groupdict.get("term", [])
+    definition = groupdict.get("definition", [])
+    return {
+        "term": term,
+        "definition": definition
+    }
+
 DLIST_PATTERN = {
     "name": "dlist",
     # prefix:  ": "
+    #"pattern": [
+    #    ("term", r"^.*?\n"),
+    #    ("definition", r"(?:^\: .*?\n)+"),
+    #],
     "pattern": [
-        ("term", r"^.*?\n"),
-        ("definition", r"(?:^\: .*?\n)+"),
+        ("content", r"(?:^.*?\n)(?:^\: .*?\n)+")
     ],
     "flags": {
         "MULTILINE": True,
         "DOTALL": False,
     },
     "attributes": {
-        "hasNested": False,
-        "hasInlineMarkup": True,
+        "nested": False,
+        "inlinemarkup": True,
     },
     "props": [],
-    "data": ["term", "definition"],
+    "data": "content",
+    #"processing": {
+    #    "term": lambda x: x.strip(),
+    #    "definition": LAMBDA_REMOVE_PREFIX_2,
+    #},
     "processing": {
-        "term": lambda x: x.strip(),
-        "definition": LAMBDA_REMOVE_PREFIX_2,
+        "content": process_dlist
     },
 }
 
@@ -139,11 +156,11 @@ FOOTNOTE_PATTERN = {
         "DOTALL": False,
     },
     "attributes": {
-        "hasNested": True,
-        "hasInlineMarkup": False,
+        "nested": True,
+        "inlinemarkup": False,
     },
     "props": ["index"],
-    "data": ["content"],
+    "data": "content",
     "processing": {
         "index": lambda x: int(x),
         "content": dedent,
@@ -169,11 +186,11 @@ ADMONITION_PATTERN = {
         "DOTALL": False,
     },
     "attributes": {
-        "hasNested": True,
-        "hasInlineMarkup": False,
+        "nested": True,
+        "inlinemarkup": False,
     },
     "props": ["type", "title"],
-    "data": ["content"],
+    "data": "content",
     "processing": {
         "type": dedent,
         "title": lambda x: x,
@@ -191,27 +208,39 @@ def get_rows(chunk:str="")-> list:
     lines = chunk.split("\n")
     return [get_row(line) for line in lines if len(line)]
 
+def process_table(source):
+    pattern = re.compile(r"(?P<header>^\|.*?\|\n)(?:^\|.*?\|\n)(?P<body>(?:^\|.*?\|\n)+)", re.MULTILINE)
+    match = pattern.match(source)
+    groupdict = match.groupdict()
+    header = groupdict.get("header", [])
+    body = groupdict.get("body", [])
+    return {
+        "header": get_row(header),
+        "body": get_rows(body)
+    }
+
 TABLE_PATTERN = {
     "name": "table",
+    #"pattern": [
+    #    ("header", r"^\|.*?\|\n"),
+    #    ("break", r"^\|.*?\|\n"),
+    #    ("content", r"(?:^\|.*?\|\n)+"),
+    #],
     "pattern": [
-        ("header", r"^\|.*?\|\n"),
-        ("break", r"^\|.*?\|\n"),
-        ("content", r"(?:^\|.*?\|\n)+"),
+        ("content", r"(?:^\|.*?\|\n){3,}"),
     ],
     "flags": {
         "MULTILINE": True,
         "DOTALL": False,
     },
     "attributes": {
-        "hasNested": False,
-        "hasInlineMarkup": True,
+        "nested": False,
+        "inlinemarkup": True,
     },
     "props": [],
-    "data": ["header", "content"],
+    "data": "content",
     "processing": {
-        "header": get_row,
-        "break": get_row,
-        "content": get_rows,
+        "content": process_table,
     },
 }
 
@@ -225,11 +254,11 @@ HR_PATTERN = {
         "DOTALL": False,
     },
     "attributes": {
-        "hasNested": False,
-        "hasInlineMarkup": False,
+        "nested": False,
+        "inlinemarkup": False,
     },
     "props": [],
-    "data": ["content"],
+    "data": "content",
     "processing": {
         "content": lambda x: ""
     },
@@ -247,11 +276,11 @@ HEADING_PATTERN = {
         "DOTALL": False,
     },
     "attributes": {
-        "hasNested": False,
-        "hasInlineMarkup": True,
+        "nested": False,
+        "inlinemarkup": True,
     },
-    "props": ["level", "content"],
-    "data": ["content"],
+    "props": ["level",],
+    "data": "content",
     "processing": {
         "level": lambda x: len(x),
         "content": lambda x: x.strip(),
@@ -274,11 +303,11 @@ IMAGE_PATTERN = {
         "DOTALL": True,
     },
     "attributes": {
-        "hasNested": False,
-        "hasInlineMarkup": False,
+        "nested": False,
+        "inlinemarkup": False,
     },
     "props": ["alt", "title"],
-    "data": ["src"],
+    "data": "src",
     "processing": {
         "alt": lambda x: x,
         "title": lambda x: x,
@@ -300,11 +329,11 @@ SVG_PATTERN = {
         "DOTALL": True,
     },
     "attributes": {
-        "hasNested": False,
-        "hasInlineMarkup": False,
+        "nested": False,
+        "inlinemarkup": False,
     },
     "props": ["attrs"],
-    "data": ["data"],
+    "data": "content",
     "processing": {
         "attrs": lambda x: x,
         "content": lambda x: x,
@@ -326,74 +355,85 @@ HTML_PATTERN = {
         "DOTALL": True,
     },
     "attributes": {
-        "hasNested": False,
-        "hasInlineMarkup": False,
+        "nested": False,
+        "inlinemarkup": False,
     },
     "props": ["attrs"],
-    "data": ["content"],
+    "data": "content",
     "processing": {
         "attrs": lambda x: x,
         "content": lambda x: x,
     },
 }
 
-def process_list(content):
-    padding_multiline = " "*3
-    padding_indented = " "*4
-    pattern = re.compile(r"(?:^(?:(?:\d{1,}\. )|(?:- ))+)(?P<item>.*\n(?:^ .*?\n)*)", re.MULTILINE)
-    items = pattern.findall(content)
+
+def remove_padding(source:str=""):
+    padding_pattern = re.compile(r"^ {0,}", re.MULTILINE)
+    m = padding_pattern.match(source)
+    padding = 0
+    if m:
+        padding = len(m.group(0))
+    source = "\n".join([line.removeprefix(" "*padding) for line in source.splitlines()])
+    return source
+
+def process_list(source, pattern):
     newitems = []
-    
-    for item in items:
-        lines = []
-        for line in item.splitlines():
-            if line.startswith(padding_indented):
-                line = line.removeprefix(padding_indented)
-            else:
-                line = line.removeprefix(padding_multiline)
-            lines.append(line)
-        lines = "\n".join(lines)
-        newitems.append({"name": "item", "data": lines})
+    items = pattern.findall(source)
+    for first, rest in items:
+        if rest:
+            content = "".join([first, remove_padding(rest)])
+        else:
+            content = first.strip()
+        newitems.append({"name": "item", "data": content})
     return newitems
+
+def process_ulist(source):
+    pattern = re.compile(r"(?:^- )(?P<first>.*\n)(?P<rest>(?:^ .*?\n)*)", re.MULTILINE)
+    return process_list(source, pattern)
 
 ULIST_PATTERN = {
     "name": "ulist",
     "pattern": [
-        ("items", r"(?:^- .*\n(?:^ .*?\n)*)+"),
+        ("content", r"(?:^- .*\n(?:^ .*?\n)*)+"),
     ],
     "flags": {
         "MULTILINE": True,
         "DOTALL": False,
     },
     "attributes": {
-        "hasNested": True,
-        "hasInlineMarkup": False,
+        "nested": True,
+        "inlinemarkup": False,
     },
-    "props": ["items", "level", "marker", "content"],
-    "data": [],
+    #"props": ["items", "level", "marker", "content"],
+    "props": ["content"],
+    "data": "content",
     "processing": {
-        "items": process_list,
+        "content": process_ulist,
     },
 }
 
+def process_olist(source):
+    pattern = re.compile(r"(?:^\d{1,}\. )(?P<first>.*\n)(?P<rest>(?:^ .*?\n)*)", re.MULTILINE)
+    return process_list(source, pattern)
 
 OLIST_PATTERN = {
     "name": "olist",
     "pattern": [
-        ("items", r"(?:^\d+\. .*\n(?:^ .*?\n)*)+"),
+        ("content", r"(?:^\d+\. .*\n(?:^ .*?\n)*)+"),
     ],
     "flags": {
         "MULTILINE": True,
         "DOTALL": False,
     },
     "attributes": {
-        "hasNested": False,
-        "hasInlineMarkup": False,
+        "nested": False,
+        "inlinemarkup": False,
     },
-    "props": ["items", "level", "marker", "content"],
-    "data": [],
+    #"props": ["items", "level", "marker", "content"],
+    "props": ["content"],
+    "data": "content",
     "processing": {
-        "items": process_list,
+        "content": process_olist,
     },
 }
 
@@ -407,11 +447,11 @@ BLOCKQUOTE_PATTERN = {
         "DOTALL": False,
     },
     "attributes": {
-        "hasNested": True,
-        "hasInlineMarkup": False,
+        "nested": True,
+        "inlinemarkup": False,
     },
     "props": [],
-    "data": ["content"],
+    "data": "content",
     "processing": {
         "content": LAMBDA_REMOVE_PREFIX_2,
     },
@@ -427,11 +467,11 @@ PARAGRAPH_PATTERN = {
         "DOTALL": False
     },
     "attributes": {
-        "hasNested": False,
-        "hasInlineMarkup": True,
+        "nested": False,
+        "inlinemarkup": True,
     },
     "props": [],
-    "data": ["content"],
+    "data": "content",
     "processing": {
         "content": lambda x: x,
     },
@@ -447,8 +487,8 @@ EMPTYLINE_PATTERN = {
         "DOTALL": False,
     },
     "attributes": {
-        "hasNested": False,
-        "hasInlineMarkup": False,
+        "nested": False,
+        "inlinemarkup": False,
     },
     "props": [],
     "data": [],
@@ -465,8 +505,8 @@ NEWLINE_PATTERN = {
         "DOTALL": False,
     },
     "attributes": {
-        "hasNested": False,
-        "hasInlineMarkup": False,
+        "nested": False,
+        "inlinemarkup": False,
     },
     "props": [],
     "data": [],
@@ -483,8 +523,8 @@ NONE_PATTERN = {
         "DOTALL": False,
     },
     "attributes": {
-        "hasNested": False,
-        "hasInlineMarkup": False,
+        "nested": False,
+        "inlinemarkup": False,
     },
     "props": [],
     "data": [],
