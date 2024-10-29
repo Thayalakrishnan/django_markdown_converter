@@ -3,35 +3,36 @@ import re
 from textwrap import dedent
 
 
-source = """- Item 1.1
-- Item 2.1
+source = """- Item 1a
+- Item 2a
   
-  Item 2.2
-- Item 3.1
-- Item 4.1
-    - Item 4.1.1
-      Item 4.1.2
+  Item 2b
+- Item 3a
+- Item 4a
+    - Item 4a.1a
+      Item 4a.1b
       
-      Item 4.1.3
-        - Item 4.1.3.1
-          Item 4.1.3.2
-          
-          Item 4.1.3.3
-    - Item 4.1.4
-    - Item 4.1.5
+      Item 4a.1c
+        - Item 4a.1c.1a
+        - Item 4a.1c.2a
+        - Item 4a.1c.3a
+    - Item 4a.2a
+    - Item 4a.3a
       
       ```python
       for p in range(3):
           print(p)
       ```
       
-      Item 4.1.6
-    - Item 4.1.7
-        - Item 4.1.7.1
-    - Item 4.1.8
-- Item 5.1
+      Item 4a.3b
+    - Item 4a.4a
+        - Item 4a.4a.1a
+        - Item 4a.4a.2a
+    - Item 4a.5a
+- Item 5a
 
 """
+#%%
 
 pattern = re.compile(r"(?:^- )(?P<first>.*\n)(?P<rest>(?:^ .*?\n)*)", re.MULTILINE)
 items = pattern.findall(source)
@@ -56,4 +57,55 @@ for first,rest in items:
 
 [print(_) for _ in newitems]
 
+
+
+#%%
+
+pattern = re.compile(r"(?:^- )(?P<first>.*\n)(?P<rest>(?:^ .*?\n)*)", re.MULTILINE)
+pattern = re.compile(r"(?P<padding>^ *?)(?P<marker>- )(?P<item>.*?)(?=(?:^ *?- )|(?:^\n))", re.MULTILINE | re.DOTALL)
+pattern = re.compile(r"(?P<padding>^ *?)(?:- )(?P<item>.*?)(?=(?:^ *?- )|(?:^\n))", re.MULTILINE | re.DOTALL)
+
+newitems = []
+
+def remove_padding(source:str="", padding:int=0):
+    source = "\n".join([line.removeprefix(" "*padding) for line in source.splitlines()])
+    return source
+
+
+items = pattern.finditer(source)
+for item in items:
+    #print(item.groupdict())
+    current_item = list(item.groups())
+    padding = len(current_item[0])
+    content = remove_padding(current_item[1], padding)
+    current_item[0] = padding
+    print(current_item)
+    #print(repr(item.group("padding")))
+    
+#%%
+
+pattern = re.compile(r"(?P<padding>^ *?)(?P<marker>- )(?P<first>.*\n)(?P<second>(?:^ .*?\n)*?)(?=(?:^ *?- )|(?:^\n))", re.MULTILINE)
+newitems = []
+
+items = pattern.finditer(source)
+for item in items:
+    print(item.groups())
+
 # %%
+"""
+Item 4a.3a
+      
+      ```python
+      for p in range(3):
+          print(p)
+      ```
+      
+      Item 4a.3b
+
+
+Item 4a.3a\n      \n      ```python\n      for p in range(3):\n          print(p)\n      ```\n      \n      Item 4a.3b\n
+"""
+source = "Item 4.1.5\n    \n      ```python\n      for p in range(3):\n          print(p)\n      ```\n      \n      Item 4.1.6\n"
+padding = 4
+source = "\n".join([line.removeprefix(" "*padding) for line in source.splitlines()])
+

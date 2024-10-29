@@ -114,21 +114,21 @@ class Pattern:
 class Manager:
     
     def __init__(self, patterns:list=[]):
-        self.PROPS_PATTERN = r"(?m:^\{ *?(?P<props>.*?) *?\}\n)?"
-        self.BLOCK_PATTERN = []
-        self.PATTERN_LOOKUP = {}
+        self.props_pattern = r"(?m:^\{ *?(?P<props>.*?) *?\}\n)?"
+        self.block_pattern = []
+        self.pattern_lookup = {}
         self.BANK = []
         
         for _ in patterns:
             self.add_pattern(_)
             
-        self.BLOCK_PATTERN = REGEX_GROUP("|".join(self.BLOCK_PATTERN))
-        self.BLOCK_PATTERN = re.compile(f"(?:{self.BLOCK_PATTERN})" + self.PROPS_PATTERN)
+        self.block_pattern = REGEX_GROUP("|".join(self.block_pattern))
+        self.block_pattern = re.compile(f"(?:{self.block_pattern})" + self.props_pattern)
     
     def add_pattern(self, pattern_obj:dict={}):
         pattern = Pattern(self, pattern_obj) 
-        self.BLOCK_PATTERN.append(pattern.matching)
-        self.PATTERN_LOOKUP[pattern.name] = pattern
+        self.block_pattern.append(pattern.matching)
+        self.pattern_lookup[pattern.name] = pattern
     
     @staticmethod
     def get_name(groupdict:dict={}) -> dict:
@@ -143,7 +143,7 @@ class Manager:
         return name
     
     def get_pattern(self, name:str="") -> Pattern:
-        return self.PATTERN_LOOKUP[name]
+        return self.pattern_lookup[name]
 
     def get_block(self, name:str="", groupdict:dict={}) -> dict:
         pattern = self.get_pattern(name)
@@ -152,7 +152,7 @@ class Manager:
         return block
     
     def get_matches(self, source:str=""):
-        matches = self.BLOCK_PATTERN.finditer(source)
+        matches = self.block_pattern.finditer(source)
         for match in matches:
             groupdict = match.groupdict()
             name = self.get_name(groupdict)
@@ -177,7 +177,7 @@ class Manager:
         return source
     
     def tokenize(self, source:str=""):
-        matches = self.BLOCK_PATTERN.finditer(source)
+        matches = self.block_pattern.finditer(source)
         for match in matches:
             groupdict = match.groupdict()
             name = self.get_name(groupdict)
