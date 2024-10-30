@@ -83,13 +83,20 @@ for item in items:
     #print(repr(item.group("padding")))
     
 #%%
+PADDING = 4
 
 pattern = re.compile(r"(?P<padding>^ *?)(?P<marker>- )(?P<first>.*\n)(?P<second>(?:^ .*?\n)*?)(?=(?:^ *?- )|(?:^\n))", re.MULTILINE)
+pattern = re.compile(r"(?P<padding>^ *?)(?:- )(?P<first>.*\n)(?P<second>(?:^ .*?\n)*?)(?=(?:^ *?- )|(?:^\n))", re.MULTILINE)
 newitems = []
 
-items = pattern.finditer(source)
-for item in items:
-    print(item.groups())
+"""
+so the first line of each item will include the padding in general which we can 
+"""
+
+#items = (item.groups() for item in pattern.finditer(source))
+for padding, first, second in (item.groups() for item in pattern.finditer(source)):
+    print(first)
+    newitems.append([len(padding), ])
 
 # %%
 """
@@ -108,4 +115,5 @@ Item 4a.3a\n      \n      ```python\n      for p in range(3):\n          print(p
 source = "Item 4.1.5\n    \n      ```python\n      for p in range(3):\n          print(p)\n      ```\n      \n      Item 4.1.6\n"
 padding = 4
 source = "\n".join([line.removeprefix(" "*padding) for line in source.splitlines()])
+
 

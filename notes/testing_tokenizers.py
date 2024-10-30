@@ -92,7 +92,7 @@ def loop_loop_tokenizer(path):
     source = get_source(path)
     
     inner_loops = 100
-    outer_loops = 100
+    outer_loops = 10
     
     funcies = [
         run_new_ogtokenizer,

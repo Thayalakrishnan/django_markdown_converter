@@ -58,7 +58,6 @@ META_PATTERN = {
         "nested": False,
         "inlinemarkup": False,
     },
-    "props": [],
     "data": "content",
     "processing": {
         "content": process_meta_values,
@@ -88,7 +87,6 @@ CODE_PATTERN = {
         "nested": False,
         "inlinemarkup": False,
     },
-    "props": ["language"],
     "data": "content",
     "processing": {
         "content": lambda x: x,
@@ -112,11 +110,6 @@ def process_dlist(source):
 
 DLIST_PATTERN = {
     "name": "dlist",
-    # prefix:  ": "
-    #"pattern": [
-    #    ("term", r"^.*?\n"),
-    #    ("definition", r"(?:^\: .*?\n)+"),
-    #],
     "pattern": [
         ("content", r"(?:^.*?\n)(?:^\: .*?\n)+")
     ],
@@ -128,12 +121,7 @@ DLIST_PATTERN = {
         "nested": False,
         "inlinemarkup": True,
     },
-    "props": [],
     "data": "content",
-    #"processing": {
-    #    "term": lambda x: x.strip(),
-    #    "definition": LAMBDA_REMOVE_PREFIX_2,
-    #},
     "processing": {
         "content": process_dlist
     },
@@ -159,7 +147,6 @@ FOOTNOTE_PATTERN = {
         "nested": True,
         "inlinemarkup": False,
     },
-    "props": ["index"],
     "data": "content",
     "processing": {
         "index": lambda x: int(x),
@@ -189,7 +176,6 @@ ADMONITION_PATTERN = {
         "nested": True,
         "inlinemarkup": False,
     },
-    "props": ["type", "title"],
     "data": "content",
     "processing": {
         "type": dedent,
@@ -201,7 +187,6 @@ ADMONITION_PATTERN = {
 def get_row(line:str="") -> list:
     """strip leading and trailing pipes,"""
     line = line.strip("|\n ")
-    #return [convert_inline(_.strip()) for _ in line.split("|")]
     return [_.strip() for _ in line.split("|")]
     
 def get_rows(chunk:str="")-> list:
@@ -221,11 +206,6 @@ def process_table(source):
 
 TABLE_PATTERN = {
     "name": "table",
-    #"pattern": [
-    #    ("header", r"^\|.*?\|\n"),
-    #    ("break", r"^\|.*?\|\n"),
-    #    ("content", r"(?:^\|.*?\|\n)+"),
-    #],
     "pattern": [
         ("content", r"(?:^\|.*?\|\n){3,}"),
     ],
@@ -237,7 +217,6 @@ TABLE_PATTERN = {
         "nested": False,
         "inlinemarkup": True,
     },
-    "props": [],
     "data": "content",
     "processing": {
         "content": process_table,
@@ -257,7 +236,6 @@ HR_PATTERN = {
         "nested": False,
         "inlinemarkup": False,
     },
-    "props": [],
     "data": "content",
     "processing": {
         "content": lambda x: ""
@@ -279,7 +257,6 @@ HEADING_PATTERN = {
         "nested": False,
         "inlinemarkup": True,
     },
-    "props": ["level",],
     "data": "content",
     "processing": {
         "level": lambda x: len(x),
@@ -306,7 +283,6 @@ IMAGE_PATTERN = {
         "nested": False,
         "inlinemarkup": False,
     },
-    "props": ["alt", "title"],
     "data": "src",
     "processing": {
         "alt": lambda x: x,
@@ -332,7 +308,6 @@ SVG_PATTERN = {
         "nested": False,
         "inlinemarkup": False,
     },
-    "props": ["attrs"],
     "data": "content",
     "processing": {
         "attrs": lambda x: x,
@@ -358,14 +333,12 @@ HTML_PATTERN = {
         "nested": False,
         "inlinemarkup": False,
     },
-    "props": ["attrs"],
     "data": "content",
     "processing": {
         "attrs": lambda x: x,
         "content": lambda x: x,
     },
 }
-
 
 def remove_padding(source:str=""):
     padding_pattern = re.compile(r"^ {0,}", re.MULTILINE)
@@ -404,8 +377,6 @@ ULIST_PATTERN = {
         "nested": True,
         "inlinemarkup": False,
     },
-    #"props": ["items", "level", "marker", "content"],
-    "props": ["content"],
     "data": "content",
     "processing": {
         "content": process_ulist,
@@ -429,8 +400,6 @@ OLIST_PATTERN = {
         "nested": False,
         "inlinemarkup": False,
     },
-    #"props": ["items", "level", "marker", "content"],
-    "props": ["content"],
     "data": "content",
     "processing": {
         "content": process_olist,
@@ -450,7 +419,6 @@ BLOCKQUOTE_PATTERN = {
         "nested": True,
         "inlinemarkup": False,
     },
-    "props": [],
     "data": "content",
     "processing": {
         "content": LAMBDA_REMOVE_PREFIX_2,
@@ -470,7 +438,6 @@ PARAGRAPH_PATTERN = {
         "nested": False,
         "inlinemarkup": True,
     },
-    "props": [],
     "data": "content",
     "processing": {
         "content": lambda x: x,
@@ -490,7 +457,6 @@ EMPTYLINE_PATTERN = {
         "nested": False,
         "inlinemarkup": False,
     },
-    "props": [],
     "data": [],
     "processing": {},
 }
@@ -508,7 +474,6 @@ NEWLINE_PATTERN = {
         "nested": False,
         "inlinemarkup": False,
     },
-    "props": [],
     "data": [],
     "processing": {},
 }
@@ -526,7 +491,6 @@ NONE_PATTERN = {
         "nested": False,
         "inlinemarkup": False,
     },
-    "props": [],
     "data": [],
     "processing": {},
 }
