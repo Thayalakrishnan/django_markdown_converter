@@ -8,13 +8,15 @@ MEDIUM = "m"
 LARGE = "l"
 
 
-scaffold_meta = lambda x=[]: "\n".join(["---", *x, "---", ""])
+SCAFFOLD_FENCED = lambda o="", x=[],c="": "\n".join([o, *x, c, ""])
 
+SCAFFOLD_META = lambda x=[]: SCAFFOLD_FENCED("---", x,"---")
+SCAFFOLD_FOOTNOTE = lambda index=0, x=[]: SCAFFOLD_FENCED(f"[^{index}]:", x,"")
+SCAFFOLD_ADMONITION = lambda ty="", ti="", x=[]: SCAFFOLD_FENCED(f"!!! {ty} {ti}", x,"")
 
 """
+
 """
-
-
 def generate_meta(size:str="m"):
     
     return ""
