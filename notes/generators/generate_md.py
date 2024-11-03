@@ -4,16 +4,11 @@ from faker import Faker
 
 fake = Faker()
 
-SMALL = "s"
-MEDIUM = "m"
-LARGE = "l"
-
-
 INDENT = "    "
 WEIGHTED_CHOICE = [1]*10 + [2]*8 + [3]*4 + [4]*2
 
-
-LAM_JOIN = lambda x=[]: " ".join(x)
+LAM_JOIN = lambda sep="", x=[]: sep.join(x)
+LAM_SPACED_JOIN = lambda x=[]: LAM_JOIN(" ", x)
 
 SCAFFOLD_JOINLINES = lambda x=[]: "\n".join(x)
 
@@ -29,13 +24,30 @@ LAM_HTML_TAG = lambda x,b: f"<{x}>{b}</{x}>"
 LAM_RANDOM_RANGE = lambda l,u: range(random.randint(l,u))
 
 class State:
+    INLINE_MARKUP_LIST = [
+        ("`", "`",),
+        ("``", "``",),
+        ("**", "**",),
+        ("_", "_",),
+        (":", ":",),
+        ("^", "^",),
+        ("~", "~",),
+        ("$", "$",),
+        ("<", ">",),
+        ("--", "--",),
+        ("==", "==",),
+    ]
+    SENTENCE_ENDINGS = ["."]*10 + ["!"]*3 + ["?"]*2 + [";"]*1
     def __init__(self):
         self.heading_level = 2
         self.footnote_index = 1
-
+        self.footnote_count = 0
 
 def random_boolean():
     return random.randint(1,100) < 80
+
+def proper_random_boolean():
+    return random.randint(1,100) < 50
 
 def generate_meta(state:State=None):
     """
@@ -53,9 +65,23 @@ def generate_code(state:State=None):
     content: random
     """
     lines = []
-    language
+    header = ["```"]
+    if random_boolean():
+        header.append(fake.word())
+    lines.append(LAM_JOIN("", header))
+        
+    max_lines = random.randint(1,20)
+    
+    for i in range(max_lines):
+        lower = random.randint(2,5)
+        upper = lower + random.randint(1,5)
+        lines.append(random_words(lower, upper))
+        extra_line_break = proper_random_boolean() and proper_random_boolean() and proper_random_boolean()
+        if extra_line_break:
+            print(f"line {i}: extra line break")
+            lines.append("\n")
     lines.append("```")
-    return ""
+    return SCAFFOLD_JOINLINES(lines)
 
 def generate_dlist(state:State=None):
     """
@@ -100,7 +126,7 @@ def generate_footnote(state:State=None):
     return SCAFFOLD_JOINLINES(lines)
 
 def random_words(lower:int=1, upper:int=2):
-    return LAM_JOIN(fake.words(nb=random.randint(lower,upper)))
+    return LAM_SPACED_JOIN(fake.words(nb=random.randint(lower,upper)))
 
 def generate_admonition(state:State=None):
     """
@@ -118,7 +144,7 @@ def generate_admonition(state:State=None):
     if random_boolean():
         header.append(f'\"{random_words(1,3)}\"')
 
-    lines.append(LAM_JOIN(header))
+    lines.append(LAM_SPACED_JOIN(header))
     content = generate_indented_content()
     lines.extend(content)
     return SCAFFOLD_JOINLINES(lines)
@@ -212,6 +238,7 @@ def generate_ulist(state:State=None):
     - if nested determine how many items, maybe minimum 3
     - maximum depth of maybe 3
     """
+    
     return ""
 
 def generate_olist(state:State=None):
@@ -243,17 +270,15 @@ def generate_newline(state:State=None):
 def generate_none(state:State=None):
     return ""
 
-def generate_paragraph(state:State=None, size:str="m"):
+def generate_paragraph(state:State=None):
     """
     content
     """
-    if size == SMALL:
-        return fake.paragraph(nb_sentences=2, variable_nb_sentences=False)
-    if size == MEDIUM:
-        return fake.paragraph(nb_sentences=3, variable_nb_sentences=False)
-    if size == LARGE:
-        return fake.paragraph(nb_sentences=5, variable_nb_sentences=False)
-    return fake.paragraph(nb_sentences=3, variable_nb_sentences=False)
+    num_sentences = random.randint(1,6)
+    lines = []
+    for _ in range(num_sentences):
+        lines.append(generate_sentence(state))
+    return LAM_SPACED_JOIN(lines)
 
 
 GENERATORS = [
@@ -289,11 +314,137 @@ def run_generators():
 def run_generator():
     current_state = State()
     for i in range(10):
-        print(repr(generate_blockquote(current_state)))
+        #print(repr(generate_code(current_state)))
+        print(f"loop {i} #########################")
+        print(generate_paragraph(current_state))
+        #generate_code(current_state)
         print("\n")
 
 
 
-run_generators()
+#run_generator()
 
+# %%
+
+"""
+## not
+"footnote": lambda x: f"[^{x}]",
+"link": lambda x: f"{x.get('title', '')}]({x.get('to', '')}",
+"""
+
+def insert_inline_markup() -> bool:
+    return proper_random_boolean() and proper_random_boolean() and proper_random_boolean()
+
+def close_inline_markup(stack:list=[]) -> bool:
+    return len(stack) and (proper_random_boolean() or proper_random_boolean() or proper_random_boolean())
+
+
+def generate_sentence(state:State=None):
+    sentence_length = random.randint(5,20)
+    stack = []
+    words = []
+    inline_markup = state.INLINE_MARKUP_LIST
+    
+    for w in range(sentence_length):
+        word = fake.word()
+        
+        if insert_inline_markup():
+            imarkup = random.choice(inline_markup)
+            if imarkup not in stack:
+                stack.append(imarkup)
+                word = imarkup[0] + word
+                
+        if close_inline_markup(stack):
+            imarkup = stack.pop()
+            word = word + imarkup[1]
+        words.append(word)
+        
+    while len(stack):
+        imarkup = stack.pop()
+        words[-1]+=imarkup[1]
+        
+    ending = random.choice(state.SENTENCE_ENDINGS)
+    words[-1]+=ending
+    return " ".join(words)
+
+def run_get_sentences():
+    current_state = State()
+    for i in range(5):
+        print(generate_sentence(current_state))
+
+#run_get_sentences()
+# %%
+def generate_list_item(level:int=0, marker:str="- ", content:str=""):
+    indent = level*' '*4
+    if content:
+        return f"{indent}{marker}{content}"
+    #content = generate_paragraph(state)
+    content = random_words(1,6).capitalize()
+    return f"{indent}{marker}{content}"
+
+
+def generate_list_block(listtype="", num_items:int=1, counter:int=1, indentation_level:int=0):
+    items = []
+    for item in range(num_items):
+        if listtype == "ulist":
+            items.append(generate_list_item(indentation_level))
+        else:
+            items.append(generate_list_item(indentation_level, f"{counter}. "))
+        counter+=1
+    return items
+    
+    
+    
+
+
+def generate_list(state:State=None, listtype=""):
+    """
+    content:
+    - random number of items
+    - for each item determine if has nested
+    - if nested determine how many items, maybe minimum 3
+    - maximum depth of maybe 3
+    """
+    items = []
+    stack = []
+    indent_counter = 0
+    num_list_blocks = random.randint(1,5)
+    
+    # initial item
+    current_counter = 1
+    items.append(generate_list_item(indent_counter, f"{current_counter}. "))
+    current_counter+=1
+    
+    for item in range(num_list_blocks):
+        
+        num_list_items = random.randint(1,3)
+        
+        if proper_random_boolean():
+            # we indent
+            indent_counter+=1
+            stack.append(current_counter)
+            current_counter = 1
+        else:
+            # we outdent
+            if indent_counter:
+                indent_counter-=1
+                current_counter = stack.pop()
+                
+        items.extend(generate_list_block(
+            listtype=listtype, 
+            num_items=num_list_items, 
+            counter=current_counter, 
+            indentation_level=indent_counter
+        ))
+        current_counter+=num_list_items
+    return SCAFFOLD_JOINLINES(items)
+
+
+def run_get_list():
+    current_state = State()
+    for i in range(5):
+        print(generate_ulist(current_state))
+        print("\n")
+        
+run_get_list()
 # %%
