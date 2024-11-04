@@ -13,8 +13,6 @@ LAM_SPACED_JOIN = lambda x=[]: LAM_JOIN(" ", x)
 SCAFFOLD_JOINLINES = lambda x=[]: "\n".join(x)
 SCAFFOLD_FENCED = lambda o="", x=[],c="": "\n".join([o, *x, c, ""])
 SCAFFOLD_META = lambda x=[]: SCAFFOLD_FENCED("---", x,"---")
-#SCAFFOLD_FOOTNOTE = lambda index=0, x=[]: SCAFFOLD_FENCED(f"[^{index}]:", x,"")
-#SCAFFOLD_ADMONITION = lambda ty="", ti="", x=[]: SCAFFOLD_FENCED(f"!!! {ty} {ti}", x,"")
 
 LAM_HTML_TAG = lambda x,b: f"<{x}>{b}</{x}>"
 LAM_RANDOM_RANGE = lambda l,u: range(random.randint(l,u))
@@ -287,8 +285,8 @@ def generate_hr(state:State=None):
 
 def generate_heading(state:State=None):
     """
-    level: random level from range
-    content: random words | possible inline markup
+    level: integer
+    content: text 
     """
     level = "#"*state.heading_level
     state.heading_level = adjust_heading_level(state.heading_level)
@@ -296,6 +294,11 @@ def generate_heading(state:State=None):
     return f"{level} {content}"
 
 def generate_image(state:State=None):
+    """
+    alt: text
+    title: text
+    src: url
+    """
     alt = fake.sentence(nb_words=10)
     title = fake.sentence(nb_words=10)
     src = fake.image_url()
@@ -319,23 +322,32 @@ def generate_html(state:State=None):
 
 def generate_ulist(state:State=None):
     """
+    content: items of other blocks, mainly sentences
     """
     return generate_list(state, "ulist")
 
 def generate_olist(state:State=None):
     """
+    content: items of other blocks, mainly sentences
     """
     return generate_list(state, "olist")
 
 def generate_blockquote(state:State=None):
     """
-    content:
-    - random number of lines
-    - determine if nested
-    - max depth 2 i reckon
+    content: other blocks, mainly sentences
     """
     lines = ["> " + random_words(5,10) for _ in LAM_RANDOM_RANGE(1,5)]
     return SCAFFOLD_JOINLINES(lines)
+
+def generate_paragraph(state:State=None):
+    """
+    content: sentences
+    """
+    num_sentences = random.randint(1,6)
+    lines = []
+    for _ in range(num_sentences):
+        lines.append(generate_sentence(state))
+    return LAM_SPACED_JOIN(lines)
 
 def generate_emptyline(state:State=None):
     return "\n\n"
@@ -346,52 +358,61 @@ def generate_newline(state:State=None):
 def generate_none(state:State=None):
     return ""
 
-def generate_paragraph(state:State=None):
-    """
-    content
-    """
-    num_sentences = random.randint(1,6)
-    lines = []
-    for _ in range(num_sentences):
-        lines.append(generate_sentence(state))
-    return LAM_SPACED_JOIN(lines)
+##################################
+"""
+Generators
+"""
+
+def create_generators():
+    generators = [
+        (generate_heading, 15),
+        (generate_paragraph, 15),
+        (generate_ulist, 10),
+        (generate_olist, 10),
+        (generate_footnote, 5),
+        (generate_image, 8),
+        
+        (generate_admonition, 5),
+        (generate_code, 8),
+        (generate_table, 3),
+        
+        (generate_svg, 2),
+        (generate_html, 2),
+        
+        (generate_blockquote, 1),
+        (generate_dlist, 1),
+        (generate_hr, 1),
+    ]
+    ret = []
+    for func, times in generators:
+        ret+=[func]*times
+    return ret
+
+def create_nested_generators():
+    generators = [
+        (generate_code, 1),
+        (generate_dlist, 1),
+        (generate_footnote, 1),
+        (generate_admonition, 1),
+        (generate_table, 1),
+        (generate_hr, 1),
+        (generate_heading, 1),
+        (generate_image, 1),
+        (generate_svg, 1),
+        (generate_html, 1),
+        (generate_ulist, 1),
+        (generate_olist, 1),
+        (generate_blockquote, 1),
+        (generate_paragraph, 1),
+    ]
+    ret = []
+    for func, times in generators:
+        ret+=[func]*times
+    return ret
 
 
-GENERATORS = [
-    #generate_meta,
-    generate_code,
-    generate_dlist,
-    generate_footnote,
-    generate_admonition,
-    generate_table,
-    generate_hr,
-    #generate_heading,
-    generate_image,
-    generate_svg,
-    generate_html,
-    generate_ulist,
-    generate_olist,
-    generate_blockquote,
-    #generate_emptyline,
-    #generate_newline,
-    #generate_none,
-    generate_paragraph,
-]
-
-NESTED_GENERATORS = [
-    generate_code,
-    generate_dlist,
-    generate_admonition,
-    generate_table,
-    generate_hr,
-    generate_image,
-    generate_svg,
-    generate_html,
-    generate_ulist,
-    generate_olist,
-    generate_blockquote,
-    generate_paragraph,
-]
+GENERATORS = create_generators()
+NESTED_GENERATORS = create_nested_generators()
 
 def run_generators():
     current_state = State()
@@ -405,10 +426,7 @@ def run_generators():
 def run_generator():
     current_state = State()
     for i in range(20):
-        #print(repr(generate_code(current_state)))
-        #print(f"loop {i} #########################")
         print(generate_olist(current_state))
-        #generate_code(current_state)
         print("\n")
 
 
@@ -418,29 +436,25 @@ def run_get_sentences():
         print(generate_sentence(current_state))
 
 
-def make_markdown_block():
-    current_state = State()
+def generate_markdown_blocks(state:State=None, num_blocks:int=1, is_nested:bool=False):
     blocks = []
-    num_blocks = random.randint(3,20)
-    blocks.append(generate_heading(current_state))
     # has meta
     has_meta = random_decision()
-    if has_meta:
-        blocks.append(generate_meta(current_state))
+    if has_meta and not is_nested:
+        blocks.append(generate_meta(state))
     
-    for i in range(num_blocks):
-        
-        has_heading = random_decision()
-        
-        if has_heading:
-            blocks.append(generate_heading(current_state))
-            
-        generator = random.choice(GENERATORS)
-        blocks.append(generator(current_state))
-    
+    generator_funcs = GENERATORS if not is_nested else NESTED_GENERATORS
+    blocks.extend([random.choice(generator_funcs)(state) for _ in range(num_blocks)])
     return "\n\n".join(blocks)
 
-print(make_markdown_block())
+
+def run_generate_markdown_blocks():
+    current_state = State()
+    for i in range(5):
+        num_blocks = random.randint(3,20)
+        print(generate_markdown_blocks(current_state, num_blocks))
+
+run_generate_markdown_blocks()
 #run_generator()
 #run_get_sentences()
 #run_generators()
