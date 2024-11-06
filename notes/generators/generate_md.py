@@ -46,61 +46,87 @@ class State:
         self.inline_markup_count = 0
         self.current_depth = 0
 
-def generate_list_item(listtype:str="ulist", level:int=0, counter:int=1, content:str=""):
+def generate_list_item(list_type:str="ulist", level:int=0, counter:int=1, content:str=""):
     indent = level*' '*4
-    delimter = "- " if listtype == "ulist" else f"{counter}. "
+    delimter = "- " if list_type == "ulist" else f"{counter}. "
     if not content:
         content = LAMGEN_FAKE_WORDS(1,6).capitalize()
 
     return f"{indent}{delimter}{content}"
 
-def generate_list_block(listtype="", num_items:int=1, counter:int=1, indentation_level:int=0):
+def generate_list_block(list_type="", num_items:int=1, counter:int=1, indentation_level:int=0):
+    return [generate_list_item(list_type, indentation_level, item) for item in range(counter, counter + num_items)]
+
+#def generate_list(state:State=None, list_type=""):
+#    items = []
+#    stack = []
+#    indentation = 0
+#    num_blocks = random.randint(1,5)
+#    counter = 1
+#    
+#    for _ in range(num_blocks):
+#        num_items = random.randint(1,3)
+#        items.extend(generate_list_block(list_type, num_items, counter, indentation))
+#        counter+=num_items
+#
+#        if LAMGEN_DECISION():
+#            # indent
+#            indentation+=1
+#            stack.append(counter)
+#            counter = 1
+#        else:
+#            # outdent
+#            if indentation:
+#                indentation-=1
+#                counter = stack.pop()
+#
+#    # decide to close list or not
+#    if LAMGEN_DECISION():
+#        while len(stack):
+#            indentation-=1
+#            counter = stack.pop()
+#            items.append(generate_list_item(list_type, indentation, counter))
+#    return SCAFFOLD_JOINLINES(items)
+#
+
+
+def adjust_indentation(lvl:int=0) -> int:
+    #new_lvl = lvl + random.choice([-1, 0, 0, 1, 1])
+    new_lvl = lvl + 1 if LAMGEN_DECISION() else lvl - 1
+    if not new_lvl:
+        return 0
+    if new_lvl > 4:
+        return 4
+    return new_lvl
+
+def generate_list_recursively(items:list=[], list_type:str="ulist", counter:int=1, indentation:int=1):
+    num_items = random.randint(1,3)
+    items.extend(generate_list_block(list_type, num_items, counter, indentation))
+    counter+=num_items
+    new_indentation = adjust_indentation(indentation)
+    if new_indentation > indentation:
+        generate_list_recursively(items, list_type, 1, new_indentation)
+    return items, counter, indentation
+
+
+def generate_list(state:State=None, list_type=""):
     items = []
-    for item in range(num_items):
-        items.append(generate_list_item(listtype, indentation_level, counter))
-        counter+=1
-    return items
-
-def generate_list(state:State=None, listtype=""):
-    items = []
-    stack = []
-    indent_counter = 0
-    num_list_blocks = random.randint(1,5)
-
-    # initial item
-    current_counter = 1
-    items.append(generate_list_item(listtype, indent_counter, current_counter))
-    current_counter+=1
-
-    for item in range(num_list_blocks):
-        num_list_items = random.randint(1,3)
-
-        if LAMGEN_DECISION():
-            # indent
-            indent_counter+=1
-            stack.append(current_counter)
-            current_counter = 1
-        else:
-            # outdent
-            if indent_counter:
-                indent_counter-=1
-                current_counter = stack.pop()
-
-        items.extend(generate_list_block(
-            listtype=listtype,
-            num_items=num_list_items,
-            counter=current_counter,
-            indentation_level=indent_counter
-        ))
-        current_counter+=num_list_items
-
-    # decide to close list or not
-    if LAMGEN_DECISION():
-        while len(stack):
-            indent_counter-=1
-            current_counter = stack.pop()
-            items.append(generate_list_item(listtype, indent_counter, current_counter))
+    indentation = 0
+    counter = 1
+    
+    for _ in LAM_RANDOM_RANGE(1,5):
+        items, counter, indentation = generate_list_recursively(items, list_type, counter, indentation)
     return SCAFFOLD_JOINLINES(items)
+
+
+
+
+
+
+
+
+
+
 
 def indent_content(content:str="") -> str:
     return "\n".join([INDENT + _ for _ in content.split("\n")])
@@ -504,6 +530,12 @@ def run_generator():
         print(f"##################################################")
         print(generate_markdown_post(current_state))
         print("\n")
+        
+def run_single_generator():
+    current_state = State()
+    for i in range(5):
+        print(generate_olist(current_state))
+        print("\n")
 
 def run_get_sentences():
     current_state = State()
@@ -518,7 +550,8 @@ def run_generate_markdown_blocks():
         print(generate_markdown_blocks(current_state, num_blocks))
 
 #run_generate_markdown_blocks()
-run_generator()
+#run_generator()
+run_single_generator()
 #run_get_sentences()
 #run_generators()
 #%%

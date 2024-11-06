@@ -11,15 +11,9 @@ WEIGHTED_CHOICE = [1]*10 + [2]*8 + [3]*4 + [4]*2
 LAM_JOIN = lambda sep="", x=[]: sep.join(x)
 LAM_SPACED_JOIN = lambda x=[]: LAM_JOIN(" ", x)
 
-SCAFFOLD_JOINLINES = lambda x=[]: "\n".join(x)
-SCAFFOLD_FENCED = lambda o="", x=[],c="": "\n".join([o, *x, c, ""])
-SCAFFOLD_META = lambda x=[]: SCAFFOLD_FENCED("---", x,"---")
-SCAFFOLD_ATTRS = lambda x: LAM_SPACED_JOIN(["{", x,"}"])
 
-LAM_HTML_TAG = lambda x,b: f"<{x}>{b}</{x}>"
 LAM_RANDOM_INT = lambda l,u: random.randint(l,u)
 LAM_RANDOM_RANGE = lambda l,u: range(LAM_RANDOM_INT(l,u))
-LAM_INDENT_LINES = lambda c="": [INDENT + _ for _ in c.splitlines()]
 
 LAMGEN_FAKE_WORDS = lambda l=1,u=5: LAM_SPACED_JOIN(fake.words(nb=LAM_RANDOM_INT(l,u)))
 LAMGEN_DECISION = lambda w=50: random.randint(1,100) < w
@@ -46,21 +40,17 @@ class State:
         self.inline_markup_count = 0
         self.current_depth = 0
 
-def generate_list_item(listtype:str="ulist", level:int=0, counter:int=1, content:str="") -> tuple:
-    indent = level*' '*4
-    delimter = "-" if listtype == "ulist" else counter
-    if not content:
-        content = LAMGEN_FAKE_WORDS(1,6).capitalize()
+def generate_list_item(list_type:str="u", level:int=0, counter:int=1) -> tuple:
+    indent = level*4
+    delimter = "-" if list_type == "u" else counter
+    content = LAMGEN_FAKE_WORDS(1,6).capitalize()
     return indent, delimter, content
 
-def generate_list_block(listtype="", num_items:int=1, counter:int=1, indentation_level:int=0):
-    items = []
-    for item in range(num_items):
-        items.append(generate_list_item(listtype, indentation_level, counter))
-        counter+=1
-    return items
+def generate_list_block(list_type="u", num_items:int=1, counter:int=1, indentation_level:int=0):
+    return [generate_list_item(list_type, indentation_level, item+1) for item in range(counter, counter + num_items)]
 
-def generate_list(state:State=None, listtype="") -> list:
+def generate_list(state:State=None, list_type="u") -> list:
+    """list types: o, u"""
     items = []
     stack = []
     indent_counter = 0
@@ -68,7 +58,7 @@ def generate_list(state:State=None, listtype="") -> list:
 
     # initial item
     current_counter = 1
-    items.append(generate_list_item(listtype, indent_counter, current_counter))
+    items.append(generate_list_item(list_type, indent_counter, current_counter))
     current_counter+=1
 
     for item in range(num_list_blocks):
@@ -85,12 +75,7 @@ def generate_list(state:State=None, listtype="") -> list:
                 indent_counter-=1
                 current_counter = stack.pop()
 
-        items.extend(generate_list_block(
-            listtype=listtype,
-            num_items=num_list_items,
-            counter=current_counter,
-            indentation_level=indent_counter
-        ))
+        items.extend(generate_list_block(list_type, num_list_items, current_counter, indent_counter))
         current_counter+=num_list_items
 
     # decide to close list or not
@@ -98,11 +83,8 @@ def generate_list(state:State=None, listtype="") -> list:
         while len(stack):
             indent_counter-=1
             current_counter = stack.pop()
-            items.append(generate_list_item(listtype, indent_counter, current_counter))
+            items.append(generate_list_item(list_type, indent_counter, current_counter))
     return items
-
-def indent_content(content:str="") -> str:
-    return "\n".join([INDENT + _ for _ in content.split("\n")])
 
 def generate_sub_content(state:State=None, is_indented:bool=False, content_type:str="blocks" ):
     """
@@ -126,10 +108,7 @@ def generate_sub_content(state:State=None, is_indented:bool=False, content_type:
         # return blocks
         num_blocks = LAM_RANDOM_INT(1,5)
         content = generate_markdown_blocks(state, num_blocks=num_blocks, is_nested=False, has_meta=False)
-
     state.current_depth-=1
-    #if is_indented:
-    #    return indent_content(content)
     return content
 
 
@@ -138,6 +117,7 @@ def generate_table_row(size:int=0):
     return row
 
 def adjust_heading_level(lvl:int=2) -> int:
+    """shift the heading level up or down one or leave unchanged"""
     new_lvl = lvl + random.choice([-1, 0, 0, 1, 1])
     if new_lvl < 2:
         return 2
@@ -194,7 +174,12 @@ def generate_sentences(state:State=None, has_inline_markup:bool=True):
     return LAM_SPACED_JOIN(sentences)
 
 
-######################
+##################################
+"""
+Block Generators
+content
+"""
+
 def generate_attributes(state:State=None):
     pairs = [(fake.word(), LAMGEN_FAKE_WORDS()) for _ in LAM_RANDOM_RANGE(1,5)]
     return (pairs)
@@ -207,7 +192,7 @@ def generate_meta(state:State=None):
     with some ofther words
     """
     pairs = [(fake.word(), LAMGEN_FAKE_WORDS()) for _ in LAM_RANDOM_RANGE(1,5)]
-    return (pairs)
+    return (("pairs", pairs))
 
 def generate_code(state:State=None):
     """
@@ -223,7 +208,7 @@ def generate_code(state:State=None):
         for _ in LAM_RANDOM_RANGE(1,5):
             content.append(LAMGEN_FAKE_WORDS(2, 10))
         content.append("\n")
-    return language, content
+    return (("language", language), ("content", content))
 
 
 def generate_dlist(state:State=None):
@@ -234,7 +219,7 @@ def generate_dlist(state:State=None):
     term = fake.word().capitalize()
     has_inline_markup = LAMGEN_DECISION(50)
     definition = [generate_sentence(state, has_inline_markup) for _ in LAM_RANDOM_RANGE(1,3)]
-    return term, definition
+    return (("term", term), ("definition", definition))
 
 
 def generate_footnote(state:State=None):
@@ -245,7 +230,7 @@ def generate_footnote(state:State=None):
     index = state.footnote_index
     state.footnote_index+=1
     content = generate_sub_content(state, is_indented=True)
-    return index, content
+    return (("index", index), ("content", content))
 
 
 def generate_admonition(state:State=None):
@@ -259,7 +244,7 @@ def generate_admonition(state:State=None):
     ad_type = random.choice(ad_type_choices) if LAMGEN_DECISION(80) else ""
     ad_title = LAMGEN_FAKE_WORDS(1,3) if LAMGEN_DECISION(80) else ""
     content = generate_sub_content(state, is_indented=True)
-    return ad_type, ad_title, content
+    return (("type", ad_type), ("title", ad_title), ("content", content))
 
 
 def generate_table(state:State=None):
@@ -274,12 +259,11 @@ def generate_table(state:State=None):
     header = generate_table_row(cols)
     breaker = ["---"]*cols
     body = [generate_table_row(cols) for i in range(rows)]
-    return header, breaker, body
+    return (("header", header), ("breaker", breaker), ("body", body))
 
 def generate_hr(state:State=None):
-    if LAMGEN_DECISION(80):
-        return "***"
-    return "---"
+    content = "***" if LAMGEN_DECISION(80) else "---"
+    return (("content", content))
 
 def generate_heading(state:State=None, level:int=0):
     """
@@ -290,7 +274,7 @@ def generate_heading(state:State=None, level:int=0):
     if not level:
         state.heading_level = adjust_heading_level(state.heading_level)
     content = LAMGEN_FAKE_WORDS(1,6).capitalize()
-    return level, content
+    return (("level", level), ("content", content))
 
 def generate_image(state:State=None):
     """
@@ -301,14 +285,14 @@ def generate_image(state:State=None):
     alt = LAMGEN_FAKE_WORDS(3,10)
     title = LAMGEN_FAKE_WORDS(3,8)
     src = fake.image_url()
-    return alt, title, src
+    return (("alt", alt), ("title", title), ("src", src))
 
 def generate_svg(state:State=None):
     """
     content: xml
     """
     content = LAMGEN_FAKE_WORDS(5,10)
-    return (content)
+    return (("content", content))
 
 def generate_html(state:State=None):
     """
@@ -317,20 +301,20 @@ def generate_html(state:State=None):
     """
     tag = fake.word()
     content = LAMGEN_FAKE_WORDS(5,10)
-    return tag, content
+    return (("content", content), ("tag", tag))
 
 def generate_ulist(state:State=None):
     """
     content: list item: words, sentences, blocks
     """
-    return generate_list(state, "ulist")
+    return (("items", generate_list(state, "u")))
 
 
 def generate_olist(state:State=None):
     """
     content: list item: words, sentences, blocks
     """
-    return generate_list(state, "olist")
+    return (("items", generate_list(state, "o")))
 
 
 def generate_blockquote(state:State=None):
@@ -338,27 +322,29 @@ def generate_blockquote(state:State=None):
     ret: content -> words, sentences, blocks
     """
     content = generate_sub_content(state, is_indented=False)
-    return (content)
+    return (("content", content))
 
 def generate_paragraph(state:State=None):
     """
     ret: content -> words, sentences, blocks
     """
-    sentences = generate_sentences(state)
-    return (sentences)
+    content = generate_sentences(state)
+    return (("content", content))
 
 def generate_emptyline(state:State=None):
-    return "\n\n"
+    return (("content", "\n\n"))
 
 def generate_newline(state:State=None):
-    return "\n"
+    return (("content", "\n"))
 
 def generate_none(state:State=None):
-    return ""
+    return (("content", ""))
 
 ##################################
 """
 Generators
+structure: 
+name, content, attributes
 """
 
 def create_generators(weighted:bool=True):
@@ -430,9 +416,15 @@ def run_generate_markdown_blocks():
     blocks = generate_markdown_blocks(current_state, 5, False, False)
     for b in blocks:
         print(b)
+        
+def run_generator():
+    current_state = State()
+    for b in range(5):
+        print(generate_olist(current_state))
 
+run_generator()
 #run_generators()
-run_generate_markdown_blocks()
+#run_generate_markdown_blocks()
 
 
 #%%
