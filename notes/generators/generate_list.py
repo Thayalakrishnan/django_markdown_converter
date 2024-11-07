@@ -26,47 +26,42 @@ def generate_list_item(list_type:str="u", level:int=0, counter:int=1):
     content = LAMGEN_FAKE_WORDS(1,6).capitalize()
     return f"{indent}{delimter}{content}"
 
-def generate_list_recursively(max_items:int=0, items:list=[], list_type:str="u", counter:int=1, indentation:int=1, count_stack:list=[]):
+def generate_list_recursively(max_items:int=0, items:list=[], list_type:str="u", ctr:int=1, ind:int=1, stack:list=[]):
+    """
+    max, items, type, ctr, ind, 
+    stack: type, ctr, ind
+    """
     if len(items) > max_items:
         return items
     
-    new_item = generate_list_item(list_type, indentation, counter)
+    new_item = generate_list_item(list_type, ind, ctr)
     items.append(new_item)
-    new_indentation = LAM_ADJUST_LIST_INDENTATION(indentation)
+    new_ind = LAM_ADJUST_LIST_INDENTATION(ind)
     
     # indent
-    if new_indentation > indentation:
-        count_stack.append(counter)
-        #indentation+=1
-        #counter = 1
-        generate_list_recursively(max_items, items, list_type, 1, indentation+1, count_stack)
+    if new_ind > ind:
+        stack.append(ctr)
+        generate_list_recursively(max_items, items, list_type, 1, ind+1, stack)
     # unindent
-    elif new_indentation < indentation:
-        #counter = count_stack.pop()
-        #counter +=1
-        #indentation-=1
-        generate_list_recursively(max_items, items, list_type, count_stack.pop() + 1, indentation-1, count_stack)
+    elif new_ind < ind:
+        generate_list_recursively(max_items, items, list_type, stack.pop() + 1, ind-1, stack)
+    # stay the same
     else:
-        counter +=1
-        generate_list_recursively(max_items, items, list_type, counter, indentation, count_stack)
-    
-    #if len(items) > max_items:
-    #    return items
-    #return items
+        ctr +=1
+        generate_list_recursively(max_items, items, list_type, ctr, ind, stack)
 
-    #else:
-    #    return generate_list_recursively(max_items, items, list_type, counter, indentation, count_stack)
-        
+
+
 def generate_list(list_type=""):
     items = []
-    count_stack = []
-    indentation = 0
+    stack = []
+    ind = 0
     counter = 1
     max_items = random.randint(1,20)
     
     #while len(items) < max_items:
-    #items, list_type, counter, indentation, count_stack = generate_list_recursively(max_items, items, list_type, counter, indentation, count_stack)
-    generate_list_recursively(max_items, items, list_type, counter, indentation, count_stack)
+    #items, list_type, counter, ind, stack = generate_list_recursively(max_items, items, list_type, counter, ind, stack)
+    generate_list_recursively(max_items, items, list_type, counter, ind, stack)
     return SCAFFOLD_JOINLINES(items)
 
 
