@@ -11,12 +11,17 @@ WEIGHTED_CHOICE = [1]*10 + [2]*8 + [3]*4 + [4]*2
 LAM_JOIN = lambda sep="", x=[]: sep.join(x)
 LAM_SPACED_JOIN = lambda x=[]: LAM_JOIN(" ", x)
 
-
 LAM_RANDOM_INT = lambda l,u: random.randint(l,u)
 LAM_RANDOM_RANGE = lambda l,u: range(LAM_RANDOM_INT(l,u))
 
 LAMGEN_FAKE_WORDS = lambda l=1,u=5: LAM_SPACED_JOIN(fake.words(nb=LAM_RANDOM_INT(l,u)))
 LAMGEN_DECISION = lambda w=50: random.randint(1,100) < w
+
+LAM_CLAMP = lambda l,u,x: max(min(x, u), l)
+LAM_CLAMP_HEADING = lambda x: LAM_CLAMP(2,6,x)
+LAM_CLAMP_LIST_INDENTATION = lambda x: LAM_CLAMP(0,4,x)
+LAM_LIST_INDENT_UNDENT = lambda x: x + random.choice([-1, 0, 1])
+LAM_ADJUST_LIST_INDENTATION = lambda x: LAM_CLAMP(0,4,LAM_LIST_INDENT_UNDENT(x))
 
 class State:
     INLINE_MARKUP_LIST = [
@@ -40,51 +45,47 @@ class State:
         self.inline_markup_count = 0
         self.current_depth = 0
 
+
 def generate_list_item(list_type:str="u", level:int=0, counter:int=1) -> tuple:
     indent = level*4
     delimter = "-" if list_type == "u" else counter
     content = LAMGEN_FAKE_WORDS(1,6).capitalize()
     return indent, delimter, content
 
-def generate_list_block(list_type="u", num_items:int=1, counter:int=1, indentation_level:int=0):
-    return [generate_list_item(list_type, indentation_level, item+1) for item in range(counter, counter + num_items)]
+def generate_list_block(list_type="u", num_items:int=1, counter:int=1, indentation:int=0):
+    return [generate_list_item(list_type, indentation, item+1) for item in range(counter, counter + num_items)]
+
+def generate_list_recursively(items:list=[], list_type:str="u", counter:int=1, indentation:int=1):
+    num_items = random.randint(1,3)
+    items.extend(generate_list_block(list_type, num_items, counter, indentation))
+    counter+=num_items
+    new_indentation = LAM_ADJUST_LIST_INDENTATION(indentation)
+    
+    if new_indentation > indentation:
+        generate_list_recursively(items, list_type, 1, new_indentation)
+    return items, counter, indentation
 
 def generate_list(state:State=None, list_type="u") -> list:
     """list types: o, u"""
     items = []
-    stack = []
-    indent_counter = 0
-    num_list_blocks = random.randint(1,5)
-
-    # initial item
-    current_counter = 1
-    items.append(generate_list_item(list_type, indent_counter, current_counter))
-    current_counter+=1
-
-    for item in range(num_list_blocks):
-        num_list_items = random.randint(1,3)
-
-        if LAMGEN_DECISION():
-            # indent
-            indent_counter+=1
-            stack.append(current_counter)
-            current_counter = 1
-        else:
-            # outdent
-            if indent_counter:
-                indent_counter-=1
-                current_counter = stack.pop()
-
-        items.extend(generate_list_block(list_type, num_list_items, current_counter, indent_counter))
-        current_counter+=num_list_items
-
-    # decide to close list or not
-    if LAMGEN_DECISION():
-        while len(stack):
-            indent_counter-=1
-            current_counter = stack.pop()
-            items.append(generate_list_item(list_type, indent_counter, current_counter))
+    indentation = 0
+    counter = 1
+    for _ in LAM_RANDOM_RANGE(1,5):
+        items, counter, indentation = generate_list_recursively(items, list_type, counter, indentation)
     return items
+
+
+def generate_list(state:State=None, list_type="u") -> list:
+    """list types: o, u"""
+    items = []
+    indentation = 0
+    counter = 1
+    max_items = random.randint(1,20)
+    
+    while len(items) < max_items:
+        items, counter, indentation = generate_list_recursively(items, list_type, counter, indentation)
+    return items
+
 
 def generate_sub_content(state:State=None, is_indented:bool=False, content_type:str="blocks" ):
     """
