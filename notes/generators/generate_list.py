@@ -17,6 +17,7 @@ LAMGEN_DECISION = lambda w=50: random.randint(1,100) < w
 
 LAM_CLAMP = lambda l,u,x: max(min(x, u), l)
 LAM_LIST_INDENT_UNDENT = lambda x: x + random.choice([-1, -1, 0, 0, 0, 1, 1])
+LAM_LIST_INDENT_UNDENT = lambda x: x + random.choice([-1, 0, 1])
 LAM_ADJUST_LIST_INDENTATION = lambda x: LAM_CLAMP(0,6,LAM_LIST_INDENT_UNDENT(x))
 
 
@@ -34,8 +35,7 @@ def generate_list_recursively(max_items:int=0, items:list=[], list_type:str="u",
     if len(items) > max_items:
         return items
     
-    new_item = generate_list_item(list_type, ind, ctr)
-    items.append(new_item)
+    items.append(generate_list_item(list_type, ind, ctr))
     new_ind = LAM_ADJUST_LIST_INDENTATION(ind)
     
     # indent
@@ -54,14 +54,8 @@ def generate_list_recursively(max_items:int=0, items:list=[], list_type:str="u",
 
 def generate_list(list_type=""):
     items = []
-    stack = []
-    ind = 0
-    counter = 1
     max_items = random.randint(1,20)
-    
-    #while len(items) < max_items:
-    #items, list_type, counter, ind, stack = generate_list_recursively(max_items, items, list_type, counter, ind, stack)
-    generate_list_recursively(max_items, items, list_type, counter, ind, stack)
+    generate_list_recursively(max_items, items, list_type, 1, 0, [])
     return SCAFFOLD_JOINLINES(items)
 
 
