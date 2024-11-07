@@ -68,12 +68,14 @@ def generate_list_recursively(max_items:int=0, items:list=[], list_type:str="uli
     new_indentation = LAM_ADJUST_LIST_INDENTATION(indentation)
     
     if new_indentation > indentation:
-        return generate_list_recursively(max_items, items, list_type, 1, indentation + 1)
-    elif new_indentation == indentation:
-        items, list_type, counter, indentation = generate_list_recursively(max_items, items, list_type, counter + num_items, indentation)
+        generate_list_recursively(max_items, items, list_type, 1, indentation + 1)
+    #elif new_indentation == indentation:
+    #items, list_type, counter, indentation = generate_list_recursively(max_items, items, list_type, counter + num_items, indentation)
     #    return items, list_type, counter + num_items, indentation
     #return items, list_type, counter + num_items, indentation - 1
-    return items, list_type, counter, indentation - 1
+    if new_indentation < indentation and new_indentation > 0:
+        items, list_type, counter, indentation = generate_list_recursively(max_items, items, list_type, counter, indentation - 1)
+    return items, list_type, counter + num_items, indentation
     #return items, list_type, counter + num_items, indentation
         
 def generate_list(state:State=None, list_type=""):
