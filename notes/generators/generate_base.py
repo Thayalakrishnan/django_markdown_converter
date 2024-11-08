@@ -24,19 +24,7 @@ LAM_LIST_INDENT_UNDENT = lambda x: x + random.choice([-1, 0, 1])
 LAM_ADJUST_LIST_INDENTATION = lambda x: LAM_CLAMP(0,4,LAM_LIST_INDENT_UNDENT(x))
 
 class State:
-    INLINE_MARKUP_LIST = [
-        ("`", "`",),
-        ("``", "``",),
-        ("**", "**",),
-        ("_", "_",),
-        (":", ":",),
-        ("^", "^",),
-        ("~", "~",),
-        ("$", "$",),
-        ("<", ">",),
-        ("--", "--",),
-        ("==", "==",),
-    ]
+    INLINE_MARKUP_LIST = [("`", "`",),("``", "``",),("**", "**",),("_", "_",),(":", ":",),("^", "^",),("~", "~",),("$", "$",),("<", ">",),("--", "--",),("==", "==",),]
     SENTENCE_ENDINGS = ["."]*10 + ["!"]*3 + ["?"]*2 + [";"]*1
     def __init__(self):
         self.heading_level = 2
@@ -45,47 +33,35 @@ class State:
         self.inline_markup_count = 0
         self.current_depth = 0
 
-
-def generate_list_item(list_type:str="u", level:int=0, counter:int=1) -> tuple:
-    indent = level*4
-    delimter = "-" if list_type == "u" else counter
+def generate_list_item(list_type:str="u", ctr:int=1, ind:int=0) -> tuple:
+    indent = ind*4
+    delimter = "-" if list_type == "u" else ctr
     content = LAMGEN_FAKE_WORDS(1,6).capitalize()
     return indent, delimter, content
 
-def generate_list_block(list_type="u", num_items:int=1, counter:int=1, indentation:int=0):
-    return [generate_list_item(list_type, indentation, item+1) for item in range(counter, counter + num_items)]
-
-def generate_list_recursively(items:list=[], list_type:str="u", counter:int=1, indentation:int=1):
-    num_items = random.randint(1,3)
-    items.extend(generate_list_block(list_type, num_items, counter, indentation))
-    counter+=num_items
-    new_indentation = LAM_ADJUST_LIST_INDENTATION(indentation)
+def generate_list_loop(items:list=[], current:list=[], stack:list=[]):
+    """stack: type, ctr, ind"""
+    items.append(generate_list_item(*current))
+    new_ind = LAM_ADJUST_LIST_INDENTATION(current[2])
+    current[1] += 1
     
-    if new_indentation > indentation:
-        generate_list_recursively(items, list_type, 1, new_indentation)
-    return items, counter, indentation
+    # indent
+    if new_ind > current[2]:
+        stack.append(current)
+        return items, [current[0], 1, current[2]+1], stack
+    # unindent
+    elif new_ind < current[2]:
+        return items, stack.pop(), stack
+    # stay the same
+    return items, current, stack
 
-def generate_list(state:State=None, list_type="u") -> list:
-    """list types: o, u"""
-    items = []
-    indentation = 0
-    counter = 1
-    for _ in LAM_RANDOM_RANGE(1,5):
-        items, counter, indentation = generate_list_recursively(items, list_type, counter, indentation)
-    return items
-
-
-def generate_list(state:State=None, list_type="u") -> list:
-    """list types: o, u"""
-    items = []
-    indentation = 0
-    counter = 1
+def generate_list(state:State=None, list_type=""):
+    items, stack, current  = [], [], [list_type, 1, 0]
     max_items = random.randint(1,20)
     
     while len(items) < max_items:
-        items, counter, indentation = generate_list_recursively(items, list_type, counter, indentation)
+        items, current, stack = generate_list_loop(items, current, stack)
     return items
-
 
 def generate_sub_content(state:State=None, is_indented:bool=False, content_type:str="blocks" ):
     """
@@ -137,19 +113,19 @@ def generate_plain_sentence(state:State=None, sentence_length:int=1):
 def generate_markedup_sentence(state:State=None, sentence_length:int=1):
     stack = []
     words = []
-    inline_markup = state.INLINE_MARKUP_LIST
+    inline_markup_list = state.INLINE_MARKUP_LIST
 
     for w in range(sentence_length):
         word = fake.word()
 
         if LAMGEN_DECISION(10):
-            state.inline_markup_count+=1
-            imarkup = random.choice(inline_markup)
+            state.inline_markup_list_count+=1
+            imarkup = random.choice(inline_markup_list)
             if imarkup not in stack:
                 stack.append(imarkup)
                 word = imarkup[0] + word
 
-        # close_inline_markup
+        # close_inline_markup_list
         if len(stack) and LAMGEN_DECISION(90):
             imarkup = stack.pop()
             word = word + imarkup[1]
@@ -167,13 +143,12 @@ def generate_sentence(state:State=None, has_inline_markup:bool=True):
     words = generate_markedup_sentence(state, sentence_length) if has_inline_markup else generate_markedup_sentence(state, sentence_length)
     ending = random.choice(state.SENTENCE_ENDINGS)
     words[-1]+=ending
+    words[0] = words[0].capitalize()
     return " ".join(words)
-
 
 def generate_sentences(state:State=None, has_inline_markup:bool=True):
     sentences = [generate_sentence(state, has_inline_markup) for _ in LAM_RANDOM_RANGE(1,6)]
     return LAM_SPACED_JOIN(sentences)
-
 
 ##################################
 """
@@ -421,7 +396,7 @@ def run_generate_markdown_blocks():
 def run_generator():
     current_state = State()
     for b in range(5):
-        print(generate_olist(current_state))
+        print(generate_paragraph(current_state))
 
 run_generator()
 #run_generators()

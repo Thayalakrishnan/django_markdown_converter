@@ -42,59 +42,35 @@ class State:
         self.inline_markup_count = 0
         self.current_depth = 0
 
-def generate_list_item(list_type:str="ulist", level:int=0, counter:int=1):
-    indent = level*' '*4
-    delimter = "- " if list_type == "ulist" else f"{counter}. "
+def generate_list_item(list_type:str="u", ctr:int=1, ind:int=0):
+    indent = ind*' '*4
+    delimter = "- " if list_type == "u" else f"{ctr}. "
     content = LAMGEN_FAKE_WORDS(1,6).capitalize()
     return f"{indent}{delimter}{content}"
 
-def generate_list_block(list_type="", num_items:int=1, counter:int=1, indentation_level:int=0):
-    return [generate_list_item(list_type, indentation_level, item) for item in range(counter, counter + num_items)]
+def generate_list_loop(items:list=[], current:list=[], stack:list=[]):
+    """stack: type, ctr, ind"""
+    items.append(generate_list_item(*current))
+    new_ind = LAM_ADJUST_LIST_INDENTATION(current[2])
+    current[1] += 1
+    
+    # indent
+    if new_ind > current[2]:
+        stack.append(current)
+        return items, [current[0], 1, current[2]+1], stack
+    # unindent
+    elif new_ind < current[2]:
+        return items, stack.pop(), stack
+    # stay the same
+    return items, current, stack
 
-def adjust_indentation(lvl:int=0) -> int:
-    new_lvl = lvl + 1 if LAMGEN_DECISION() else lvl - 1
-    return LAM_CLAMP_LIST_INDENTATION(new_lvl)
 
-def generate_list_recursively(max_items:int=0, items:list=[], list_type:str="ulist", counter:int=1, indentation:int=1):
-    print(f"indentation {indentation} ################")
-    
-    if len(items) > max_items:
-        return items, list_type, counter, indentation
-    
-    num_items = random.randint(1,3)
-    items.extend(generate_list_block(list_type, num_items, counter, indentation))
-    
-    #new_counter = counter + num_items
-    new_indentation = LAM_ADJUST_LIST_INDENTATION(indentation)
-    
-    if new_indentation > indentation:
-        generate_list_recursively(max_items, items, list_type, 1, indentation + 1)
-    #elif new_indentation == indentation:
-    #items, list_type, counter, indentation = generate_list_recursively(max_items, items, list_type, counter + num_items, indentation)
-    #    return items, list_type, counter + num_items, indentation
-    #return items, list_type, counter + num_items, indentation - 1
-    if new_indentation < indentation and new_indentation > 0:
-        items, list_type, counter, indentation = generate_list_recursively(max_items, items, list_type, counter, indentation - 1)
-    return items, list_type, counter + num_items, indentation
-    #return items, list_type, counter + num_items, indentation
-        
-def generate_list(state:State=None, list_type=""):
-    items = []
-    indentation = 0
-    counter = 1
-    
-    for _ in LAM_RANDOM_RANGE(1,5):
-        items, list_type, counter, indentation = generate_list_recursively(items, list_type, counter, indentation)
-    return SCAFFOLD_JOINLINES(items)
-
-def generate_list(state:State=None, list_type=""):
-    items = []
-    indentation = 0
-    counter = 1
+def generate_list(state:State=None, list_type="u"):
+    items, stack, current  = [], [], [list_type, 1, 0]
     max_items = random.randint(1,20)
     
     while len(items) < max_items:
-        items, list_type, counter, indentation = generate_list_recursively(max_items, items, list_type, counter, indentation)
+        items, current, stack = generate_list_loop(items, current, stack)
     return SCAFFOLD_JOINLINES(items)
 
 def indent_content(content:str="") -> str:
@@ -349,13 +325,13 @@ def generate_ulist(state:State=None):
     """
     content: list item: words, sentences, blocks
     """
-    return generate_list(state, "ulist")
+    return generate_list(state, "u")
 
 def generate_olist(state:State=None):
     """
     content: list item: words, sentences, blocks
     """
-    return generate_list(state, "olist")
+    return generate_list(state, "o")
 
 def generate_blockquote(state:State=None):
     """
@@ -499,8 +475,8 @@ def run_generator():
 def run_single_generator():
     current_state = State()
     for i in range(5):
-        print(generate_olist(current_state))
-        print("\n")
+        print(generate_sentence(current_state))
+        #print("\n")
 
 def run_get_sentences():
     current_state = State()
