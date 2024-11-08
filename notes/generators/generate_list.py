@@ -21,42 +21,73 @@ LAM_LIST_INDENT_UNDENT = lambda x: x + random.choice([-1, 0, 1])
 LAM_ADJUST_LIST_INDENTATION = lambda x: LAM_CLAMP(0,6,LAM_LIST_INDENT_UNDENT(x))
 
 
-def generate_list_item(list_type:str="u", level:int=0, counter:int=1):
-    indent = level*' '*4
-    delimter = "- " if list_type == "u" else f"{counter}. "
+def generate_list_item(list_type:str="u", ctr:int=1, ind:int=0):
+    indent = ind*' '*4
+    delimter = "- " if list_type == "u" else f"{ctr}. "
     content = LAMGEN_FAKE_WORDS(1,6).capitalize()
     return f"{indent}{delimter}{content}"
 
-def generate_list_recursively(max_items:int=0, items:list=[], list_type:str="u", ctr:int=1, ind:int=1, stack:list=[]):
-    """
-    max, items, type, ctr, ind, 
-    stack: type, ctr, ind
-    """
+
+
+#def generate_list_recursively(max_items:int=0, items:list=[], list_type:str="u", ctr:int=1, ind:int=1, stack:list=[]):
+#    """
+#    max, items, type, ctr, ind, 
+#    stack: type, ctr, ind
+#    """
+#    if len(items) > max_items:
+#        return items
+#    
+#    items.append(generate_list_item(list_type, ind, ctr))
+#    new_ind = LAM_ADJUST_LIST_INDENTATION(ind)
+#    
+#    # indent
+#    if new_ind > ind:
+#        stack.append(ctr)
+#        generate_list_recursively(max_items, items, list_type, 1, ind+1, stack)
+#    # unindent
+#    elif new_ind < ind:
+#        generate_list_recursively(max_items, items, list_type, stack.pop() + 1, ind-1, stack)
+#    # stay the same
+#    else:
+#        ctr +=1
+#        generate_list_recursively(max_items, items, list_type, ctr, ind, stack)
+#
+#def generate_list(list_type=""):
+#    items = []
+#    max_items = random.randint(1,20)
+#    generate_list_recursively(max_items, items, list_type, 1, 0, [])
+#    return SCAFFOLD_JOINLINES(items)
+#
+
+
+def generate_list_recursively(max_items:int=0, items:list=[], current:list=[], stack:list=[]):
+    """stack: type, ctr, ind"""
     if len(items) > max_items:
         return items
     
-    items.append(generate_list_item(list_type, ind, ctr))
+    list_type, ctr, ind = current
+    items.append(generate_list_item(*current))
     new_ind = LAM_ADJUST_LIST_INDENTATION(ind)
     
     # indent
     if new_ind > ind:
-        stack.append(ctr)
-        generate_list_recursively(max_items, items, list_type, 1, ind+1, stack)
+        stack.append(current)
+        current = [list_type, 1, ind+1]
     # unindent
     elif new_ind < ind:
-        generate_list_recursively(max_items, items, list_type, stack.pop() + 1, ind-1, stack)
+        current = stack.pop()
+        current[1] += 1
     # stay the same
     else:
-        ctr +=1
-        generate_list_recursively(max_items, items, list_type, ctr, ind, stack)
-
-
+        current = [list_type, ctr + 1, ind]
+    generate_list_recursively(max_items, items, current, stack)
 
 def generate_list(list_type=""):
     items = []
     max_items = random.randint(1,20)
-    generate_list_recursively(max_items, items, list_type, 1, 0, [])
+    generate_list_recursively(max_items, items, [list_type, 1, 0], [])
     return SCAFFOLD_JOINLINES(items)
+
 
 
 def generate_ulist():
