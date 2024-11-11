@@ -3,6 +3,8 @@ import random
 from faker import Faker
 from typing import Callable
 
+
+
 fake = Faker()
 
 INDENT = "    "
@@ -30,6 +32,8 @@ LAM_CLAMP_LIST_INDENTATION = lambda x: LAM_CLAMP(0,4,x)
 
 LAM_LIST_INDENT_UNDENT = lambda x: x + random.choice([-1, 0, 1])
 LAM_ADJUST_LIST_INDENTATION = lambda x: LAM_CLAMP(0,4,LAM_LIST_INDENT_UNDENT(x))
+
+
 
 
 class State:
@@ -167,6 +171,11 @@ def generate_sentence(state:State=None, has_inline_markup:bool=True):
 def generate_sentences(state:State=None, has_inline_markup:bool=True):
     sentences = [generate_sentence(state, has_inline_markup) for _ in LAM_RANDOM_RANGE(1,6)]
     return LAM_SPACED_JOIN(sentences)
+
+
+
+
+
 
 
 ######################
