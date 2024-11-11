@@ -132,15 +132,19 @@ def generate_markedup_sentence(state:State=None, sentence_length:int=1):
     for w in range(sentence_length):
         word = fake.word()
 
-        if LAMGEN_DECISION(10):
+        if LAMGEN_DECISION(20):
             state.inline_markup_count+=1
             imarkup = random.choice(inline_markup)
             if imarkup not in stack:
                 stack.append(imarkup)
                 word = imarkup[0] + word
+            else:
+                print("DENIED")
+                print(imarkup)
+                print("---------")
 
         # close_inline_markup
-        if len(stack) and LAMGEN_DECISION(90):
+        if len(stack) and LAMGEN_DECISION(80):
             imarkup = stack.pop()
             word = word + imarkup[1]
 
