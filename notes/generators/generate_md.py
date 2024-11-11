@@ -3,8 +3,6 @@ import random
 from faker import Faker
 from typing import Callable
 
-
-
 fake = Faker()
 
 INDENT = "    "
@@ -32,8 +30,6 @@ LAM_CLAMP_LIST_INDENTATION = lambda x: LAM_CLAMP(0,4,x)
 
 LAM_LIST_INDENT_UNDENT = lambda x: x + random.choice([-1, 0, 1])
 LAM_ADJUST_LIST_INDENTATION = lambda x: LAM_CLAMP(0,4,LAM_LIST_INDENT_UNDENT(x))
-
-
 
 
 class State:
@@ -119,6 +115,9 @@ def generate_table_row(size:int=0):
 def adjust_heading_level(lvl:int=2) -> int:
     new_lvl = lvl + random.choice([-1, 0, 0, 1, 1])
     return LAM_CLAMP_HEADING(new_lvl)
+
+
+
 
 """
 ## not

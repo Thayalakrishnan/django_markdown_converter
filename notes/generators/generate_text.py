@@ -124,7 +124,6 @@ def generate_sentences(state:State=None, has_markup:bool=True, as_list:bool=Fals
         return sentences
     return LAM_SPACED_JOIN(sentences)
 
-
 def generate_text(state:State=None, form:str="words", has_markup:bool=True):
     """
     text_type: words, sentence, sentences,
