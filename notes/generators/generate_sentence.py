@@ -41,146 +41,90 @@ class State:
 "footnote": lambda x: f"[^{x}]",
 "link": lambda x: f"{x.get('title', '')}]({x.get('to', '')}",
 """
-def generate_plain_sentence(state:State=None, sentence_length:int=1):
-    return [fake.word() for w in range(sentence_length)]
-
-def generate_markedup_sentence(state:State=None, sentence_length:int=1):
-    stack = OrderedDict()
-    words = []
-    inline_markup_dict = dict(state.INLINE_MARKUP_LIST)
-
-    for w in range(sentence_length):
-        words.append(" ")
-
-        # open inline formatting
-        if (LAMGEN_DECISION(10)) or (len(stack) and LAMGEN_DECISION(50)):
-            key = random.choice(list(inline_markup_dict.keys()))
-            value = inline_markup_dict.pop(key)
-            stack.update({key: value})
-            words.append(value[0])
-
-        word = fake.word()
-        words.append(word)
-
-        # close inline formatting
-        if len(stack) and LAMGEN_DECISION(90):
-            key, value = stack.popitem(last=False)
-            words.append(value[1])
-            inline_markup_dict.update({key: value})
-
-    while len(stack):
-        key, value = stack.popitem(last=False)
-        words.append(value[1])
-    return words
-
-
-def generate_markedup_sentence_optimized(state:State=None, sentence_length:int=1):
-    stack = OrderedDict()
-    stack = []
-    words = []
-
-    num_inline_markup = random.randint(1,5)
-    markup_choices = random.sample(state.INLINE_MARKUP_LIST, k=num_inline_markup)
-
-    while len(markup_choices) or len(stack):
-        """
-        each loop we add a word
-        we also have the change to add some inline formatting
-        """
-
-        words.append(" ")
-
-        # open inline formatting
-        if len(markup_choices) and ((LAMGEN_DECISION(10)) or (len(stack) and LAMGEN_DECISION(50))):
-            markup = markup_choices.pop()
-            key, value = markup
-            stack.append(value[1])
-            words.append(value[0])
-
-        word = fake.word()
-        words.append(word)
-
-        # close inline formatting
-        if len(stack) and LAMGEN_DECISION(90):
-            value = stack.pop()
-            words.append(value)
-
-    return "".join(words)
-
-
-def sentence_positions(minimum:int=0, maximum:int=25, pairs:int=0) -> list:
+def markup_positions(minimum:int=0, maximum:int=25, pairs:int=0) -> list:
     spots = random.sample(range(minimum, maximum),k=pairs*2)
     spots.sort()
     positions = [(spots[i], spots[i+1]) for i in range(0,len(spots)-1, 2)]
     return positions
 
-def nested_position(minimum:int=0, maximum:int=25) -> list:
-    return sentence_positions(minimum, maximum, 1)[0]
+def nested_markup_position(minimum:int=0, maximum:int=25) -> list:
+    if maximum - minimum > 1:
+        return markup_positions(minimum, maximum, 1)[0]
+    return (minimum, maximum)
 
-def is_nested(maximum:int=25, pairs:int=0) -> list:
-    spots = random.sample(range(0,maximum),k=pairs*2)
-    spots.sort()
-    positions = [(spots[i], spots[i+1]) for i in range(0,len(spots)-1, 2)]
-    return positions
+def remainder_choices(choices:list=[], num_choices:int=0) -> tuple:
+    all_choices = random.sample(choices, k=num_choices)
+    remainder_choices = list(filter(lambda x: x not in all_choices, choices))
+    return all_choices, remainder_choices
 
-def generate_markedup_sentence_moreoptimized(state:State=None):
-    sentence_min = 9
-    sentence_max = 25
-    sentence_length = random.randint(sentence_min, sentence_max)
-    words = fake.words(nb=sentence_length)
 
-    upper_range = sentence_length//7
-    num_inline_s_mu = random.randint(0, upper_range)
-    num_inline_nested_mu = num_inline_s_mu//2
+def markup_choices(choices:list=[], num_words:int=0) -> tuple:
+    upper_range = num_words//7
+    
+    num_straight_choices = random.randint(0, upper_range)
+    num_nested_choices = num_straight_choices//2
+    
+    straight_choices, leftover_choices = remainder_choices(choices, num_straight_choices)
+    nested_choices = random.sample(leftover_choices, k=num_nested_choices)
+    return straight_choices, nested_choices
 
-    mu_choices = random.sample(state.inline_markup_list, k=num_inline_s_mu)
-    if num_inline_nested_mu:
-        nested_choices = random.sample(mu_choices, k=num_inline_nested_mu)
-    else:
-        nested_choices = []
-
-    straight_choices = list(filter(lambda x: x not in nested_choices, mu_choices))
-    positions = sentence_positions(0, sentence_length, len(straight_choices))
-
-    #print(f"straight_choices {type(straight_choices)}")
-    #print(straight_choices)
-    #print(f"nested_choices {type(nested_choices)}")
-    #print(nested_choices)
-    #print(f"positions {type(positions)}")
-    #print(positions)
-
+def combine_choices(positions:list=[], straight_choices:list=[], nested_choices:list=[]) -> list:
+    """(position, format)"""
+    combined_choices = []
     for current_pos, current_straight in zip(positions, straight_choices):
-        #key, value = current_straight
         if len(nested_choices):
-            current_nested = nested_choices.pop()
-            #nested_key, nested_value = current_nested
-            nested_start, nested_stop = current_nested
-            nested_pos = nested_position(current_pos[0], current_pos[1])
-            words[nested_pos[0]] = nested_start + words[nested_pos[0]]
-            words[nested_pos[1]] =  words[nested_pos[1]] + nested_stop
-        
-        start, stop = current_straight
-        words[current_pos[0]] = start + words[current_pos[0]]
-        words[current_pos[1]] =  words[current_pos[1]] + stop
-        
+            nested_pos = nested_markup_position(current_pos[0], current_pos[1])
+            combined_choices.append((nested_pos, nested_choices.pop()))
+        combined_choices.append((current_pos, current_straight))
+    return combined_choices
 
+
+def generate_markedup_words(state:State=None, num_words:int=0):
+    words = fake.words(nb=num_words)
+    
+    # markup choices
+    straight_choices, nested_choices = markup_choices(state.inline_markup_list, num_words)
+    
+    # positions for straight choices
+    positions = markup_positions(0, num_words, len(straight_choices))
+    
+    # combinding the straight and the nested chioces and positions
+    combined = combine_choices(positions, straight_choices, nested_choices)
+    
+    # loop over the words and add in the formatting
+    for pos, markup in combined:
+        words[pos[0]] = markup[0] + words[pos[0]]
+        words[pos[1]] =  words[pos[1]] + markup[1]
+    return words
+
+
+def generate_words(state:State=None, has_markup:bool=True, as_list:bool=False):
+    num_words = random.randint(9, 25)
+    words = generate_markedup_words(state, num_words) if has_markup else fake.words(nb=num_words)
+    if as_list:
+        return words
     return " ".join(words)
 
 
-def generate_sentence(state:State=None, has_inline_markup:bool=True):
-    words = generate_markedup_sentence(state) if has_inline_markup else generate_markedup_sentence(state)
+def generate_sentence(state:State=None, has_markup:bool=True, as_list:bool=True):
+    words = generate_words(state, has_markup, as_list=True)
+    # sentence endings
     ending = random.choice(state.SENTENCE_ENDINGS)
-    words.append(ending)
-    return "".join(words)
+    #words.append(ending)
+    words[0] = words[0].capitalize()
+    words[-1] = words[-1] + ending
+    if as_list:
+        return words
+    return " ".join(words)
 
-def generate_sentences(state:State=None, has_inline_markup:bool=True):
-    sentences = [generate_sentence(state, has_inline_markup) for _ in LAM_RANDOM_RANGE(1,6)]
+def generate_sentences(state:State=None, has_markup:bool=True):
+    sentences = [generate_sentence(state, has_markup, as_list=False) for _ in LAM_RANDOM_RANGE(1,6)]
     return LAM_SPACED_JOIN(sentences)
 
 def run_single_generator():
     current_state = State()
-    for i in range(1):
-        print(generate_markedup_sentence_moreoptimized(current_state))
+    for i in range(3):
+        print(generate_sentences(current_state, has_markup=True))
 
 run_single_generator()
 #%%
