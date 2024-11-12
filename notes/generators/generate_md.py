@@ -3,6 +3,8 @@ import random
 from faker import Faker
 from typing import Callable
 
+from notes.generators.generate_base import block_generator
+
 fake = Faker()
 
 INDENT = "    "
@@ -31,224 +33,107 @@ LAM_CLAMP_LIST_INDENTATION = lambda x: LAM_CLAMP(0,4,x)
 LAM_LIST_INDENT_UNDENT = lambda x: x + random.choice([-1, 0, 1])
 LAM_ADJUST_LIST_INDENTATION = lambda x: LAM_CLAMP(0,4,LAM_LIST_INDENT_UNDENT(x))
 
+LAM_FUNC_NAMNE = lambda func: func.__name__.split("_")[1]
 
-class State:
-    INLINE_MARKUP_LIST = [("`", "`",),("``", "``",),("**", "**",),("_", "_",),(":", ":",),("^", "^",),("~", "~",),("$", "$",),("<", ">",),("--", "--",),("==", "==",),]
-    SENTENCE_ENDINGS = ["."]*10 + ["!"]*3 + ["?"]*2 + [";"]*1
-    def __init__(self):
-        self.heading_level = 2
-        self.footnote_index = 1
-        self.footnote_count = 0
-        self.inline_markup_count = 0
-        self.current_depth = 0
-
-def generate_list_item(list_type:str="u", ctr:int=1, ind:int=0):
-    indent = ind*' '*4
-    delimter = "- " if list_type == "u" else f"{ctr}. "
-    content = LAMGEN_FAKE_WORDS(1,6).capitalize()
-    return f"{indent}{delimter}{content}"
-
-def generate_list_loop(items:list=[], current:list=[], stack:list=[]):
-    """stack: type, ctr, ind"""
-    items.append(generate_list_item(*current))
-    new_ind = LAM_ADJUST_LIST_INDENTATION(current[2])
-    current[1] += 1
-    
-    # indent
-    if new_ind > current[2]:
-        stack.append(current)
-        return items, [current[0], 1, current[2]+1], stack
-    # unindent
-    elif new_ind < current[2]:
-        return items, stack.pop(), stack
-    # stay the same
-    return items, current, stack
-
-
-def generate_list(state:State=None, list_type="u"):
-    items, stack, current  = [], [], [list_type, 1, 0]
-    max_items = random.randint(1,20)
-    
-    while len(items) < max_items:
-        items, current, stack = generate_list_loop(items, current, stack)
-    return SCAFFOLD_JOINLINES(items)
+def construct_list(items:list=[]) -> str:
+    #print("[construct_list]")
+    lines = []
+    for item in items:
+        #print(item)
+        ind, mark, content = item
+        mark = f"{mark} " if mark == "-" else f"{mark}. "
+        lines.append(f"{' '*ind}{mark}{content}")
+    return SCAFFOLD_JOINLINES(lines)
 
 def indent_content(content:str="") -> str:
     return "\n".join([INDENT + _ for _ in content.split("\n")])
 
-def generate_sub_content(state:State=None, is_indented:bool=False, content_type:str="blocks" ):
-    """
-    return words, sentences, text only content or other blocks
-    content_type: words, sentence, sentences, blocks
-    """
-    # if nested depth is too deep, we can return just sentences
-    state.current_depth+=1
-    if state.current_depth > 3:
-        content = LAMGEN_FAKE_WORDS(1,5)
-    # return words
-    elif LAMGEN_DECISION() or content_type=="words":
-        content = LAMGEN_FAKE_WORDS(1,5)
-    # reutrn sentence
-    elif LAMGEN_DECISION() or content_type=="sentence":
-        content = generate_sentence(state, LAMGEN_DECISION())
-    # return sentences
-    elif LAMGEN_DECISION() or content_type=="sentences":
-        content = generate_sentences(state, LAMGEN_DECISION())
-    else:
-        # return blocks
-        num_blocks = LAM_RANDOM_INT(1,5)
-        content = generate_markdown_blocks(state, num_blocks=num_blocks, is_nested=False, has_meta=False)
-
-    state.current_depth-=1
-    if is_indented:
-        return indent_content(content)
+def construct_sub_content(content, is_indented:bool=False) -> str:
+    if isinstance(content, str):
+        if is_indented:
+            return indent_content(content)
+        return content
+    elif isinstance(content, list):
+        #content = construct_markdown_blocks(num_blocks=num_blocks, is_nested=False, has_meta=False)
+        content = "yeet"
     return content
-
 
 def join_table_row(row):
     return f"| {' | '.join(row)} |"
 
-def generate_table_row(size:int=0):
+def construct_table_row(size:int=0):
     row = [LAMGEN_FAKE_WORDS(1,3) for _ in range(size)]
     return join_table_row(row)
 
-def adjust_heading_level(lvl:int=2) -> int:
-    new_lvl = lvl + random.choice([-1, 0, 0, 1, 1])
-    return LAM_CLAMP_HEADING(new_lvl)
-
-
-
-
-"""
-## not
-"footnote": lambda x: f"[^{x}]",
-"link": lambda x: f"{x.get('title', '')}]({x.get('to', '')}",
-"""
-def generate_plain_sentence(state:State=None, sentence_length:int=1):
-    return [fake.word() for w in range(sentence_length)]
-
-def generate_markedup_sentence(state:State=None, sentence_length:int=1):
-    stack = []
-    words = []
-    inline_markup = state.INLINE_MARKUP_LIST
-
-    for w in range(sentence_length):
-        word = fake.word()
-
-        if LAMGEN_DECISION(20):
-            state.inline_markup_count+=1
-            imarkup = random.choice(inline_markup)
-            if imarkup not in stack:
-                stack.append(imarkup)
-                word = imarkup[0] + word
-            else:
-                print("DENIED")
-                print(imarkup)
-                print("---------")
-
-        # close_inline_markup
-        if len(stack) and LAMGEN_DECISION(80):
-            imarkup = stack.pop()
-            word = word + imarkup[1]
-
-        words.append(word)
-
-    while len(stack):
-        imarkup = stack.pop()
-        words[-1]+=imarkup[1]
-    return words
-
-
-def generate_sentence(state:State=None, has_inline_markup:bool=True):
-    sentence_length = random.randint(5,20)
-    words = generate_markedup_sentence(state, sentence_length) if has_inline_markup else generate_markedup_sentence(state, sentence_length)
-    ending = random.choice(state.SENTENCE_ENDINGS)
-    words[-1]+=ending
-    return " ".join(words)
-
-
-def generate_sentences(state:State=None, has_inline_markup:bool=True):
-    sentences = [generate_sentence(state, has_inline_markup) for _ in LAM_RANDOM_RANGE(1,6)]
-    return LAM_SPACED_JOIN(sentences)
-
-
-
-
-
-
-
 ######################
-def generate_attributes(state:State=None):
-    pairs = [f"{fake.word()}=\"{LAMGEN_FAKE_WORDS(1,5)}\"" for _ in LAM_RANDOM_RANGE(1,5)]
-    joined = LAM_SPACED_JOIN(pairs)
+"""
+Generators
+structure: 
+name, content, attributes
+"""
+def construct_attributes(props:list=[]) -> str:
+    #print("[construct_attributes] Start")
+    attrs = [f"{k}=\"{v}\"" for k,v in props]
+    joined = LAM_SPACED_JOIN(attrs)
+    #print("[construct_attributes] End")
     return SCAFFOLD_ATTRS(joined)
 
-def generate_meta(state:State=None):
+def construct_meta(data:dict={}) -> str:
     """
-    generate the key value pairs
-    - generate random number of lines
-    - might have types later, but for now just single word paired
-    with some ofther words
     """
-    pairs = [f"{fake.word()}: {LAMGEN_FAKE_WORDS()}" for _ in LAM_RANDOM_RANGE(1,5)]
-    return SCAFFOLD_META(pairs)
+    pairs = data.get("pairs", [])
+    attrs = [f"{k}: {v}" for k,v in pairs]
+    return SCAFFOLD_META(attrs)
 
-def generate_code(state:State=None):
+def construct_code(data:dict={}) -> str:
     """
     language: random
     content: lines of sentences
     """
+    language = data.get("language", "")
+    content = data.get("content", [])
+    
     lines = []
-    header = ["```"]
-    if LAMGEN_DECISION(80):
-        language = random.choice(["python", "javascript", "c", "cpp", "assembly", "css", "html"])
-        header.append(language)
-
-    lines.append(LAM_JOIN("", header))
-
-    # blocks
-    for _ in LAM_RANDOM_RANGE(1,5):
-        # lines
-        for _ in LAM_RANDOM_RANGE(1,5):
-            lines.append(LAMGEN_FAKE_WORDS(2, 10))
-        lines.append("\n")
+    header = "```" if language else f"```{language}"
+    lines.append(header)
+    lines.extend(content)
     lines.append("```")
     return SCAFFOLD_JOINLINES(lines)
 
 
-def generate_dlist(state:State=None):
+def construct_dlist(data:dict={}) -> str:
     """
     term: random word or words
     definition: words, sentences, blocks, inline markup
     """
     lines = []
-    term = fake.word().capitalize()
+    
+    term = data.get("term", "")
     lines.append(term)
-    has_inline_markup = LAMGEN_DECISION(50)
-    definition = [f": {generate_sentence(state, has_inline_markup)}" for _ in LAM_RANDOM_RANGE(1,3)]
+    
+    definition = data.get("definition", [])
+    definition = [f": {_}" for _ in definition]
     lines.extend(definition)
     return SCAFFOLD_JOINLINES(lines)
 
 
-def generate_footnote(state:State=None):
+def construct_footnote(data:dict={}) -> str:
     """
     index: random number
     content: words, sentences, blocks
     """
     lines = []
-
-    index = f"[^{state.footnote_index}]:"
-    state.footnote_index+=1
-
-    content = generate_sub_content(state, is_indented=True)
+    index = f"[^{data.get('index', 1)}]:"
+    
+    content = data.get("content", [])
+    content = construct_sub_content(content, is_indented=True)
 
     lines.append(index)
     lines.append(content)
-
     return SCAFFOLD_JOINLINES(lines)
 
 
-def generate_admonition(state:State=None):
+def construct_admonition(data:dict={}) -> str:
     """
     type: choice
     title: words
@@ -256,255 +141,177 @@ def generate_admonition(state:State=None):
     """
     lines = []
     header = ["!!!"]
-    if LAMGEN_DECISION(80):
-        ad_type = random.choice(["note", "info", "warning", "tip", "danger", "example"])
+    ad_type = data.get("type", "")
+    ad_title = data.get("title", "")
+    if ad_type:
         header.append(ad_type)
-    if LAMGEN_DECISION(80):
-        header.append(f'\"{LAMGEN_FAKE_WORDS(1,3)}\"')
-
+    if ad_title:
+        header.append(f'\"{ad_title}\"')
+    
+    content = data.get("content", [])
+    content = construct_sub_content(content, is_indented=True)
+    
     lines.append(LAM_SPACED_JOIN(header))
-    content = generate_sub_content(state, is_indented=True)
     lines.append(content)
     return SCAFFOLD_JOINLINES(lines)
 
 
-def generate_table(state:State=None):
+def construct_table(data:dict={}) -> str:
     """
     header: random number of columns
     body: random number of rows and use columns
     - cells: inline markup
     """
     lines = []
-    cols = LAM_RANDOM_INT(1,10)
-    rows = LAM_RANDOM_INT(1,5)
 
-    header = generate_table_row(cols)
+    header = data.get("header", [])
+    header = join_table_row(header)
     lines.append(header)
-
-    breaker = join_table_row(["---"]*cols)
+    
+    breaker = data.get("break", [])
+    breaker = join_table_row(breaker)
     lines.append(breaker)
-
-    for i in range(rows):
-        lines.append(generate_table_row(cols))
+    
+    body = data.get("body", [])
+    for row in body:
+        lines.append(join_table_row(row))
+        
     return SCAFFOLD_JOINLINES(lines)
 
-def generate_hr(state:State=None):
-    if LAMGEN_DECISION(80):
-        return "***"
-    return "---"
+def construct_hr(data:dict={}) -> str:
+    content = data.get("content", "***")
+    return content
 
-def generate_heading(state:State=None, level:int=0):
+def construct_heading(data:dict={}) -> str:
     """
     level: integer
     content: words, inline markup
     """
-    if not level:
-        level = "#"*state.heading_level
-        state.heading_level = adjust_heading_level(state.heading_level)
-    else:
-        level = "#"*level
-    content = LAMGEN_FAKE_WORDS(1,6).capitalize()
-    return f"{level} {content}"
+    level = data.get("level", 2)
+    content = data.get("content", "Heading Content")
+    return f"{'#'*level} {content}"
 
-def generate_image(state:State=None):
+def construct_image(data:dict={}) -> str:
     """
     alt: words
     title: words
     src: url
     """
-    alt = LAMGEN_FAKE_WORDS(3,10)
-    title = LAMGEN_FAKE_WORDS(3,8)
-    src = fake.image_url()
+    alt = data.get("alt", "")
+    title = data.get("title", "")
+    src = data.get("src", "")
     return f"![{alt}]({src} \"{title}\")"
 
-def generate_svg(state:State=None):
+def construct_svg(data:dict={}) -> str:
     """
     content: xml
     """
-    content = LAMGEN_FAKE_WORDS(5,10)
+    content = data.get("content", "")
     return LAM_HTML_TAG("svg", content)
 
-def generate_html(state:State=None):
+def construct_html(data:dict={}) -> str:
     """
     tag: word
     content: xml
     """
-    tag = fake.word()
-    content = LAMGEN_FAKE_WORDS(5,10)
+    tag = data.get("tag", "")
+    content = data.get("content", "")
     return LAM_HTML_TAG(tag, content)
 
-def generate_ulist(state:State=None):
+def construct_ulist(data:dict={}) -> str:
     """
     content: list item: words, sentences, blocks
     """
-    return generate_list(state, "u")
+    items = data.get("items", [])
+    return construct_list(items)
 
-def generate_olist(state:State=None):
+def construct_olist(data:dict={}) -> str:
     """
     content: list item: words, sentences, blocks
     """
-    return generate_list(state, "o")
+    items = data.get("items", [])
+    return construct_list(items)
 
-def generate_blockquote(state:State=None):
+def construct_blockquote(data:dict={}) -> str:
     """
     content: words, sentences, blocks
     """
-    content = generate_sub_content(state, is_indented=False)
-    #lines = ["> " + LAMGEN_FAKE_WORDS(5,10) for _ in LAM_RANDOM_RANGE(1,5)]
+    content = data.get("content", "")
+    content = construct_sub_content(content, is_indented=False)
     lines = ["> " + line for line in content.split("\n")]
     return SCAFFOLD_JOINLINES(lines)
 
-def generate_paragraph(state:State=None):
+def construct_paragraph(data:dict={}) -> str:
     """
     content: sentences
     """
-    sentences = generate_sentences(state)
-    return sentences
+    content = data.get("content", "")
+    return content
 
-def generate_emptyline(state:State=None):
+def construct_emptyline(data:dict={}) -> str:
     return "\n\n"
 
-def generate_newline(state:State=None):
+def construct_newline(data:dict={}) -> str:
     return "\n"
 
-def generate_none(state:State=None):
+def construct_none(data:dict={}) -> str:
     return ""
 
 ##################################
 """
 Generators
 """
-
-def create_generators():
+def create_constructors() -> dict:
     generators = [
-        (generate_heading, 30),
-        (generate_paragraph, 30),
-        (generate_ulist, 20),
-        (generate_olist, 20),
-
-        (generate_image, 10),
-        (generate_code, 10),
-        (generate_footnote, 8),
-        (generate_admonition, 8),
-
-        (generate_table, 3),
-        (generate_svg, 2),
-        (generate_html, 2),
-        (generate_blockquote, 1),
-        (generate_dlist, 1),
-        (generate_hr, 1),
+        construct_meta,
+        construct_code,
+        construct_dlist,
+        construct_footnote,
+        construct_admonition,
+        construct_table,
+        construct_hr,
+        construct_heading,
+        construct_image,
+        construct_svg,
+        construct_html,
+        construct_ulist,
+        construct_olist,
+        construct_blockquote,
+        construct_paragraph,
     ]
-    ret = []
-    for func, times in generators:
-        ret+=[func]*times
-    return ret
-
-def create_nested_generators():
-    generators = [
-        (generate_code, 1),
-        (generate_dlist, 1),
-        (generate_footnote, 1),
-        (generate_admonition, 1),
-        (generate_table, 1),
-        (generate_hr, 1),
-        (generate_heading, 1),
-        (generate_image, 1),
-        (generate_svg, 1),
-        (generate_html, 1),
-        (generate_ulist, 1),
-        (generate_olist, 1),
-        (generate_blockquote, 1),
-        (generate_paragraph, 1),
-    ]
-    ret = []
-    for func, times in generators:
-        ret+=[func]*times
+    ret = {}
+    for func in generators:
+        name = LAM_FUNC_NAMNE(func)
+        ret.update({name: func})
     return ret
 
 
-def return_markdown_blocks_list(state:State=None, generator_funcs:Callable=lambda: None, num_blocks:int=1) -> list:
-    blocks = []
-    for _ in range(num_blocks):
-        block = random.choice(generator_funcs)(state)
-        #blocks.append(block)
-        
-        has_attrs = LAMGEN_DECISION(30)
-        if has_attrs:
-            attrs = generate_attributes(state)
-            #blocks.append(attrs)
-            block = block + "\n" + attrs
-            
-        blocks.append(block)   
-    return blocks
-
-def generate_markdown_blocks(state:State=None, num_blocks:int=1, is_nested:bool=False, has_meta:bool=True):
-    generator_funcs = create_generators() if not is_nested else create_nested_generators()
-    blocks = []
-    if has_meta and not is_nested:
-        blocks.append(generate_meta(state))
-    blocks.extend(return_markdown_blocks_list(state, generator_funcs, num_blocks))
-    return "\n\n".join(blocks)
+def construct_block(block:tuple=()) -> str:
+    name, data, props = block
+    #print(f"[construct_block] Start: {name}")
+    constructor_funcs = create_constructors()
+    func = constructor_funcs.get(name, lambda x: x)
+    md = func(dict(data))
+    if props:
+        attrs = construct_attributes(props)
+        #print(f"[construct_block] End: {name}")
+        return md + "\n" + attrs
+    #print(f"[construct_block] End: {name}")
+    return md
 
 
-def generate_markdown_post(state:State=None, num_blocks:int=0):
-    generator_funcs = create_generators()
-    blocks = []
-    if not num_blocks:
-        num_blocks = random.randint(3,20)
+def construct_markdown():
+    constructor_funcs = create_constructors()
+    blocks = block_generator()
     
-    blocks.append(generate_meta(state))
-    blocks.append(generate_heading(state, 1))
-    blocks.extend(return_markdown_blocks_list(state, generator_funcs, num_blocks))
-    return "\n\n".join(blocks)
+    doco = []
+    for block in blocks:
+        #print(block)
+        md_block = construct_block(block)
+        #print(md_block)
+        doco.append(md_block)
+    
+    print("\n\n".join(doco))
+    return doco
 
-
-
-
-##################################
-"""
-Runners
-generate_footnote
-generate_admonition
-"""
-def run_generators():
-    current_state = State()
-    generators_list = create_generators()
-    for _ in generators_list:
-        name = _.__name__.split("_")[1]
-        print(f"## {name}\n")
-        print(_(current_state))
-        print("\n")
-
-def run_generator():
-    current_state = State()
-    for i in range(5):
-        print(f"##################################################")
-        print(f"Post {i} ###########################################")
-        print(f"##################################################")
-        print(generate_markdown_post(current_state))
-        print("\n")
-        
-def run_single_generator():
-    current_state = State()
-    for i in range(5):
-        print(generate_sentence(current_state))
-        #print("\n")
-
-def run_get_sentences():
-    current_state = State()
-    num_loops = 5
-    for i in range(num_loops):
-        print(generate_sentence(current_state))
-
-def run_generate_markdown_blocks():
-    current_state = State()
-    for i in range(5):
-        num_blocks = random.randint(3,20)
-        print(generate_markdown_blocks(current_state, num_blocks))
-
-#run_generate_markdown_blocks()
-#run_generator()
-run_single_generator()
-#run_get_sentences()
-#run_generators()
-#%%
+construct_markdown()

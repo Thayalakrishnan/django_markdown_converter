@@ -4,8 +4,6 @@ from faker import Faker
 from collections import OrderedDict
 from typing import Union
 
-
-
 fake = Faker()
 
 LAM_JOIN = lambda sep="", x=[]: sep.join(x)
